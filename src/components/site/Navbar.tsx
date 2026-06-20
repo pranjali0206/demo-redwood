@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-
+import logoWhite from "../../assets/rw-logo.png";
+import logoDark from "../../assets/rw-logo2.png";
 const links = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
@@ -38,12 +39,17 @@ export function Navbar({ transparentUntilScroll = true }: { transparentUntilScro
       className="fixed top-0 inset-x-0 z-50"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group">
-          <span className="inline-block w-1 h-7 bg-[var(--brand-red)]" />
-          <span className={`font-serif text-lg sm:text-xl font-bold tracking-tight ${solid ? "text-[var(--brand-red)]" : "text-white"}`}>
-            REDWOOD <span className="font-normal">BIOTECH</span>
-          </span>
-        </Link>
+            <Link to="/" className="flex items-center">
+        <motion.img
+          key={solid ? "dark" : "light"}
+          src={solid ? logoDark : logoWhite}
+          alt="Redwood Biotech"
+          className="h-14 sm:h-16 w-auto"
+          initial={{ opacity: 0.8 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        />
+      </Link>
         <nav className="hidden lg:flex items-center gap-1">
           {links.map((l) => (
             <Link

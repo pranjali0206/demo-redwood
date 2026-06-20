@@ -1,15 +1,20 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin, FlaskConical } from "lucide-react";
+import logoWhite from "../../assets/rw-logo.png";
 
 export function Footer() {
   return (
     <footer className="bg-stone-900 text-stone-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid gap-10 md:grid-cols-4">
         <div className="md:col-span-2">
-          <div className="flex items-center gap-2">
-            <span className="inline-block w-1 h-7 bg-[var(--brand-red)]" />
-            <span className="font-serif text-xl font-bold text-white">REDWOOD <span className="font-normal">BIOTECH</span></span>
-          </div>
+        <div className="flex items-center">
+        <img
+          src={logoWhite}
+          alt="Redwood Biotech"
+          className="h-16 w-auto"
+        />
+      </div>
+
           <p className="mt-3 italic text-stone-400">Revolution in Biotechnology</p>
           <p className="mt-6 text-sm leading-relaxed max-w-md">
             Genetically engineered Sagwan teak plantations on your land. Managed by science, owned by you.
