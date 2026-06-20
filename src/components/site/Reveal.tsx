@@ -1,5 +1,5 @@
 import { motion, type MotionProps } from "framer-motion";
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 export function Reveal({
   children, delay = 0, y = 30, className, as = "div",
@@ -18,29 +18,7 @@ export function Reveal({
   );
 }
 
-export function CountUp({ to, suffix = "", duration = 1.6 }: { to: number; suffix?: string; duration?: number }) {
-  return (
-    <motion.span
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-    >
-      <motion.span
-        initial={{ "--n": 0 } as React.CSSProperties}
-        whileInView={{ "--n": to } as React.CSSProperties}
-        viewport={{ once: true }}
-        transition={{ duration, ease: "easeOut" }}
-        style={{ counterReset: "n var(--n)" } as React.CSSProperties}
-      >
-        <CounterText to={to} duration={duration} />
-      </motion.span>
-      {suffix}
-    </motion.span>
-  );
-}
-
-import { useEffect, useRef, useState } from "react";
-function CounterText({ to, duration }: { to: number; duration: number }) {
+export function CountUp({ to, suffix = "", duration = 1.6, className }: { to: number; suffix?: string; duration?: number; className?: string }) {
   const [n, setN] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const started = useRef(false);
@@ -64,5 +42,5 @@ function CounterText({ to, duration }: { to: number; duration: number }) {
     obs.observe(el);
     return () => obs.disconnect();
   }, [to, duration]);
-  return <span ref={ref}>{n.toLocaleString("en-IN")}</span>;
+  return <span ref={ref} className={className}>{n.toLocaleString("en-IN")}{suffix}</span>;
 }
