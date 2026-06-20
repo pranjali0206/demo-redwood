@@ -134,7 +134,7 @@ function Agroforestry() {
 }
 
 function Combined() {
-  const cards = [
+  const cards: { title: string; tone: "neutral" | "soft" | "brand"; points: string[]; featured?: boolean }[] = [
     {
       title: "Real Estate Alone", tone: "neutral",
       points: ["High entry cost", "Slow appreciation", "No regular income", "Dependent on market"],
@@ -147,7 +147,7 @@ function Combined() {
       title: "Redwood Biotech Model", tone: "brand", featured: true,
       points: ["Your land as the asset", "75% of all yield to you", "12-year managed partnership", "Genetic technology for maximum returns", "100% tax-free agriculture income"],
     },
-  ] as const;
+  ];
   return (
     <section className="py-20 lg:py-28 bg-stone-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -296,7 +296,7 @@ function About() {
 }
 
 function Plans() {
-  const plans = [
+  const plans: { name: string; bar: string; desc: string; features: string[]; featured?: boolean }[] = [
     {
       name: "Basic", bar: "bg-green-200", desc: "Your land, our management, your returns. The foundational partnership model.",
       features: ["Tissue culture sagwan teak plantation", "Drip irrigation system", "Quarterly soil analysis", "Pesticide & fertilizer management", "75% yield at harvest", "Registered agreement"],
@@ -309,7 +309,7 @@ function Plans() {
       name: "Operational", bar: "bg-stone-800", desc: "The complete partnership — technology, transparency, and marketing working together.",
       features: ["All Immersive features", "Marketing automation", "Lead pipeline management", "Monthly analytics report", "Priority support"],
     },
-  ] as const;
+  ];
   return (
     <section className="py-20 lg:py-28 bg-stone-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
