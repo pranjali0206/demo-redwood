@@ -65,7 +65,7 @@ function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.7 }}
-            className="mt-5 font-serif text-[2rem] sm:text-5xl lg:text-7xl font-bold leading-tight text-center"
+            className="mt-5 font-serif text-[1.7rem] sm:text-5xl lg:text-7xl font-bold leading-tight text-center"
           >
             <span className="block whitespace-nowrap">
               Real Estate + Agroforestry

@@ -1,7 +1,10 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { Link } from "@tanstack/react-router";
-import { Check, Plus, ArrowRight, Sparkles, TreePine, Building2 } from "lucide-react";
+import { Check, ArrowRight, Sparkles, TreePine, Building2 } from "lucide-react";
+import combinedBg from "../../assets/combined-bg.png";
+
+// ─── Data ────────────────────────────────────────────────────────────────────
 
 const realEstatePoints = [
   "Stability & Security",
@@ -25,180 +28,294 @@ const redwoodPoints = [
   "100% Tax-Free Agriculture Income",
 ];
 
+// ─── Animation variants ───────────────────────────────────────────────────────
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 32 },
+  visible: (delay: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1], delay },
+  }),
+};
+
+const arcVariant = {
+  hidden: { pathLength: 0, opacity: 0 },
+  visible: {
+    pathLength: 1,
+    opacity: 1,
+    transition: { duration: 1.2, ease: "easeInOut", delay: 0.1 },
+  },
+};
+
+const dotVariant = (delay: number) => ({
+  hidden: { scale: 0, opacity: 0 },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    transition: { duration: 0.4, ease: "backOut", delay },
+  },
+});
+
+const labelVariant = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.5, delay: 1.1 } },
+};
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
 export function CombinedSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const p = useSpring(scrollYProgress, { stiffness: 80, damping: 20, mass: 0.5 });
-
-  // Heading
-  const headingY = useTransform(p, [0.05, 0.2], [60, 0]);
-  const headingOpacity = useTransform(p, [0.05, 0.2], [0, 1]);
-
-  // Agroforestry (left card)
-  const agroX = useTransform(p, [0.1, 0.3, 0.5, 0.65], [-200, 0, 0, 200]);
-  const agroOpacity = useTransform(p, [0.1, 0.25, 0.55, 0.65], [0, 1, 1, 0]);
-  const agroScale = useTransform(p, [0.1, 0.3, 0.5, 0.65], [0.5, 0.85, 0.85, 0.4]);
-  const agroRotate = useTransform(p, [0.5, 0.65], [0, -8]);
-
-  // Plus sign
-  const plusOpacity = useTransform(p, [0.28, 0.38, 0.5, 0.58], [0, 1, 1, 0]);
-  const plusScale = useTransform(p, [0.28, 0.38, 0.58], [0, 1.15, 0.3]);
-  const plusRotate = useTransform(p, [0.28, 0.6], [0, 270]);
-
-  // Real Estate (right card)
-  const realX = useTransform(p, [0.3, 0.45, 0.5, 0.65], [200, 0, 0, -200]);
-  const realOpacity = useTransform(p, [0.3, 0.45, 0.55, 0.65], [0, 1, 1, 0]);
-  const realScale = useTransform(p, [0.3, 0.45, 0.5, 0.65], [0.5, 0.85, 0.85, 0.4]);
-  const realRotate = useTransform(p, [0.5, 0.65], [0, 8]);
-
-  // Redwood combined
-  const redwoodScale = useTransform(p, [0.58, 0.78], [0.25, 1]);
-  const redwoodOpacity = useTransform(p, [0.58, 0.72], [0, 1]);
-  const redwoodGlow = useTransform(p, [0.62, 0.82], [0, 1]);
-  const redwoodY = useTransform(p, [0.58, 0.95], [40, -20]);
-
-  // Parallax decor
-  const blob1Y = useTransform(p, [0, 1], [0, -180]);
-  const blob2Y = useTransform(p, [0, 1], [0, 220]);
-
-  // CTA
-  const ctaY = useTransform(p, [0.82, 0.95], [80, 0]);
-  const ctaOpacity = useTransform(p, [0.82, 0.95], [0, 1]);
-
-  const progressScaleX = useTransform(p, [0.05, 0.95], [0, 1]);
+  // Trigger animation once when section enters the viewport
+  const inView = useInView(sectionRef, { once: true, margin: "-80px 0px" });
 
   return (
-    <section ref={sectionRef} className="relative bg-stone-100 " style={{ height: "380vh" }}>
-      <motion.div
-        style={{ y: blob1Y }}
-        className="absolute top-[18%] -left-0 w-96 h-96 rounded-full bg-green-200/50 blur-3xl pointer-events-none"
-        aria-hidden
-      />
-      <motion.div
-        style={{ y: blob2Y }}
-        className="absolute top-[50%] -right-0 w-[28rem] h-[28rem] rounded-full bg-amber-200/40 blur-3xl pointer-events-none"
-        aria-hidden
-      />
+    <section
+      ref={sectionRef}
+      className="relative bg-stone-100 overflow-hidden py-16 sm:py-24 px-4"
+    >
 
-      <div className="sticky top-0 h-screen flex flex-col overflow-hidden">
-        <motion.div
-          style={{ scaleX: progressScaleX, transformOrigin: "0% 50%" }}
-          className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-700 via-amber-500 to-green-900 z-30"
+          {/* Background Image */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+      >
+        <img
+          src={combinedBg}
+          alt=""
+          className="w-full h-full object-cover opacity-[0.8] select-none"
         />
 
+        {/* Soft overlay to blend with section */}
+        <div className="absolute inset-0 bg-stone-100/70" />
+      </div>
+
+      {/* ── Decorative blobs ── */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-24 top-1/4 w-96 h-96 rounded-full bg-green-200/40 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-24 top-1/2 w-[28rem] h-[28rem] rounded-full bg-amber-200/30 blur-3xl"
+      />
+
+      <div className="relative max-w-6xl mx-auto">
+        {/* ── Heading ── */}
         <motion.div
-          style={{ y: headingY, opacity: headingOpacity }}
-          className="pt-12 sm:pt-16 px-6 text-center max-w-3xl mx-auto"
+          className="text-center mb-10 sm:mb-14 max-w-2xl mx-auto"
+          custom={0}
+          variants={fadeUp}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
         >
-          <h2 className="font-serif text-3xl sm:text-5xl font-bold text-green-900 text-balance">
+          <h2 className="font-serif text-3xl sm:text-5xl font-bold text-green-900 text-balance leading-tight">
             Two of India's Most Trusted Investments{" "}
             <span className="text-amber-700">Combined.</span>
           </h2>
           <p className="mt-3 text-base sm:text-lg text-stone-600">
-            Landowners who wait for real estate appreciation wait alone. Ours work for you from day one.
+            Landowners who wait for real estate appreciation wait alone.
+            Ours work for you from day one.
           </p>
         </motion.div>
 
-        <div className="flex-1 relative flex items-center justify-center px-4">
-          {/* Agroforestry */}
-          <motion.div
-            style={{ x: agroX, opacity: agroOpacity, scale: agroScale, rotate: agroRotate }}
-            className="absolute left-1/2 -translate-x-1/2 md:left-[12%] md:translate-x-0 w-[300px] sm:w-[340px] rounded-2xl bg-green-50 border border-green-200 p-6 shadow-2xl shadow-green-900/20"
+        {/* ── Arc SVG ── */}
+        <div className="w-full mb-[-6px] overflow-visible" aria-hidden>
+          <svg
+            viewBox="0 0 660 72"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-full overflow-visible"
           >
-            <div className="flex items-center gap-2 text-green-800">
-              <TreePine size={22} />
-              <h3 className="font-serif text-xl font-bold">Agroforestry</h3>
-            </div>
-            <ul className="mt-4 space-y-2">
-              {agroforestryPoints.map((pt) => (
-                <li key={pt} className="flex gap-2 text-sm text-stone-700">
-                  <Check size={16} className="text-green-700 shrink-0 mt-0.5" />
-                  <span>{pt}</span>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+            <defs>
+              <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%"   stopColor="#2a7a4e" />
+                <stop offset="50%"  stopColor="#1d9e75" />
+                <stop offset="100%" stopColor="#0f6e56" />
+              </linearGradient>
+            </defs>
 
-          {/* Plus */}
-          <motion.div
-            style={{ opacity: plusOpacity, scale: plusScale, rotate: plusRotate }}
-            className="relative z-10 w-16 h-16 rounded-full bg-amber-500 text-white flex items-center justify-center shadow-2xl shadow-amber-600/50"
-          >
-            <Plus size={32} strokeWidth={3} />
-          </motion.div>
-
-          {/* Real Estate */}
-          <motion.div
-            style={{ x: realX, opacity: realOpacity, scale: realScale, rotate: realRotate }}
-            className="absolute left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-[12%] w-[300px] sm:w-[340px] rounded-2xl bg-stone-200 border border-stone-300 p-6 shadow-2xl shadow-stone-900/20"
-          >
-            <div className="flex items-center gap-2 text-stone-800">
-              <Building2 size={22} />
-              <h3 className="font-serif text-xl font-bold">Real Estate</h3>
-            </div>
-            <ul className="mt-4 space-y-2">
-              {realEstatePoints.map((pt) => (
-                <li key={pt} className="flex gap-2 text-sm text-stone-700">
-                  <Check size={16} className="text-stone-600 shrink-0 mt-0.5" />
-                  <span>{pt}</span>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Redwood */}
-          <motion.div
-            style={{ scale: redwoodScale, opacity: redwoodOpacity, y: redwoodY }}
-            className="relative z-20 w-[92%] sm:w-[480px] rounded-3xl bg-gradient-to-br from-green-900 via-green-800 to-green-950 text-white p-7 sm:p-8 shadow-2xl shadow-green-900/50 border border-amber-500/30"
-          >
-            <motion.div
-              style={{ opacity: redwoodGlow }}
-              className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-amber-400/40 via-transparent to-green-400/30 blur-2xl -z-10"
-              aria-hidden
+            {/* Main arc */}
+            <motion.path
+              d="M 110 65 C 110 20, 220 8, 330 8 C 440 8, 550 20, 550 65"
+              fill="none"
+              stroke="url(#arcGrad)"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              variants={arcVariant}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
             />
 
-            <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-500 text-green-950 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg">
-              Recommended
-            </span>
+            {/* Left dot */}
+            <motion.circle
+              cx="110" cy="65" r="5" fill="#2a7a4e"
+              variants={dotVariant(0.55)}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
+            />
 
-            <div className="flex items-center gap-2 text-amber-300">
-              <Sparkles size={22} />
-              <h3 className="font-serif text-2xl sm:text-3xl font-bold">Redwood Biotech Model</h3>
-            </div>
-            <p className="mt-2 text-sm text-green-100/80">
-              Where land meets timber — a synergy compounding wealth from day one.
-            </p>
+            {/* Centre peak dot (slightly larger) */}
+            <motion.circle
+              cx="330" cy="8" r="6"
+              fill="#1d9e75" stroke="white" strokeWidth="1.5"
+              variants={dotVariant(0.9)}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
+            />
 
-            <ul className="mt-5 grid sm:grid-cols-2 gap-x-4 gap-y-2.5">
-              {redwoodPoints.map((pt) => (
-                <li key={pt} className="flex gap-2 text-sm">
-                  <Check size={16} className="text-amber-300 shrink-0 mt-0.5" />
-                  <span>{pt}</span>
-                </li>
-              ))}
-            </ul>
+            {/* Right dot */}
+            <motion.circle
+              cx="550" cy="65" r="5" fill="#0f6e56"
+              variants={dotVariant(1.25)}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
+            />
 
-            <Link
-              to="/model"
-              className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-amber-500 text-green-950 font-semibold hover:bg-amber-400 transition-colors text-sm"
+            {/* Label above arc peak */}
+            <motion.text
+              x="330" y="3"
+              textAnchor="middle"
+              fontSize="8"
+              fill="#1d9e75"
+              fontFamily="sans-serif"
+              letterSpacing="0.08em"
+              variants={labelVariant}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
             >
-              Know More <ArrowRight size={16} />
-            </Link>
+              REDWOOD SYNERGY
+            </motion.text>
+          </svg>
+        </div>
+
+        {/* ── Three Cards ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 items-end">
+
+          {/* 1. Agroforestry — smallest */}
+          <motion.div
+            custom={0.2}
+            variants={fadeUp}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            className="sm:self-end"
+          >
+            <div className="rounded-2xl bg-green-50 border border-green-200 p-5 shadow-lg shadow-green-900/10">
+              <div className="flex items-center gap-2 text-green-800 mb-4">
+                <TreePine size={20} />
+                <h3 className="font-serif text-lg font-bold">Agroforestry</h3>
+              </div>
+              <ul className="space-y-2">
+                {agroforestryPoints.map((pt) => (
+                  <li key={pt} className="flex gap-2 text-sm text-stone-700">
+                    <Check size={15} className="text-green-700 shrink-0 mt-0.5" />
+                    <span>{pt}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
+
+          {/* 2. Real Estate — medium */}
+          <motion.div
+            custom={0.55}
+            variants={fadeUp}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            className="sm:self-end"
+          >
+            <div className="rounded-2xl bg-stone-200 border border-stone-300 p-6 shadow-lg shadow-stone-900/10">
+              <div className="flex items-center gap-2 text-stone-800 mb-4">
+                <Building2 size={22} />
+                <h3 className="font-serif text-xl font-bold">Real Estate</h3>
+              </div>
+              <ul className="space-y-2.5">
+                {realEstatePoints.map((pt) => (
+                  <li key={pt} className="flex gap-2 text-sm text-stone-700">
+                    <Check size={15} className="text-stone-600 shrink-0 mt-0.5" />
+                    <span>{pt}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
+
+          {/* 3. Redwood — largest */}
+          <motion.div
+            custom={0.9}
+            variants={fadeUp}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+          >
+            {/* "Recommended" badge sits above the card */}
+            <div className="relative">
+              <span className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 bg-amber-500 text-green-950 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md whitespace-nowrap">
+                ✦ Recommended
+              </span>
+
+              <div className="relative rounded-3xl bg-gradient-to-br from-green-900 via-green-800 to-green-950 text-white p-7 shadow-2xl shadow-green-900/40 border border-amber-500/30 overflow-hidden">
+                {/* Subtle inner glow */}
+                <div
+                  aria-hidden
+                  className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-amber-400/20 via-transparent to-green-400/10 blur-2xl pointer-events-none"
+                />
+
+                <div className="relative">
+                  <div className="flex items-center gap-2 text-amber-300 mb-1">
+                    <Sparkles size={20} />
+                    <h3 className="font-serif text-2xl font-bold">
+                      Redwood Biotech Model
+                    </h3>
+                  </div>
+                  <p className="text-sm text-green-100/70 mb-5">
+                    Where land meets timber — a synergy compounding wealth from day one.
+                  </p>
+
+                  <ul className="grid grid-cols-2 gap-x-4 gap-y-2.5 mb-6">
+                    {redwoodPoints.map((pt, i) => (
+                      <li
+                        key={pt}
+                        className={`flex gap-2 text-sm ${
+                          // Last item (odd one out) spans both columns
+                          i === redwoodPoints.length - 1 && redwoodPoints.length % 2 !== 0
+                            ? "col-span-2"
+                            : ""
+                        }`}
+                      >
+                        <Check size={15} className="text-amber-300 shrink-0 mt-0.5" />
+                        <span>{pt}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Link
+                    to="/model"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-amber-500 text-green-950 font-semibold hover:bg-amber-400 transition-colors text-sm"
+                  >
+                    Know More <ArrowRight size={15} />
+                  </Link>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
 
-        <motion.div style={{ y: ctaY, opacity: ctaOpacity }} className="px-4 sm:px-8 pb-10">
-          <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 px-6 py-5 rounded-xl bg-amber-50 border border-amber-200">
-            <p className="text-base sm:text-lg text-amber-900 font-serif">
-              India imports <span className="font-bold">₹75 crore</span> of teak every year. Your land could be supplying it.
+        {/* ── CTA Bar ── */}
+        <motion.div
+          custom={1.2}
+          variants={fadeUp}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          className="mt-10"
+        >
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-5 rounded-xl bg-amber-50 border border-amber-200">
+            <p className="text-base sm:text-lg text-amber-900 font-serif text-center sm:text-left">
+              India imports{" "}
+              <span className="font-bold">₹75 crore</span> of teak every year.
+              Your land could be supplying it.
             </p>
             <Link
-              to="/"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-md bg-amber-700 text-white font-semibold hover:bg-amber-800 transition-colors whitespace-nowrap"
+              to="/contact"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-md bg-amber-700 text-white font-semibold hover:bg-amber-800 transition-colors whitespace-nowrap text-sm"
             >
               Become a Partner <ArrowRight size={18} />
             </Link>

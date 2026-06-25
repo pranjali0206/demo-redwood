@@ -78,16 +78,15 @@ export default function Agroforestry() {
             <Leaf size={14} /> The Smart Indian Portfolio
           </motion.span>
 
-          <h2 className="mt-6 font-serif text-4xl sm:text-5xl lg:text-6xl  font-bold leading-[1.1] text-[oklch(0.28_0.07_145)] sm:text-2xl lg:text-6xl">
-          Why Smart Indians Are Investing In
-          <br />
-          <span className="relative inline-block">
-          <span className="relative z-10 whitespace-nowrap bg-gradient-to-r from-[oklch(0.55_0.2_30)] to-[oklch(0.5_0.22_20)] bg-clip-text text-transparent">
-          Real Estate + Agroforestry
-        </span>
-            
-          </span>
-        </h2>
+          <h2 className="mt-6 font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] text-[oklch(0.28_0.07_145)]">
+  Why Smart Indians Are Investing In
+  <br />
+  <span className="relative inline-block">
+    <span className="relative z-10 text-[1.7rem] sm:text-5xl lg:text-6xl whitespace-nowrap bg-gradient-to-r from-[oklch(0.55_0.2_30)] to-[oklch(0.5_0.22_20)] bg-clip-text text-transparent">
+      Real Estate + Agroforestry
+    </span>
+  </span>
+</h2>
 
           <motion.p
             initial={{ opacity: 0, y: 16 }}
