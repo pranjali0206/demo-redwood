@@ -66,7 +66,16 @@ export function Navbar({ transparentUntilScroll = true }: { transparentUntilScro
             </Link>
           ))}
         </nav>
-        
+        <div className="flex items-center gap-2">
+         
+          <button
+            onClick={() => setOpen((v) => !v)}
+            aria-label="Toggle menu"
+            className={`lg:hidden p-2 rounded ${solid ? "text-stone-800" : "text-white"}`}
+          >
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
       {open && (
         <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="lg:hidden bg-white border-t border-stone-200">
