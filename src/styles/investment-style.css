@@ -1,0 +1,115 @@
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-ember: var(--ember);
+  --color-leaf: var(--leaf);
+  --color-bark: var(--bark);
+  --color-ivory: var(--ivory);
+  --color-ink: var(--ink);
+  --color-surface: var(--surface);
+  --font-display: "Cormorant Garamond", "Playfair Display", serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+:root {
+  --radius: 0.5rem;
+
+  /* Brand */
+  --ink: oklch(0.16 0.02 30);
+  --ivory: oklch(0.97 0.012 80);
+  --surface: oklch(0.99 0.006 80);
+  --primary: oklch(0.48 0.18 25);          /* Redwood crimson */
+  --primary-foreground: oklch(0.98 0.005 80);
+  --ember: oklch(0.62 0.21 28);
+  --leaf: oklch(0.42 0.09 145);
+  --bark: oklch(0.32 0.04 40);
+
+  --background: var(--ivory);
+  --foreground: var(--ink);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--ink);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--ink);
+  --secondary: oklch(0.94 0.01 60);
+  --secondary-foreground: var(--ink);
+  --muted: oklch(0.94 0.008 60);
+  --muted-foreground: oklch(0.45 0.02 40);
+  --accent: oklch(0.93 0.04 30);
+  --accent-foreground: var(--primary);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.89 0.01 40);
+  --input: oklch(0.89 0.01 40);
+  --ring: var(--primary);
+}
+
+.dark {
+  --background: oklch(0.14 0.015 30);
+  --foreground: oklch(0.97 0.012 80);
+  --card: oklch(0.18 0.02 30);
+  --card-foreground: oklch(0.97 0.012 80);
+  --popover: oklch(0.18 0.02 30);
+  --popover-foreground: oklch(0.97 0.012 80);
+  --secondary: oklch(0.24 0.02 30);
+  --secondary-foreground: oklch(0.97 0.012 80);
+  --muted: oklch(0.24 0.02 30);
+  --muted-foreground: oklch(0.72 0.02 60);
+  --accent: oklch(0.28 0.05 30);
+  --accent-foreground: oklch(0.97 0.012 80);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 14%);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
+}
+
+@utility text-balance { text-wrap: balance; }
+
+@utility grain {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+    opacity: 0.08;
+    mix-blend-mode: multiply;
+  }
+}
+
+@utility ticker-mask {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ModelRouteImport } from './routes/model'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as InvestmentRouteImport } from './routes/investment'
 import { Route as GalleryRouteImport } from './routes/gallery'
@@ -21,6 +22,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModelRoute = ModelRouteImport.update({
+  id: '/model',
+  path: '/model',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -67,6 +73,7 @@ export interface FileRoutesByFullPath {
   '/gallery': typeof GalleryRoute
   '/investment': typeof InvestmentRoute
   '/login': typeof LoginRoute
+  '/model': typeof ModelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesByTo {
@@ -77,6 +84,7 @@ export interface FileRoutesByTo {
   '/gallery': typeof GalleryRoute
   '/investment': typeof InvestmentRoute
   '/login': typeof LoginRoute
+  '/model': typeof ModelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesById {
@@ -88,6 +96,7 @@ export interface FileRoutesById {
   '/gallery': typeof GalleryRoute
   '/investment': typeof InvestmentRoute
   '/login': typeof LoginRoute
+  '/model': typeof ModelRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRouteTypes {
@@ -100,6 +109,7 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/investment'
     | '/login'
+    | '/model'
     | '/sitemap.xml'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/investment'
     | '/login'
+    | '/model'
     | '/sitemap.xml'
   id:
     | '__root__'
@@ -120,6 +131,7 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/investment'
     | '/login'
+    | '/model'
     | '/sitemap.xml'
   fileRoutesById: FileRoutesById
 }
@@ -131,6 +143,7 @@ export interface RootRouteChildren {
   GalleryRoute: typeof GalleryRoute
   InvestmentRoute: typeof InvestmentRoute
   LoginRoute: typeof LoginRoute
+  ModelRoute: typeof ModelRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
@@ -141,6 +154,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/model': {
+      id: '/model'
+      path: '/model'
+      fullPath: '/model'
+      preLoaderRoute: typeof ModelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -203,6 +223,7 @@ const rootRouteChildren: RootRouteChildren = {
   GalleryRoute: GalleryRoute,
   InvestmentRoute: InvestmentRoute,
   LoginRoute: LoginRoute,
+  ModelRoute: ModelRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport

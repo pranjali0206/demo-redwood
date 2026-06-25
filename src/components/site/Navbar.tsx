@@ -10,6 +10,7 @@ const links = [
   { to: "/agroforestry", label: "Agroforestry" },
   { to: "/investment", label: "Investment" },
   { to: "/gallery", label: "Gallery" },
+  { to: "/faq", label: "Faq" },
   { to: "/contact", label: "Contact" },
 ] as const;
 
