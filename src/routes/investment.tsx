@@ -62,8 +62,7 @@ const driversData = [
   { name: "Scientific Mgmt", value: 90, fill: "oklch(0.32 0.04 40)" },
 ];
 
-/* ---------- DATA ---------- */
-
+/* ---------- PILLARS ---------- */
 const pillars = [
   {
     n: "01",
@@ -78,7 +77,7 @@ const pillars = [
     icon: TrendingUp,
     title: "Growing Demand for Premium Timber",
     lede: "India's timber demand outpaces domestic supply — creating a structural market opportunity for premium Sagwan.",
-    body: "India is among the world's largest consumers of timber, yet domestic production continues to lag behind demand, resulting in substantial timber imports every year. As natural forest resources become increasingly limited, professionally managed plantations are expected to play a vital role in bridging this supply gap. This demand-supply imbalance creates a strong long-term market opportunity for premium timber assets such as Sagwan — one of the world's most valuable timber species, known for its durability, quality, and consistent demand across furniture, construction, and export industries.",
+    body: "India is among the world's largest consumers of timber, yet domestic production continues to lag behind demand, resulting in substantial timber imports every year. As natural forest resources become increasingly limited, professionally managed plantations are expected to play a vital role in bridging this supply gap.",
     img: timberImg,
   },
   {
@@ -94,7 +93,7 @@ const pillars = [
     icon: Layers,
     title: "Professional Asset Management",
     lede: "From planting to harvest, the entire lifecycle is executed by Redwood. You own the asset; we run the operation.",
-    body: "Investors benefit from ownership, while Redwood manages the execution — from plantation development and maintenance to monitoring, compliance, harvesting, and market facilitation. Upon maturity, Redwood facilitates the harvesting and commercialisation of the timber asset. As per the agreed investment structure, 75% of the net proceeds generated from timber sales are shared with the investor, while 25% is retained by the company towards plantation management, maintenance, operational expenses, and market execution. Our objective is to maximise value through professional management and responsible market participation while ensuring complete transparency throughout the process.",
+    body: "Investors benefit from ownership, while Redwood manages the execution — from plantation development and maintenance to monitoring, compliance, harvesting, and market facilitation. Upon maturity, Redwood facilitates the harvesting and commercialisation of the timber asset.",
     img: heroImg,
   },
   {
@@ -102,7 +101,7 @@ const pillars = [
     icon: ShieldCheck,
     title: "Investor Protection Framework",
     lede: "Registered land ownership, legal agreements, plantation records — clarity at every step.",
-    body: "Every investment is supported by a structured legal framework designed to provide transparency and confidence. Our commitment is to ensure clarity, accountability, and peace of mind throughout the investment journey.",
+    body: "Every investment is supported by a structured legal framework designed to provide transparency and confidence.",
     checks: [
       "Registered Land Ownership",
       "Legal Documentation & Agreements",
@@ -187,7 +186,6 @@ function Hero() {
         <div className="flex-1 flex items-end pb-16 md:pb-24">
           <div className="mx-auto max-w-7xl px-6 w-full">
 
-          {/* ── Enhanced badge ── */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -198,11 +196,9 @@ function Hero() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-red-600" />
             </span>
-          
             Investment Thesis · 2026
           </motion.div>
 
-            {/* ── Headline: white + red ── */}
             <h1 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] text-balance max-w-5xl">
               {"The Commerce Behind".split(" ").map((w, i) => (
                 <motion.span
@@ -226,7 +222,6 @@ function Hero() {
               </motion.span>
             </h1>
 
-            {/* ── Subheading: white ── */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -241,7 +236,6 @@ function Hero() {
             transition={{ delay: 1.1, duration: 0.8 }}
             className="mt-10 flex flex-wrap items-center gap-4"
           >
-            {/* Primary Button */}
             <a
               href="#enquire"
               className="group inline-flex items-center gap-2 rounded-full bg-red-600 px-6 py-3.5 text-sm font-medium text-white hover:bg-red-700 transition"
@@ -249,8 +243,6 @@ function Hero() {
               Book a discovery call
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
-          
-            {/* Secondary Button */}
             <a
               href="#logic"
               className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-transparent px-6 py-3.5 text-sm font-medium text-white hover:bg-white/10 transition"
@@ -343,121 +335,149 @@ function LogicIntro() {
   );
 }
 
-function PillarRow({ p, i }: { p: typeof pillars[number]; i: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const imgY = useTransform(scrollYProgress, [0, 1], [-40, 40]);
+/* ── NEW: Horizontal pillar card (replaces PillarRow) ── */
+function PillarCard({ p, i }: { p: typeof pillars[number]; i: number }) {
   const Icon = p.icon;
-  const reverse = i % 2 === 1;
-
   return (
-    <div ref={ref} className="relative py-24 md:py-32 border-t border-border">
-      <div
-        className={`mx-auto max-w-7xl px-6 grid md:grid-cols-12 gap-10 md:gap-16 items-center ${
-          reverse ? "md:[&>*:first-child]:order-2" : ""
-        }`}
-      >
-        {/* Image */}
-        <Reveal y={48}>
-          <div className="md:col-span-6 relative overflow-hidden rounded-2xl bg-muted aspect-[4/5] md:aspect-[5/6]">
-            <motion.img
-              style={{ y: imgY, scale: 1.15 }}
-              src={p.img}
-              alt={p.title}
-              className="absolute inset-0 h-full w-full object-cover"
-              loading="lazy"
-              width={1600}
-              height={1024}
-            />
-            <div className="absolute inset-0 bg-gradient-to-tr from-ink/40 via-transparent to-transparent" />
-            <div className="absolute top-6 left-6 inline-flex items-center gap-2 rounded-full bg-background/80 backdrop-blur px-3 py-1.5 text-xs font-medium">
-              <Icon className="h-3.5 w-3.5 text-primary" /> Pillar {p.n}
-            </div>
+    <Reveal delay={i * 0.07}>
+      <div className="group relative flex flex-col rounded-2xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm hover:border-white/25 hover:bg-white/10 transition-all duration-500 hover:shadow-[0_8px_40px_-12px_rgba(180,40,20,0.35)] h-full">
+        {/* Image strip */}
+        <div className="relative h-44 overflow-hidden shrink-0">
+          <img
+            src={p.img}
+            alt={p.title}
+            className="absolute inset-0 h-full w-full object-cover scale-105 group-hover:scale-110 transition-transform duration-700"
+            loading="lazy"
+            width={800}
+            height={520}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/80" />
+          {/* Pillar number — large watermark */}
+          <div className="absolute bottom-3 right-4 font-display text-6xl leading-none text-white/20 select-none">
+            {p.n}
           </div>
-        </Reveal>
+          {/* Icon badge */}
+          <div className="absolute top-4 left-4 inline-flex items-center gap-2 rounded-full bg-black/50 backdrop-blur border border-white/15 px-3 py-1.5 text-xs font-medium text-white">
+            <Icon className="h-3.5 w-3.5 text-red-400" />
+            Pillar {p.n}
+          </div>
+        </div>
 
-        {/* Text */}
-        <div className="md:col-span-6">
-          <Reveal>
-            <div className="font-display text-7xl md:text-9xl leading-none text-primary/15 select-none">
-              {p.n}
-            </div>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <h3 className="mt-2 font-display text-3xl md:text-5xl leading-tight text-balance">
-              {p.title}
-            </h3>
-          </Reveal>
-          <Reveal delay={0.15}>
-            <p className="mt-4 text-sm font-medium text-primary uppercase tracking-widest">
-              {p.lede}
-            </p>
-          </Reveal>
-          <Reveal delay={0.2}>
-            <p className="mt-5 text-base text-muted-foreground leading-relaxed max-w-lg">
-              {p.body}
-            </p>
-          </Reveal>
+        {/* Content */}
+        <div className="flex flex-col flex-1 p-6">
+          <h3 className="font-display text-xl leading-snug text-white mb-2">
+            {p.title}
+          </h3>
+          <p className="text-xs font-medium text-red-400 uppercase tracking-widest mb-3">
+            {p.lede}
+          </p>
+          <p className="text-sm text-white/60 leading-relaxed flex-1">
+            {p.body}
+          </p>
 
           {/* Checks list (pillar 05) */}
           {p.checks && (
-            <Reveal delay={0.25}>
-              <ul className="mt-6 space-y-2.5">
-                {p.checks.map((t) => (
-                  <li key={t} className="flex items-center gap-3 text-sm text-foreground">
-                    <span className="h-6 w-6 shrink-0 rounded-full bg-primary/10 grid place-items-center">
-                      <Check className="h-3.5 w-3.5 text-primary" strokeWidth={3} />
-                    </span>
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
+            <ul className="mt-5 space-y-2">
+              {p.checks.map((t) => (
+                <li key={t} className="flex items-center gap-2.5 text-xs text-white/80">
+                  <span className="h-5 w-5 shrink-0 rounded-full bg-red-600/20 grid place-items-center">
+                    <Check className="h-3 w-3 text-red-400" strokeWidth={3} />
+                  </span>
+                  {t}
+                </li>
+              ))}
+            </ul>
           )}
 
           {/* Drivers list (pillar 06) */}
           {p.drivers && (
-            <Reveal delay={0.25}>
-              <ul className="mt-6 space-y-2.5">
-                {p.drivers.map((t) => (
-                  <li key={t} className="flex items-center gap-2 text-sm text-foreground">
-                    <TrendingUp className="h-4 w-4 text-primary shrink-0" />
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
+            <ul className="mt-5 space-y-2">
+              {p.drivers.map((t) => (
+                <li key={t} className="flex items-center gap-2 text-xs text-white/80">
+                  <TrendingUp className="h-3.5 w-3.5 text-red-400 shrink-0" />
+                  {t}
+                </li>
+              ))}
+            </ul>
           )}
         </div>
       </div>
-    </div>
+    </Reveal>
   );
 }
 
-
+/* ── NEW: Pillars section — 3 × 2 horizontal grid with gradient bg ── */
 function Pillars() {
+  const topRow = pillars.slice(0, 3);
+  const bottomRow = pillars.slice(3, 6);
+
   return (
-    <section id="pillars" className="relative bg-surface">
-      <div className="mx-auto max-w-7xl px-6 pt-32 pb-8">
+    <section
+      id="pillars"
+      className="relative overflow-hidden"
+      style={{
+        background:
+          "linear-gradient(135deg, #0f0500 0%, #1c0803 18%, #2a0d08 35%, #1a1008 55%, #0d1a0a 75%, #060e14 100%)",
+      }}
+    >
+      {/* Ambient orbs */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div
+          className="absolute -top-40 -left-40 h-[600px] w-[600px] rounded-full opacity-30"
+          style={{ background: "radial-gradient(circle, rgba(180,30,15,0.5) 0%, transparent 70%)", filter: "blur(80px)" }}
+        />
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[800px] w-[800px] rounded-full opacity-15"
+          style={{ background: "radial-gradient(circle, rgba(120,60,10,0.6) 0%, transparent 70%)", filter: "blur(120px)" }}
+        />
+        <div
+          className="absolute -bottom-40 -right-40 h-[500px] w-[500px] rounded-full opacity-25"
+          style={{ background: "radial-gradient(circle, rgba(20,80,40,0.5) 0%, transparent 70%)", filter: "blur(80px)" }}
+        />
+      </div>
+
+      {/* Subtle grid texture */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+        }}
+      />
+
+      <div className="relative mx-auto max-w-7xl px-6 pt-32 pb-32">
+        {/* Header */}
         <Reveal>
-          <p className="text-xs uppercase tracking-[0.3em] text-primary mb-6">— Six Pillars</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-red-400 mb-6">— Six Pillars</p>
         </Reveal>
         <Reveal delay={0.1}>
-          <h2 className="font-display text-4xl md:text-6xl max-w-3xl text-balance">
-            The foundations of a <span className="italic text-primary">structured</span> opportunity.
+          <h2 className="font-display text-4xl md:text-6xl max-w-3xl text-balance text-white">
+            The foundations of a <span className="italic text-red-500">structured</span> opportunity.
           </h2>
         </Reveal>
-        {/* ── NEW: intro line ── */}
         <Reveal delay={0.2}>
-          <p className="mt-6 text-lg text-muted-foreground max-w-2xl leading-relaxed">
+          <p className="mt-6 text-lg text-white/50 max-w-2xl leading-relaxed">
             The following pillars form the foundation of this opportunity.
           </p>
         </Reveal>
+
+        {/* ── Row 1: pillars 01–03 ── */}
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-5">
+          {topRow.map((p, i) => (
+            <PillarCard key={p.n} p={p} i={i} />
+          ))}
+        </div>
+
+        {/* ── Row 2: pillars 04–06 ── */}
+        <div className="mt-5 grid grid-cols-1 md:grid-cols-3 gap-5">
+          {bottomRow.map((p, i) => (
+            <PillarCard key={p.n} p={p} i={i + 3} />
+          ))}
+        </div>
       </div>
 
-      {pillars.map((p, i) => <PillarRow key={p.n} p={p} i={i} />)}
-
-      {/* ── NEW: Outcome block ── */}
+      {/* ── Outcome block (unchanged content, re-styled for dark bg) ── */}
       <PillarOutcome />
     </section>
   );
@@ -849,79 +869,72 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-
 function ScrollProgress() {
   const { scrollYProgress } = useScroll();
   const w = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
   return <motion.div style={{ scaleX: w, transformOrigin: "0%" }} className="fixed top-0 left-0 right-0 h-[2px] bg-primary z-[60]" />;
 }
 
-
-
 function PillarOutcome() {
   return (
-    <div className="relative border-t border-border py-28 md:py-40 bg-gradient-to-b from-surface to-background overflow-hidden">
+    <div className="relative border-t border-white/10 py-28 md:py-40 overflow-hidden">
       {/* decorative blurred orb */}
-      <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 h-[500px] w-[500px] rounded-full bg-primary/10 blur-[120px]" />
+      <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 h-[500px] w-[500px] rounded-full bg-red-600/10 blur-[120px]" />
 
       <div className="relative mx-auto max-w-4xl px-6 text-center">
         <Reveal>
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 px-3 py-1 text-xs uppercase tracking-[0.2em] text-primary mb-8">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+          <span className="inline-flex items-center gap-2 rounded-full border border-red-500/30 px-3 py-1 text-xs uppercase tracking-[0.2em] text-red-400 mb-8">
+            <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
             The Outcome
           </span>
         </Reveal>
 
         <Reveal delay={0.1}>
-          <h2 className="font-display text-4xl md:text-6xl leading-[1.05] text-balance">
+          <h2 className="font-display text-4xl md:text-6xl leading-[1.05] text-balance text-white">
             When land, timber, science, and demand{" "}
-            <span className="italic text-primary">converge.</span>
+            <span className="italic text-red-500">converge.</span>
           </h2>
         </Reveal>
 
         <Reveal delay={0.2}>
-          <p className="mt-8 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-8 text-lg text-white/50 max-w-2xl mx-auto leading-relaxed">
             When strategic land ownership, premium timber cultivation, scientific management, and growing market demand come together, the result is a unique asset designed for both{" "}
-            <strong className="text-foreground">stability</strong> and{" "}
-            <strong className="text-foreground">long-term growth.</strong>
+            <strong className="text-white/80">stability</strong> and{" "}
+            <strong className="text-white/80">long-term growth.</strong>
           </p>
         </Reveal>
 
         <Reveal delay={0.3}>
           <div className="mt-14 grid grid-cols-2 md:grid-cols-3 gap-4 text-left">
             {[
-              { icon: Map,         label: "Strategic Land",       sub: "Emerging corridors" },
-              { icon: TreePine,    label: "Premium Sagwan",       sub: "Grade-A teak timber" },
-              { icon: FlaskConical,label: "Biotech Management",   sub: "Science-led growth" },
-              { icon: TrendingUp,  label: "Rising Demand",        sub: "Supply-gap opportunity" },
-              { icon: ShieldCheck, label: "Legal Framework",      sub: "Registered ownership" },
-              { icon: Sparkles,    label: "Multiple Drivers",     sub: "Diversified value" },
+              { icon: Map,          label: "Strategic Land",      sub: "Emerging corridors" },
+              { icon: TreePine,     label: "Premium Sagwan",      sub: "Grade-A teak timber" },
+              { icon: FlaskConical, label: "Biotech Management",  sub: "Science-led growth" },
+              { icon: TrendingUp,   label: "Rising Demand",       sub: "Supply-gap opportunity" },
+              { icon: ShieldCheck,  label: "Legal Framework",     sub: "Registered ownership" },
+              { icon: Sparkles,     label: "Multiple Drivers",    sub: "Diversified value" },
             ].map(({ icon: Icon, label, sub }, i) => (
               <Reveal key={label} delay={0.04 * i}>
-                <div className="flex items-start gap-3 rounded-2xl bg-card border border-border p-5 hover:border-primary/40 hover:shadow-[0_4px_24px_-8px_rgba(120,30,20,0.18)] transition-all duration-300">
-                  <span className="mt-0.5 h-8 w-8 shrink-0 rounded-full bg-primary/10 grid place-items-center">
-                    <Icon className="h-4 w-4 text-primary" />
+                <div className="flex items-start gap-3 rounded-2xl bg-white/5 border border-white/10 p-5 hover:border-red-500/40 hover:bg-white/10 hover:shadow-[0_4px_24px_-8px_rgba(180,30,20,0.3)] transition-all duration-300">
+                  <span className="mt-0.5 h-8 w-8 shrink-0 rounded-full bg-red-600/15 grid place-items-center">
+                    <Icon className="h-4 w-4 text-red-400" />
                   </span>
                   <div>
-                    <p className="text-sm font-medium text-foreground">{label}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>
+                    <p className="text-sm font-medium text-white/90">{label}</p>
+                    <p className="text-xs text-white/40 mt-0.5">{sub}</p>
                   </div>
                 </div>
               </Reveal>
             ))}
           </div>
         </Reveal>
-
-        
       </div>
     </div>
   );
 }
 
-
 /* ---------- PAGE ---------- */
 function Page() {
-  // silence unused import
   void logo;
   return (
     <div className="min-h-screen bg-background text-foreground">
