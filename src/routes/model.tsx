@@ -15,7 +15,7 @@ export const Route = createFileRoute("/model")({
   head: () => ({
     meta: [
       { title: "The Model — Redwood Biotech" },
-      { name: "description", content: "Dual-asset strategy: strategic land appreciation combined with premium Sagwan (Teak) plantations." },
+      { name: "description", content: "Dual-asset strategy: strategic land appreciation combined with premium Genitically Hi-Tech Sagwan (Teak) plantations." },
       { property: "og:title", content: "The Redwood Biotech Model" },
       { property: "og:description", content: "Where land appreciation meets the long-term value of premium teak." },
       { property: "og:image", content: heroImg },
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/model")({
 const highlights = [
   { icon: Sprout,      title: "Dual Asset Strategy",         text: "Benefit from both land appreciation and timber growth.",                                      color: "from-emerald-500/20 to-emerald-500/0" },
   { icon: TrendingUp,  title: "Long-Term Wealth Creation",   text: "Designed to generate value through multiple growth drivers.",                                  color: "from-amber-500/20 to-amber-500/0" },
-  { icon: Trees,       title: "Premium Sagwan Plantation",   text: "Invest in one of the world's most sought-after timber species.",                              color: "from-lime-500/20 to-lime-500/0" },
+  { icon: Trees,       title: "Premium Genitically enginered Hi-Tech Sagwan Plantation",   text: "Invest in one of the world's most sought-after timber species.",                              color: "from-lime-500/20 to-lime-500/0" },
   { icon: MapPin,      title: "Ownership of Real Assets",    text: "Backed by tangible land ownership and natural resources.",                                     color: "from-orange-500/20 to-orange-500/0" },
   { icon: Coins,       title: "Multiple Revenue Potential",  text: "Land value growth combined with future timber income opportunities.",                          color: "from-yellow-500/20 to-yellow-500/0" },
   { icon: Recycle,     title: "Sustainable & Future-Focused",text: "Supports environmental restoration while creating economic value.",                            color: "from-teal-500/20 to-teal-500/0" },
@@ -239,7 +239,7 @@ function ModelPage() {
             transition={{ delay: 0.9, duration: 0.75 }}
             className="mt-6 max-w-md text-base leading-relaxed text-white/75 sm:text-lg"
           >
-            A dual-asset investment model combining strategic land ownership with scientifically managed premium Sagwan (Teak) plantations.
+            A dual-asset investment model combining strategic land ownership with scientifically managed premium Genitically Hi-Tech Sagwan (Teak) plantations.
           </motion.p>
 
           {/* CTA row */}

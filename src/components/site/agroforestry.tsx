@@ -6,7 +6,7 @@ import {
   } from "framer-motion";
   import { useRef } from "react";
 import { TreePine, Leaf, TrendingUp, Sprout } from "lucide-react";
-import fieldImg from "@/assets/agroforestry-field.jpg";
+import fieldImg from "@/assets/agroforestry-img.jpeg";
 import bgImg from "@/assets/agroforestry-bg.jpg";
 
 const benefits = [

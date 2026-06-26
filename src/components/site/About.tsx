@@ -6,6 +6,7 @@ import labImg from "@/assets/biotech-lab.jpg";
 import woodTex from "@/assets/wood-texture.jpg";
 import { Reveal } from "./Reveal-2";
 import { CountUp } from "./CountUp";
+import { Link } from "@tanstack/react-router"; 
 
 const pillars = [
   {
@@ -16,7 +17,7 @@ const pillars = [
   {
     Icon: Microscope,
     title: "Biotechnology-Driven Teak",
-    body: "Tissue-cultured Sagwan engineered for straighter trunks, faster growth, and higher timber yield.",
+    body: "Tissue-cultured Genitically Hi-Tech Sagwan engineered for straighter trunks, faster growth, and higher timber yield.",
   },
   {
     Icon: TrendingUp,
@@ -60,7 +61,7 @@ export function About() {
             Know Redwood Biotech
           </h2>
           <p className="mt-6 text-lg text-stone-700 leading-relaxed">
-            At Redwood, returns are driven by a carefully designed combination of premium Sagwan
+            At Redwood, returns are driven by a carefully designed combination of premium Genitically Hi-Tech Sagwan
             (Teak) cultivation and advanced biotechnology. Instead of relying on conventional
             plantation methods, we focus on scientifically selected planting material and modern
             cultivation practices aimed at maximizing growth, quality, and long-term value.
@@ -126,12 +127,12 @@ export function About() {
                   A state-of-the-art laboratory opening in Indore, expanding our research,
                   hardening, and quality-control capacity across India.
                 </p>
-                <a
-                  href="#"
+                <Link
+                  to="/about"
                   className="mt-5 inline-flex items-center gap-2 text-[color:var(--brand-amber)] font-semibold hover:gap-3 transition-all"
                 >
                   Read our full story <ArrowRight size={16} />
-                </a>
+                </Link>
               </div>
             </div>
           </motion.div>

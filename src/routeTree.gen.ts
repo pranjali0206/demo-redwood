@@ -14,6 +14,7 @@ import { Route as ModelRouteImport } from './routes/model'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as InvestmentRouteImport } from './routes/investment'
 import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AgroforestryRouteImport } from './routes/agroforestry'
 import { Route as AboutRouteImport } from './routes/about'
@@ -44,6 +45,11 @@ const GalleryRoute = GalleryRouteImport.update({
   path: '/gallery',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/agroforestry': typeof AgroforestryRoute
   '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
   '/gallery': typeof GalleryRoute
   '/investment': typeof InvestmentRoute
   '/login': typeof LoginRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/agroforestry': typeof AgroforestryRoute
   '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
   '/gallery': typeof GalleryRoute
   '/investment': typeof InvestmentRoute
   '/login': typeof LoginRoute
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/agroforestry': typeof AgroforestryRoute
   '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
   '/gallery': typeof GalleryRoute
   '/investment': typeof InvestmentRoute
   '/login': typeof LoginRoute
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/agroforestry'
     | '/contact'
+    | '/faq'
     | '/gallery'
     | '/investment'
     | '/login'
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/agroforestry'
     | '/contact'
+    | '/faq'
     | '/gallery'
     | '/investment'
     | '/login'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/agroforestry'
     | '/contact'
+    | '/faq'
     | '/gallery'
     | '/investment'
     | '/login'
@@ -140,6 +152,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AgroforestryRoute: typeof AgroforestryRoute
   ContactRoute: typeof ContactRoute
+  FaqRoute: typeof FaqRoute
   GalleryRoute: typeof GalleryRoute
   InvestmentRoute: typeof InvestmentRoute
   LoginRoute: typeof LoginRoute
@@ -184,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GalleryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
@@ -220,6 +240,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AgroforestryRoute: AgroforestryRoute,
   ContactRoute: ContactRoute,
+  FaqRoute: FaqRoute,
   GalleryRoute: GalleryRoute,
   InvestmentRoute: InvestmentRoute,
   LoginRoute: LoginRoute,

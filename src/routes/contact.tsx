@@ -18,7 +18,20 @@ export const Route = createFileRoute("/contact")({
   component: Page,
 });
 
-const initial = { name: "", mobile: "", city: "", district: "", state: "", size: "", landType: "agricultural", time: "morning", message: "" };
+const initial = {
+  name: "",
+  mobile: "",
+  city: "",
+  district: "",
+  state: "",
+  age: "",
+  gender: "",
+  interest: "",
+  size: "",
+  landType: "agricultural",
+  time: "morning",
+  message: "",
+};
 
 function Page() {
   const [f, setF] = useState(initial);
@@ -60,44 +73,186 @@ function Page() {
           </Reveal>
 
           <Reveal delay={0.1} className="lg:col-span-3">
-            <form onSubmit={submit} className="bg-white rounded-2xl shadow-md border border-stone-200 p-7 sm:p-8 space-y-4">
-              <h2 className="font-serif text-2xl font-bold text-green-900">Enquiry Form</h2>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <I label="Full Name" v={f.name} on={(v) => setF({ ...f, name: v })} required />
-                <I label="Mobile Number" type="tel" v={f.mobile} on={(v) => setF({ ...f, mobile: v })} required />
-                <I label="City" v={f.city} on={(v) => setF({ ...f, city: v })} required />
-                <I label="District" v={f.district} on={(v) => setF({ ...f, district: v })} />
-                <I label="State" v={f.state} on={(v) => setF({ ...f, state: v })} />
-                <I label="Land Size (acres / bigha)" v={f.size} on={(v) => setF({ ...f, size: v })} />
-                <div>
-                  <label className="block text-sm font-medium text-stone-700">Type of Land</label>
-                  <select value={f.landType} onChange={(e) => setF({ ...f, landType: e.target.value })}
-                    className="mt-1 w-full rounded-md border border-stone-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-700">
-                    <option value="agricultural">Agricultural</option>
-                    <option value="farmland">Farmland</option>
-                    <option value="plot">Plot</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-stone-700">Preferred Contact Time</label>
-                  <select value={f.time} onChange={(e) => setF({ ...f, time: e.target.value })}
-                    className="mt-1 w-full rounded-md border border-stone-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-700">
-                    <option value="morning">Morning (9–12)</option>
-                    <option value="afternoon">Afternoon (12–4)</option>
-                    <option value="evening">Evening (4–8)</option>
-                  </select>
-                </div>
-              </div>
+          <form
+            onSubmit={submit}
+            className="bg-white rounded-2xl shadow-md border border-stone-200 p-7 sm:p-8 space-y-4"
+          >
+            <h2 className="font-serif text-2xl font-bold text-green-900">
+              Enquiry Form
+            </h2>
+          
+            <div className="grid sm:grid-cols-2 gap-4">
+              <I
+                label="Full Name"
+                v={f.name}
+                on={(v) => setF({ ...f, name: v })}
+                required
+              />
+          
+              <I
+                label="Mobile Number"
+                type="tel"
+                v={f.mobile}
+                on={(v) => setF({ ...f, mobile: v })}
+                required
+              />
+          
+              <I
+                label="City"
+                v={f.city}
+                on={(v) => setF({ ...f, city: v })}
+                required
+              />
+          
+              <I
+                label="District"
+                v={f.district}
+                on={(v) => setF({ ...f, district: v })}
+              />
+          
+              <I
+                label="State"
+                v={f.state}
+                on={(v) => setF({ ...f, state: v })}
+              />
+          
+              <I
+                label="Age"
+                type="number"
+                v={f.age}
+                on={(v) => setF({ ...f, age: v })}
+                required
+              />
+          
+              {/* Gender */}
               <div>
-                <label className="block text-sm font-medium text-stone-700">Message</label>
-                <textarea rows={4} value={f.message} onChange={(e) => setF({ ...f, message: e.target.value })}
-                  className="mt-1 w-full rounded-md border border-stone-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-700" />
+                <label className="block text-sm font-medium text-stone-700">
+                  Gender <span className="text-red-600">*</span>
+                </label>
+          
+                <select
+                  required
+                  value={f.gender}
+                  onChange={(e) =>
+                    setF({
+                      ...f,
+                      gender: e.target.value,
+                    })
+                  }
+                  className="mt-1 w-full rounded-md border border-stone-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-700"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
               </div>
-              <button type="submit" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 rounded-md bg-amber-700 text-white font-semibold hover:bg-amber-800">
-                Send Enquiry <ArrowRight size={18} />
-              </button>
-            </form>
+          
+              {/* Interested As */}
+              <div>
+                <label className="block text-sm font-medium text-stone-700">
+                  Interested As <span className="text-red-600">*</span>
+                </label>
+          
+                <select
+                  required
+                  value={f.interest}
+                  onChange={(e) =>
+                    setF({
+                      ...f,
+                      interest: e.target.value,
+                    })
+                  }
+                  className="mt-1 w-full rounded-md border border-stone-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-700"
+                >
+                  <option value="">Select Option</option>
+                  <option value="Sales Associate">Sales Associate</option>
+                  <option value="Investor">Investor</option>
+                  <option value="Both">Both</option>
+                </select>
+              </div>
+          
+              <I
+                label="Land Size (Acres / Bigha)"
+                v={f.size}
+                on={(v) => setF({ ...f, size: v })}
+              />
+          
+              {/* Type of Land */}
+              <div>
+                <label className="block text-sm font-medium text-stone-700">
+                  Type of Land
+                </label>
+          
+                <select
+                  value={f.landType}
+                  onChange={(e) =>
+                    setF({
+                      ...f,
+                      landType: e.target.value,
+                    })
+                  }
+                  className="mt-1 w-full rounded-md border border-stone-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-700"
+                >
+                  <option value="agricultural">Agricultural</option>
+                  <option value="farmland">Farmland</option>
+                  <option value="plot">Plot</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+          
+              {/* Preferred Contact Time */}
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-stone-700">
+                  Preferred Contact Time
+                </label>
+          
+                <select
+                  value={f.time}
+                  onChange={(e) =>
+                    setF({
+                      ...f,
+                      time: e.target.value,
+                    })
+                  }
+                  className="mt-1 w-full rounded-md border border-stone-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-700"
+                >
+                  <option value="morning">Morning (9:00 AM – 12:00 PM)</option>
+                  <option value="afternoon">Afternoon (12:00 PM – 4:00 PM)</option>
+                  <option value="evening">Evening (4:00 PM – 8:00 PM)</option>
+                </select>
+              </div>
+            </div>
+          
+            <div>
+              <label className="block text-sm font-medium text-stone-700">
+                Message
+              </label>
+          
+              <textarea
+                rows={4}
+                value={f.message}
+                onChange={(e) =>
+                  setF({
+                    ...f,
+                    message: e.target.value,
+                  })
+                }
+                placeholder="Tell us about your enquiry..."
+                className="mt-1 w-full rounded-md border border-stone-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-700"
+              />
+            </div>
+          
+            <button
+              type="submit"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 rounded-md bg-amber-700 text-white font-semibold hover:bg-amber-800 transition-colors"
+            >
+              Send Enquiry
+              <ArrowRight size={18} />
+            </button>
+          </form>
+          
+          
           </Reveal>
         </div>
       </section>

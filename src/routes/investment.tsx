@@ -19,14 +19,15 @@ import landImg from "../assets/RealEstateandAgrobg.png";
 import { Navbar } from "../components/site/Navbar";
 import { Footer } from "../components/site/Footer";
 import "../styles/investment-style.css";
+import nidhivanImg from "../assets/nidhivan.png";
 
 export const Route = createFileRoute("/investment")({
   head: () => ({
     meta: [
       { title: "The Commerce Behind the Opportunity — Redwood Biotech" },
-      { name: "description", content: "An investment is only as strong as the logic behind it. Explore the Redwood Biotech Sagwan plantation investment model." },
+      { name: "description", content: "An investment is only as strong as the logic behind it. Explore the Redwood Biotech Genitically Hi-Tech Sagwan plantation investment model." },
       { property: "og:title", content: "The Logic Behind the Opportunity — Redwood Biotech" },
-      { property: "og:description", content: "Strategic land, premium Sagwan timber, scientific management — one structured asset." },
+      { property: "og:description", content: "Strategic land, premium Genitically Hi-Tech Sagwan timber, scientific management — one structured asset." },
       { property: "og:image", content: heroImg },
       { name: "twitter:image", content: heroImg },
     ],
@@ -228,7 +229,7 @@ function Hero() {
               transition={{ delay: 0.9, duration: 1 }}
               className="mt-8 max-w-xl text-lg text-white/80 leading-relaxed"
             >
-              Where strategic land, premium Sagwan timber, and scientific management converge into one structured ecosystem for long-term value.
+              Where strategic land, premium Genitically Hi-Tech Sagwan timber, and scientific management converge into one structured ecosystem for long-term value.
             </motion.p>
             <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -591,6 +592,87 @@ function DemandSection() {
   );
 }
 
+function FarmPlanSection() {
+  return (
+    <section className="py-28 md:py-40 bg-[#060606] text-white">
+      <div className="mx-auto max-w-6xl px-6">
+        <Reveal>
+          <p className="text-xs uppercase tracking-[0.3em] text-red-400 mb-6">— Farm Plan</p>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <h2 className="font-display text-2xl md:text-3xl lg:text-4xl leading-snug text-balance max-w-4xl uppercase tracking-wide">
+            Redwood Biotech Proposed Planning of Farm Land on Land Bearing Khasra No.{" "}
+            <span className="text-red-500">47/1/1, 47/1/2, 47/2/1, 47/2/2, 47/3/1, 47/3/2</span>{" "}
+            at Vill. Kharkua Teh. Balwara
+          </h2>
+        </Reveal>
+
+        {/* Farm plan image */}
+        <Reveal delay={0.2} y={48}>
+          <div className="mt-12 rounded-2xl overflow-hidden border border-white/10 shadow-[0_30px_80px_-20px_rgba(180,30,20,0.2)]">
+            <img
+              src={nidhivanImg}
+              alt="Redwood Biotech proposed farm planning map — Khasra No. 47/1/1 to 47/3/2, Vill. Kharkua Teh. Balwara"
+              className="w-full object-contain bg-white"
+              loading="lazy"
+            />
+          </div>
+        </Reveal>
+
+        {/* Location map */}
+        <Reveal delay={0.3} y={48}>
+          <div className="mt-8 rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_60px_-20px_rgba(180,30,20,0.15)]">
+            {/* Map header bar */}
+            <div className="flex items-center justify-between px-5 py-4 bg-white/5 border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <span className="h-8 w-8 rounded-full bg-red-600/20 grid place-items-center">
+                  <Map className="h-4 w-4 text-red-400" />
+                </span>
+                <div>
+                  <p className="text-sm font-medium text-white/90">Site Location · Vill. Kharkua, Teh. Balwara</p>
+                  <p className="text-xs text-white/40">22°22'30.8"N 75°56'8.2"E</p>
+                </div>
+              </div>
+              
+              <a
+                href="https://www.google.com/maps/place/Green+project/@22.3751268,75.9357087,17z"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs font-medium text-white/80 hover:bg-white/10 hover:border-white/40 transition"
+              >
+                View on Google Maps
+                <ArrowUpRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            </div>
+
+            {/* Embedded map */}
+            <div className="relative h-[420px] md:h-[520px]">
+              <iframe
+                title="Redwood Biotech Farm Site Location"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3672.8!2d75.9357087!3d22.3751268!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3962930026951ef9%3A0xc5bbcfd6c577c1e3!2sGreen%20project!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                width="100%"
+                height="100%"
+                style={{ border: 0, filter: "invert(90%) hue-rotate(180deg)" }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.4}>
+          <p className="mt-6 text-xs text-white/30 text-center">
+            Site plan subject to final survey and regulatory approval. For illustrative purposes only.
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+
+
 function EconomicsSection() {
   return (
     <section id="economics" className="py-28 md:py-40">
@@ -908,7 +990,7 @@ function PillarOutcome() {
           <div className="mt-14 grid grid-cols-2 md:grid-cols-3 gap-4 text-left">
             {[
               { icon: Map,          label: "Strategic Land",      sub: "Emerging corridors" },
-              { icon: TreePine,     label: "Premium Sagwan",      sub: "Grade-A teak timber" },
+              { icon: TreePine,     label: "Premium Genitically Hi-Tech Sagwan",      sub: "Grade-A teak timber" },
               { icon: FlaskConical, label: "Biotech Management",  sub: "Science-led growth" },
               { icon: TrendingUp,   label: "Rising Demand",       sub: "Supply-gap opportunity" },
               { icon: ShieldCheck,  label: "Legal Framework",     sub: "Registered ownership" },
@@ -945,6 +1027,7 @@ function Page() {
       <Pillars />
       <DemandSection />
       <EconomicsSection />
+      <FarmPlanSection />
       <OutcomeSection />
       <EnquiryForm />
       <Footer />
