@@ -140,18 +140,39 @@ export function About() {
 
         {/* Why choose */}
         <div className="mt-28">
-          <Reveal className="max-w-2xl">
-            <span className="text-xs uppercase tracking-[0.4em] text-[color:var(--brand-red)] font-semibold">
-              Why Choose Redwood
-            </span>
-            <h3 className="mt-3 font-serif text-3xl sm:text-4xl font-bold text-[color:var(--forest-950)]">
-              The security of real assets. The power of science.
-            </h3>
-            <p className="mt-4 text-stone-700 leading-relaxed">
-              Our model is built around three pillars — a structured investment designed to harness
-              the strengths of both real estate and high-value agroforestry.
-            </p>
-          </Reveal>
+        <Reveal className="max-w-2xl">
+        <span className="text-xs uppercase tracking-[0.4em] text-[color:var(--brand-red)] font-semibold">
+          Why Choose Redwood
+        </span>
+        <h3 className="mt-3 font-serif text-3xl sm:text-4xl font-bold text-[color:var(--forest-950)]">
+          The security of real assets. The power of science.
+        </h3>
+        <div className="mt-4 space-y-4 text-stone-700 leading-relaxed">
+          <p>
+            Redwood Biotech was founded on a simple belief: the most rewarding
+            investments are those that grow in more than one way.
+          </p>
+          <p>
+            We identify land in carefully chosen growth corridors surrounding
+            expanding cities, where future urban development has the potential to
+            accelerate property appreciation over time. Every plot is then
+            registered in the investor's name and developed into a professionally
+            managed teak plantation using advanced, genetically engineered hi tech
+            Sagwan.
+          </p>
+          <p>
+            As cities expand, your land has the potential to increase in value. At
+            the same time, your teak plantation matures into a premium timber
+            asset. One investment, one registered property, and two powerful
+            engines of long-term wealth creation.
+          </p>
+          <p>
+            Our model is built around three pillars — a structured investment
+            designed to harness the strengths of both real estate and high-value
+            agroforestry.
+          </p>
+        </div>
+      </Reveal>
 
           <motion.div
             initial="hidden"

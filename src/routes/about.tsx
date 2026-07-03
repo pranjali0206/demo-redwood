@@ -299,6 +299,103 @@ function DualLineChart() {
 
 // ─── PAGE ─────────────────────────────────────────────────────────────────────
 
+function GrowthEngineSection() {
+  return (
+    <section className="relative overflow-hidden px-6 py-32">
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute left-1/3 top-1/2 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[oklch(0.42_0.11_152/0.06)] blur-[120px]" />
+      </div>
+
+      <div className="mx-auto max-w-6xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          className="mb-14 text-center"
+        >
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-primary">Our Foundation</p>
+          <h2 className="mt-3 font-display text-4xl md:text-5xl">
+            Investing in <span className="italic text-gradient-gold">tomorrow's growth</span>
+          </h2>
+        </motion.div>
+
+        <div className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-center">
+          {/* LEFT — narrative */}
+          <div className="space-y-6">
+            <motion.p
+              initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="font-display text-2xl leading-snug text-foreground md:text-3xl"
+            >
+              Redwood Biotech was founded on a simple belief: the most rewarding
+              investments are those that grow in more than one way.
+            </motion.p>
+
+            <motion.p
+              initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-lg leading-relaxed text-muted-foreground"
+            >
+              We identify land in carefully chosen growth corridors surrounding
+              expanding cities, where future urban development has the potential
+              to accelerate property appreciation over time. Every plot is then
+              registered in the investor's name and developed into a
+              professionally managed teak plantation using advanced, genetically
+              engineered hi tech Sagwan.
+            </motion.p>
+
+            <motion.p
+              initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-lg leading-relaxed text-muted-foreground"
+            >
+              As cities expand, your land has the potential to increase in value.
+              At the same time, your teak plantation matures into a premium
+              timber asset. One investment, one registered property, and two
+              powerful engines of long-term wealth creation.
+            </motion.p>
+          </div>
+
+          {/* RIGHT — two engine cards, stacked */}
+          <div className="space-y-6">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="group relative overflow-hidden rounded-3xl border border-border bg-card p-8"
+            >
+              <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent opacity-60" />
+              <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <TrendingUp className="h-6 w-6" />
+              </div>
+              <p className="text-xs font-medium uppercase tracking-widest text-primary/70">Engine One</p>
+              <h3 className="mt-1 font-display text-2xl text-foreground">Land Appreciation</h3>
+              <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
+                Registered land in growth corridors around expanding cities, positioned
+                to benefit as urban development accelerates.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.12 }}
+              className="group relative overflow-hidden rounded-3xl border border-border bg-card p-8"
+            >
+              <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-[oklch(0.70_0.16_60)] to-transparent opacity-60" />
+              <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[oklch(0.55_0.16_60/0.12)] text-[oklch(0.70_0.16_60)]">
+                <Sparkles className="h-6 w-6" />
+              </div>
+              <p className="text-xs font-medium uppercase tracking-widest text-[oklch(0.60_0.16_60)]">Engine Two</p>
+              <h3 className="mt-1 font-display text-2xl text-foreground">Premium Timber Growth</h3>
+              <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
+                A professionally managed, genetically engineered hi-tech Sagwan
+                plantation that matures into a high-value timber asset.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function AboutPage() {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
@@ -380,6 +477,14 @@ function AboutPage() {
           </div>
         </div>
       </section>
+
+
+
+      <GrowthEngineSection />
+
+
+
+      
 
       {/* ── VISION · MISSION · VALUES — horizontal strip ─────────────────── */}
       <section className="relative bg-black px-6 py-28">

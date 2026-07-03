@@ -485,6 +485,131 @@ function Pillars() {
 }
 
 
+function DualAssetSection() {
+  return (
+    <section id="dual-asset" className="relative py-28 md:py-40 bg-surface overflow-hidden">
+      {/* ambient accent */}
+      <div className="pointer-events-none absolute -top-40 right-0 h-[500px] w-[500px] rounded-full bg-primary/5 blur-[120px]" />
+
+      <div className="relative mx-auto max-w-7xl px-6">
+        <div className="grid md:grid-cols-12 gap-12 items-start">
+          {/* Left: narrative */}
+          <div className="md:col-span-6">
+            <Reveal>
+              <p className="text-xs uppercase tracking-[0.3em] text-primary mb-6">
+                — Dual Asset Growth Strategy
+              </p>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <h2 className="font-display text-4xl md:text-5xl leading-tight text-balance">
+                Two engines of wealth.{" "}
+                <span className="italic text-primary">One investment.</span>
+              </h2>
+            </Reveal>
+
+            <Reveal delay={0.2}>
+              <p className="mt-8 text-lg text-muted-foreground leading-relaxed">
+                At Redwood Biotech, we don't just offer land — we create a dual-growth
+                investment designed to build long-term wealth.
+              </p>
+            </Reveal>
+            <Reveal delay={0.25}>
+              <p className="mt-5 text-muted-foreground leading-relaxed">
+                Every plot is strategically selected on the developing outskirts of
+                rapidly expanding cities, where land values have the potential to
+                appreciate significantly as urban infrastructure and population move
+                outward. Instead of investing in already expensive city properties
+                with comparatively slower appreciation, you own land positioned in
+                tomorrow's growth corridors.
+              </p>
+            </Reveal>
+            <Reveal delay={0.3}>
+              <p className="mt-5 text-muted-foreground leading-relaxed">
+                Once the land is legally registered in your name, it is transformed
+                into a professionally managed teak plantation using genetically
+                engineered high tech Sagwan variety. While the land steadily
+                appreciates in value, the teak trees continue to mature into a
+                premium timber asset.
+              </p>
+            </Reveal>
+            <Reveal delay={0.35}>
+              <p className="mt-5 text-foreground leading-relaxed font-medium">
+                This creates two independent sources of wealth from a single
+                investment — capital appreciation from strategically located land
+                and future income from high-value teak harvesting.
+              </p>
+            </Reveal>
+          </div>
+
+          {/* Right: two stacked "engine" cards */}
+          <div className="md:col-span-6 space-y-6">
+            <Reveal delay={0.15} y={48}>
+              <div className="relative rounded-3xl bg-card border border-border p-8 shadow-[0_20px_60px_-30px_rgba(120,30,20,0.2)]">
+                <div className="flex items-start gap-4">
+                  <span className="h-12 w-12 shrink-0 rounded-full bg-primary/10 grid place-items-center">
+                    <Map className="h-5 w-5 text-primary" />
+                  </span>
+                  <div>
+                    <p className="text-xs uppercase tracking-widest text-primary font-medium">
+                      Engine 01
+                    </p>
+                    <h3 className="font-display text-2xl mt-1">
+                      Land Appreciation
+                    </h3>
+                    <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                      Plots positioned on the developing outskirts of fast-growing
+                      cities — tomorrow's growth corridors, not today's already-priced
+                      real estate.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.25} y={48}>
+              <div className="relative rounded-3xl bg-card border border-border p-8 shadow-[0_20px_60px_-30px_rgba(120,30,20,0.2)]">
+                <div className="flex items-start gap-4">
+                  <span className="h-12 w-12 shrink-0 rounded-full bg-primary/10 grid place-items-center">
+                    <TreePine className="h-5 w-5 text-primary" />
+                  </span>
+                  <div>
+                    <p className="text-xs uppercase tracking-widest text-primary font-medium">
+                      Engine 02
+                    </p>
+                    <h3 className="font-display text-2xl mt-1">
+                      Premium Timber Income
+                    </h3>
+                    <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                      Your registered land is developed into a professionally managed,
+                      genetically engineered high-tech Sagwan plantation — maturing
+                      into a high-value harvestable asset.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.35}>
+              <div className="rounded-2xl bg-primary/5 border border-primary/20 p-6 flex items-center gap-3">
+                <span className="h-9 w-9 shrink-0 rounded-full bg-primary/15 grid place-items-center">
+                  <Sparkles className="h-4 w-4 text-primary" />
+                </span>
+                <p className="text-sm text-foreground">
+                  <strong>Two independent value streams</strong> — land appreciation
+                  and timber income — from a single, structured investment.
+                </p>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+
+
 function DemandSection() {
   return (
     <section className="relative py-28 md:py-40 bg-[#000000] text-white grain">
@@ -1025,6 +1150,7 @@ function Page() {
       <Hero />
       <LogicIntro />
       <Pillars />
+      <DualAssetSection />
       <DemandSection />
       <EconomicsSection />
       <FarmPlanSection />

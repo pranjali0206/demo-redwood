@@ -24,7 +24,7 @@ export const Route = createFileRoute("/")({
       { title: "Redwood Biotech — Genetically Engineered Sagwan Teak Plantation, Indore" },
       { name: "description", content: "Partner your land with Redwood Biotech. 12-year managed Genitically Hi-Tech Sagwan teak plantation using tissue culture biotechnology. 75% yield to landowners. Based in Indore, MP." },
       { property: "og:title", content: "Redwood Biotech — Innovative Science. Wealthier Tomorrow." },
-      { property: "og:description", content: "Genetically engineered teak plantation, grown on your land, managed by science." },
+      { property: "og:description", content: "Genetically Engineered teak plantation, grown on your land, managed by science." },
       { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/" }],
@@ -72,13 +72,13 @@ function Hero() {
             </span>
 
             <span className="block mt-3 text-amber-300">
-            Genetically engineered Hi-Tech Sagwan Teak 
+            Genetically Engineered Hi-Tech Sagwan Teak 
             </span>
           </motion.h1>
       
           <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9, duration: 0.7 }}
             className="mt-6 text-lg sm:text-xl text-stone-100/90 max-w-2xl mx-auto">
-              grown on your land, managed and  sold by us , profit earned by you .
+              Grown on your land, managed and  sold by us , profit earned by you .
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.7 }}
             className="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
