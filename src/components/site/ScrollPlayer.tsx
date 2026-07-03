@@ -9,14 +9,40 @@ interface ScrollPlayerProps {
   className?: string;
 }
 
-/**
- * Registry so that starting playback on one ScrollPlayer pauses every other
- * instance currently mounted on the page. Each player registers a `pause`
- * callback keyed by its own instance id and calls `pauseOthers` whenever it
- * starts playing (via scroll-into-view autoplay or the play button).
- */
-const playerRegistry = new Map<string, () => void>();
+// ── YouTube IFrame Player API loader ──────────────────────────────────────
+// Using the official API (rather than hand-built embed URLs + blind
+// postMessage calls) is the sanctioned integration path and is far less
+// likely to trip YouTube's "confirm you're not a bot" check, which tends to
+// fire on ad-hoc iframe embeds — especially when several autoplay on one page.
+declare global {
+  interface Window {
+    YT: any;
+    onYouTubeIframeAPIReady?: () => void;
+  }
+}
 
+let apiPromise: Promise<void> | null = null;
+function loadYouTubeIframeAPI(): Promise<void> {
+  if (apiPromise) return apiPromise;
+  apiPromise = new Promise((resolve) => {
+    if (window.YT && window.YT.Player) {
+      resolve();
+      return;
+    }
+    const prevReady = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      prevReady?.();
+      resolve();
+    };
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+  });
+  return apiPromise;
+}
+
+// Registry so starting one player pauses every other instance on the page.
+const playerRegistry = new Map<string, () => void>();
 function pauseOtherPlayers(exceptId: string) {
   playerRegistry.forEach((pause, id) => {
     if (id !== exceptId) pause();
@@ -24,11 +50,9 @@ function pauseOtherPlayers(exceptId: string) {
 }
 
 /**
- * Autoplays a YouTube video (muted) when scrolled into view, and exposes
- * play/pause + mute/unmute controls. Only one ScrollPlayer plays at a time
- * across the page — starting one pauses whichever was previously playing.
- * Chrome-less: hides the YouTube UI and covers the branding with an overlay so
- * it reads as a native video player, not a YouTube embed.
+ * Autoplays a YouTube video (muted) when scrolled into view, via the
+ * official YouTube IFrame Player API, with play/pause + mute controls.
+ * Only one ScrollPlayer plays at a time across the page.
  */
 export function ScrollPlayer({
   videoId,
@@ -39,23 +63,17 @@ export function ScrollPlayer({
 }: ScrollPlayerProps) {
   const instanceId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const mountRef = useRef<HTMLDivElement>(null);
+  const playerRef = useRef<any>(null);
 
   const [started, setStarted] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
-  const [iframeReady, setIframeReady] = useState(false);
+  const [playerReady, setPlayerReady] = useState(false);
 
-  // Tracks whether the user explicitly paused, so re-entering the viewport
-  // doesn't force playback back on.
+  // True once the user has explicitly paused, so scrolling back into view
+  // doesn't force playback on again.
   const manualPauseRef = useRef(false);
-
-  const postCommand = (func: string, args: unknown[] = []) => {
-    iframeRef.current?.contentWindow?.postMessage(
-      JSON.stringify({ event: "command", func, args }),
-      "*",
-    );
-  };
 
   const play = () => {
     manualPauseRef.current = false;
@@ -64,11 +82,9 @@ export function ScrollPlayer({
     setPlaying(true);
   };
 
-  const pause = () => {
-    setPlaying(false);
-  };
+  const pause = () => setPlaying(false);
 
-  // Register/unregister this player so other instances can pause it.
+  // Register so other players can pause this one.
   useEffect(() => {
     playerRegistry.set(instanceId, pause);
     return () => {
@@ -100,34 +116,93 @@ export function ScrollPlayer({
     return () => io.disconnect();
   }, [instanceId]);
 
-  // Push play/pause + mute state to the YouTube iframe once it's ready.
+  // Create the real YT.Player once we need to start playing.
   useEffect(() => {
-    if (!iframeReady) return;
-    postCommand(playing ? "playVideo" : "pauseVideo");
-  }, [playing, iframeReady]);
+    if (!started || playerRef.current || !mountRef.current) return;
+
+    let cancelled = false;
+
+    loadYouTubeIframeAPI().then(() => {
+      if (cancelled || !mountRef.current) return;
+
+      playerRef.current = new window.YT.Player(mountRef.current, {
+        videoId,
+        width: "100%",
+        height: "100%",
+        playerVars: {
+          autoplay: 1,
+          mute: 1,
+          controls: 0,
+          modestbranding: 1,
+          rel: 0,
+          iv_load_policy: 3,
+          disablekb: 1,
+          fs: 0,
+          playsinline: 1,
+          loop: 1,
+          playlist: videoId,
+          origin: window.location.origin,
+        },
+        events: {
+          onReady: (e: any) => {
+            if (cancelled) return;
+            // Crop the iframe slightly oversized to push YouTube's own
+            // chrome (logo/title) outside the visible frame.
+            const iframe: HTMLIFrameElement | null = e.target.getIframe?.();
+            if (iframe) {
+              Object.assign(iframe.style, {
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                width: "130%",
+                height: "130%",
+                transform: "translate(-50%, -50%)",
+                pointerEvents: "none",
+              });
+            }
+            setPlayerReady(true);
+          },
+        },
+      });
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [started, videoId]);
+
+  // Destroy the player when the component unmounts.
+  useEffect(() => {
+    return () => {
+      playerRef.current?.destroy?.();
+    };
+  }, []);
+
+  // Push play/pause + mute state to the real player.
+  useEffect(() => {
+    if (!playerReady) return;
+    if (playing) {
+      playerRef.current?.playVideo?.();
+    } else {
+      playerRef.current?.pauseVideo?.();
+    }
+  }, [playing, playerReady]);
 
   useEffect(() => {
-    if (!iframeReady) return;
-    postCommand(muted ? "mute" : "unMute");
-  }, [muted, iframeReady]);
-
-  // Reset readiness whenever the iframe remounts (i.e. on first start).
-  useEffect(() => {
-    if (!started) setIframeReady(false);
-  }, [started]);
-
-  const src = started
-    ? `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&fs=0&playsinline=1&loop=1&playlist=${videoId}&enablejsapi=1&origin=${encodeURIComponent(
-        typeof window !== "undefined" ? window.location.origin : "",
-      )}`
-    : "";
+    if (!playerReady) return;
+    if (muted) {
+      playerRef.current?.mute?.();
+    } else {
+      playerRef.current?.unMute?.();
+    }
+  }, [muted, playerReady]);
 
   const aspectClass = aspect === "short" ? "aspect-[9/16]" : "aspect-video";
 
   return (
     <div
       ref={containerRef}
-      className={`group relative overflow-hidden rounded-2xl bg-black shadow-ember ring-1 ring-border/60 ${aspectClass} ${className ?? ""}`}
+      className={`group relative overflow-hidden rounded-2xl bg-black shadow-ember ring-1 ring-white/10 ${aspectClass} ${className ?? ""}`}
     >
       {/* Poster while idle */}
       {!started && (
@@ -154,22 +229,9 @@ export function ScrollPlayer({
 
       {started && (
         <>
-          {/* Oversized iframe hides the YT logo & title bar via overflow crop */}
+          {/* YT.Player is mounted into this div */}
           <div className="absolute inset-0 overflow-hidden">
-            <iframe
-              ref={iframeRef}
-              src={src}
-              title={title ?? "video"}
-              allow="autoplay; encrypted-media; picture-in-picture"
-              allowFullScreen={false}
-              onLoad={() => {
-                // Small delay so the YouTube player's postMessage listener
-                // is ready before we start sending it commands.
-                setTimeout(() => setIframeReady(true), 300);
-              }}
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[130%] h-[130%] pointer-events-none"
-              frameBorder={0}
-            />
+            <div ref={mountRef} className="absolute inset-0" />
           </div>
 
           {/* Corner cloaks to obscure any residual YouTube branding */}
