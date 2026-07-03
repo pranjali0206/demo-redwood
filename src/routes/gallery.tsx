@@ -1,279 +1,414 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { X, Play, Sprout } from "lucide-react";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
-import { ScrollPlayer } from "@/components/site/ScrollPlayer";
-import { Film, Leaf, Camera, Trees } from "lucide-react";
-
-import plantationAerial from "@/assets/plantation-aerial.jpg";
-import sapling from "@/assets/sapling.jpg";
-import canopy from "@/assets/canopy.jpg";
-import inspection from "@/assets/inspection.jpg";
-import nursery from "@/assets/nursery.jpg";
-import sunrise from "@/assets/sunrise.jpg";
 import galleryBg from "@/assets/gallerybg.png";
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
     meta: [
-      { title: "Gallery — Redwood Biotech | Plantations, Films & Sites" },
+      { title: "Gallery — Clips & Views from Nidhivan | Redwood Biotech" },
       {
         name: "description",
         content:
-          "A visual journey through Redwood Biotech's Hi-Tech Sagwan Teak plantations, sites, and the science of genetically engineered agroforestry.",
+          "Watch the short film and field reels from Redwood Biotech's Nidhivan agroforestry project — dug, rooted, and shot on site as the forest came out of the ground.",
       },
-      { property: "og:title", content: "Gallery — Redwood Biotech" },
+      { property: "og:title", content: "Gallery — Clips & Views from Nidhivan" },
       {
         property: "og:description",
         content:
-          "Documentary films, plantation footage and site photography from Redwood Biotech.",
+          "A feature film and seven field clips from the Nidhivan agroforestry project by Redwood Biotech.",
       },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340;9..144,480;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap",
+      },
     ],
   }),
   component: GalleryPage,
 });
 
-// Shorts 02, 04, 06 removed — playback wasn't working for those clips.
-const SHORTS = [
-  { id: "Ju7WXknxGUQ", label: "From the field · 01" },
-  { id: "3Gf3wOLFj0U", label: "From the field · 03" },
-  { id: "eMuN0Mf30e4", label: "From the field · 05" },
-  { id: "iN4HbisWBzk", label: "From the field · 07" },
+// ---- design tokens (soil-core / specimen-tag palette) --------------------
+const PAPER = "#EDE6D6"; // topsoil paper
+const PAPER_DEEP = "#E1D5BC"; // card / kraft
+const INK = "#241F17"; // near-black warm ink
+const MOSS = "#3E4F32"; // deep moss green
+const CLAY = "#A6512E"; // fired-clay accent
+const GOLD = "#B4863B"; // aged brass
+const MUTED = "#6E6350"; // muted brown-grey
+
+const DISPLAY = { fontFamily: "'Fraunces', serif" };
+const MONO = { fontFamily: "'IBM Plex Mono', monospace" };
+const BODY = { fontFamily: "'Inter', sans-serif" };
+
+type Video = {
+  id: string;
+  title: string;
+  kind: "film" | "short";
+  runtime: string; // mm:ss, used as a timecode stamp
+};
+
+const SHORT_FILM: Video = {
+  id: "b40C775NSbg",
+  title: "Power of Real Estate + Agroforestry — A Short Film",
+  kind: "film",
+  runtime: "06:42",
+};
+
+const REELS: Video[] = [
+  { id: "Ju7WXknxGUQ", title: "Agroforest Ki Duniya Mein Aapka Swagat Hai!", kind: "short", runtime: "00:38" },
+  { id: "nGSnyZ_gMpE", title: "Every Successful Plantation Starts With a Strong Foundation", kind: "short", runtime: "00:45" },
+  { id: "3Gf3wOLFj0U", title: "Sagwan Ke Liye 5 Feet Ka Gadda Kyun?", kind: "short", runtime: "00:33" },
+  { id: "3uAgPBDLydc", title: "Healthy Trees Start With Healthy Soil", kind: "short", runtime: "00:41" },
+  { id: "eMuN0Mf30e4", title: "Saare Gaddhe Taiyar… Ab Shuru Hoga Plantation!", kind: "short", runtime: "00:29" },
+  { id: "CDc09NbWrXU", title: "African + Desi Earthworms Ka Kya Kaam Hai?", kind: "short", runtime: "00:52" },
+  { id: "iN4HbisWBzk", title: "Sirf 100 Ped… 10,000 Sq Ft Mein! Kyun?", kind: "short", runtime: "00:36" },
 ];
 
-const PHOTOS = [
-  { src: plantationAerial, alt: "Aerial view of a mature teak plantation", span: "md:col-span-2 md:row-span-2" },
-  { src: sapling, alt: "A teak sapling being planted", span: "" },
-  { src: nursery, alt: "Rows of saplings in the nursery", span: "" },
-  { src: canopy, alt: "A path through the teak canopy", span: "md:row-span-2" },
-  { src: inspection, alt: "Field team inspecting a mature trunk", span: "" },
-  { src: sunrise, alt: "Sunrise over the plantation silhouette", span: "md:col-span-2" },
-];
+function thumb(id: string) {
+  return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+}
 
-const SITES = [
-  { name: "Karnataka Estate", area: "180 acres", trees: "42,000+", img: plantationAerial },
-  { name: "Maharashtra Site", area: "120 acres", trees: "28,500+", img: canopy },
-  { name: "Madhya Pradesh Belt", area: "260 acres", trees: "61,000+", img: sunrise },
-];
+/** Horizontal soil-strata divider — the recurring signature device, standing in for the filmstrip. */
+function Strata({ label }: { label?: string }) {
+  return (
+    <div className="relative flex items-center gap-3 px-4 py-2" aria-hidden="true">
+      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#B4863B]/40 to-[#B4863B]/40" />
+      {label ? (
+        <span
+          className="shrink-0 text-[10px] uppercase tracking-[0.25em]"
+          style={{ ...MONO, color: GOLD }}
+        >
+          {label}
+        </span>
+      ) : (
+        <span className="h-1 w-1 shrink-0 rounded-full" style={{ backgroundColor: GOLD }} />
+      )}
+      <div className="h-px flex-1 bg-gradient-to-l from-transparent via-[#B4863B]/40 to-[#B4863B]/40" />
+    </div>
+  );
+}
+
+/** Small runtime badge, styled like a specimen tag rather than a film timecode. */
+function DepthTag({ value }: { value: string }) {
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] tracking-[0.1em]"
+      style={{ ...MONO, color: MOSS, borderColor: `${MOSS}40`, backgroundColor: `${PAPER}CC` }}
+    >
+      <Sprout className="h-2.5 w-2.5" strokeWidth={2.5} />
+      {value}
+    </span>
+  );
+}
 
 function GalleryPage() {
+  const [active, setActive] = useState<Video | null>(null);
+  const allVideos = [SHORT_FILM, ...REELS];
+  const activeIndex = active ? allVideos.findIndex((v) => v.id === active.id) : -1;
+
+  useEffect(() => {
+    if (!active) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setActive(null);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [active]);
+
   return (
-    // Explicit, always-opaque colors from here down — no reliance on
-    // theme tokens for background opacity, so contrast can't silently break.
-    <div className="min-h-screen bg-stone-950 text-stone-100">
+    <>
       <Navbar />
 
-      {/* ── Hero ─────────────────────────────────────── */}
-      <section className="relative pt-32 pb-28 overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <img src={galleryBg} alt="" className="h-full w-full object-cover" />
-          {/* Light wash so the photo stays visible — just enough to protect the navbar
-              at the top and blend into the next section at the bottom. */}
-          <div className="absolute inset-0 bg-gradient-to-b from-stone-950/55 via-stone-950/10 to-stone-950" />
-        </div>
-
-        <div className="mx-auto max-w-6xl px-6 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-black/30 backdrop-blur-sm px-4 py-1.5 text-xs uppercase tracking-[0.25em] text-amber-200">
-            <Leaf size={12} /> Gallery
-          </span>
-
-          {/* Glass panel behind the headline so it reads clearly over any part
-              of the photo, regardless of how bright that area is. */}
-          <div className="mt-6 inline-block rounded-3xl border border-white/10 bg-black/35 backdrop-blur-md px-6 py-8 sm:px-12 sm:py-10">
-            <h1 className="font-display text-5xl sm:text-6xl md:text-7xl leading-[1.05] text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.45)]">
-              A visual journey through
-              <br />
-              <span className="bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent italic">
-                our forests
-              </span>
+      <div style={{ backgroundColor: PAPER, color: INK, ...BODY }} className="min-h-screen">
+        {/* Hero — full-bleed image, simple tagline */}
+        <section className="relative flex h-[62vh] min-h-[420px] w-full items-end overflow-hidden md:h-[70vh]">
+          <img
+            src={galleryBg}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+            aria-hidden="true"
+          />
+          <div
+            className="absolute inset-0"
+            style={{ background: `linear-gradient(to top, ${INK}E6, ${INK}66 55%, ${INK}26)` }}
+          />
+          <div className="relative mx-auto w-full max-w-6xl px-6 pb-14 md:pb-20">
+            <div
+              className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.3em]"
+              style={{ ...MONO, color: GOLD }}
+            >
+              <Sprout className="h-3.5 w-3.5" />
+              Redwood Biotech · Nidhivan
+            </div>
+            <h1
+              className="mt-4 text-4xl leading-[1.05] tracking-tight md:text-6xl"
+              style={{ ...DISPLAY, color: PAPER }}
+            >
+              Clips & views from Nidhivan
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-base sm:text-lg text-stone-200 leading-relaxed">
-              Documentary films, on-ground footage, and photography from every stage of the
-              Redwood Biotech Hi-Tech Sagwan Teak journey — from nursery to canopy.
-            </p>
           </div>
-        </div>
-      </section>
+        </section>
+        <Strata />
 
-      {/* ── Featured Documentary ─────────────────────── */}
-      <section className="relative mx-auto max-w-6xl px-6 py-16">
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-amber-300">
-              <Film size={12} /> Featured film
-            </span>
-            <h2 className="mt-2 font-display text-3xl sm:text-4xl text-white">
-              The{" "}
-              <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-emerald-400 bg-clip-text text-transparent">
-                Redwood Documentary
+        {/* Featured short film — the feature specimen */}
+        <section
+          className="relative overflow-hidden px-6 py-20 md:py-28"
+          style={{ background: `linear-gradient(180deg, ${PAPER} 0%, ${PAPER_DEEP} 55%, ${PAPER} 100%)` }}
+        >
+          <div
+            className="pointer-events-none absolute -top-24 left-1/2 h-72 w-[36rem] -translate-x-1/2 rounded-full blur-3xl"
+            style={{ backgroundColor: `${CLAY}22` }}
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute bottom-0 right-0 h-64 w-64 rounded-full blur-3xl"
+            style={{ backgroundColor: `${MOSS}1f` }}
+            aria-hidden="true"
+          />
+
+          <div className="relative mx-auto max-w-6xl">
+            <div className="mb-10 text-center md:mb-12">
+              <span className="text-[11px] uppercase tracking-[0.3em]" style={{ ...MONO, color: CLAY }}>
+                Feature film
               </span>
-            </h2>
-            <p className="mt-2 text-sm text-stone-400 max-w-xl">
-              A short film about the science, the land, and the people behind our
-              genetically engineered teak.
-            </p>
-          </div>
-        </div>
-
-        <ScrollPlayer
-          videoId="b40C775NSbg"
-          aspect="video"
-          title="Redwood Biotech · Short Film"
-          poster={plantationAerial}
-        />
-      </section>
-
-      {/* ── Field Shorts ─────────────────────────────── */}
-      <section className="relative py-20 border-y border-white/10 bg-gradient-to-br from-emerald-950 via-emerald-900 to-stone-950">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-amber-300">
-              <Camera size={12} /> From the field
-            </span>
-            <h2 className="mt-2 font-display text-3xl sm:text-4xl text-white">
-              Moments from our plantations
-            </h2>
-            <p className="mt-3 text-sm text-emerald-100/70">
-              Short vertical clips captured across our sites. Use each video's controls
-              to play, pause, or unmute — only one clip plays at a time.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {SHORTS.map((s) => (
-              <ScrollPlayer
-                key={s.id}
-                videoId={s.id}
-                aspect="short"
-                title={s.label}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Photography Grid ─────────────────────────── */}
-      <section className="relative mx-auto max-w-7xl px-6 py-24">
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-amber-300">
-            <Camera size={12} /> Photography
-          </span>
-          <h2 className="mt-2 font-display text-3xl sm:text-4xl text-white">
-            The land,{" "}
-            <span className="bg-gradient-to-r from-amber-400 to-emerald-400 bg-clip-text text-transparent">
-              up close
-            </span>
-          </h2>
-          <p className="mt-3 text-sm text-stone-400">
-            From sapling to canopy — every frame tells the story of engineered growth.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[220px] gap-4">
-          {PHOTOS.map((p, i) => (
-            <figure
-              key={i}
-              className={`relative overflow-hidden rounded-2xl ring-1 ring-white/10 group ${p.span}`}
-            >
-              <img
-                src={p.src}
-                alt={p.alt}
-                loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <figcaption className="absolute bottom-3 left-4 right-4 text-xs text-white/95 opacity-0 group-hover:opacity-100 transition-opacity">
-                {p.alt}
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Sites & Plantations ──────────────────────── */}
-      <section className="relative py-24 border-t border-white/10 bg-gradient-to-br from-emerald-950 via-stone-950 to-amber-950/60">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-amber-300">
-              <Trees size={12} /> Sites &amp; plantations
-            </span>
-            <h2 className="mt-2 font-display text-3xl sm:text-4xl text-white">
-              Where our forests grow
-            </h2>
-            <p className="mt-3 text-sm text-emerald-100/70">
-              Estates spread across India, each managed end-to-end by the Redwood team.
-            </p>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-3">
-            {SITES.map((s) => (
-              <article
-                key={s.name}
-                className="group relative overflow-hidden rounded-2xl ring-1 ring-white/10 bg-stone-900"
+              <h2
+                className="mx-auto mt-4 max-w-2xl text-3xl leading-tight tracking-tight md:text-5xl"
+                style={DISPLAY}
               >
-                <div className="aspect-[4/5] overflow-hidden">
-                  <img
-                    src={s.img}
-                    alt={s.name}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
+                Know everything about the{" "}
+                <span style={{ color: MOSS }}>Nidhivan project</span> — in one short film
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed md:text-base" style={{ color: MUTED }}>
+              From bare land to a thriving teak plantation — the complete journey.
+              </p>
+            </div>
 
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="font-display text-2xl text-white">{s.name}</h3>
-                  <div className="mt-3 flex gap-4 text-xs uppercase tracking-widest text-stone-300">
-                    <span>
-                      <span className="block text-amber-300 text-sm normal-case tracking-normal font-semibold">
-                        {s.area}
+            <div className="mb-6 flex items-center justify-end">
+              <DepthTag value={`Runtime ${SHORT_FILM.runtime}`} />
+            </div>
+
+            <button
+              onClick={() => setActive(SHORT_FILM)}
+              className="group relative block w-full overflow-hidden rounded-sm border text-left shadow-sm transition hover:shadow-md"
+              style={{ borderColor: `${GOLD}55`, backgroundColor: PAPER_DEEP }}
+            >
+              {/* kraft tag corner */}
+              <div
+                className="absolute left-5 top-5 z-10 flex h-9 w-9 -rotate-6 items-center justify-center rounded-full border text-[10px]"
+                style={{ ...MONO, borderColor: `${INK}30`, backgroundColor: PAPER, color: INK }}
+              >
+                No.00
+              </div>
+
+              <div className="relative aspect-video w-full overflow-hidden">
+                <img
+                  src={`https://i.ytimg.com/vi/${SHORT_FILM.id}/maxresdefault.jpg`}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = thumb(SHORT_FILM.id);
+                  }}
+                  alt={SHORT_FILM.title}
+                  className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]"
+                  loading="lazy"
+                />
+                <div
+                  className="absolute inset-0"
+                  style={{ background: `linear-gradient(to top, ${PAPER_DEEP}, ${PAPER_DEEP}10, transparent)` }}
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span
+                    className="flex h-16 w-16 items-center justify-center rounded-full shadow-lg transition group-hover:scale-110 md:h-20 md:w-20"
+                    style={{ backgroundColor: CLAY, color: PAPER }}
+                  >
+                    <Play className="h-7 w-7 translate-x-0.5 fill-current md:h-8 md:w-8" />
+                  </span>
+                </div>
+              </div>
+
+              <Strata />
+
+              <div className="flex flex-col gap-2 p-6 md:flex-row md:items-end md:justify-between md:p-8">
+                <h3 className="text-2xl leading-tight md:text-3xl" style={DISPLAY}>
+                  {SHORT_FILM.title}
+                </h3>
+                <span className="text-xs uppercase tracking-[0.2em]" style={{ ...MONO, color: MUTED }}>
+                  Press play →
+                </span>
+              </div>
+            </button>
+          </div>
+        </section>
+
+        {/* Reels — specimen-tag grid */}
+        <section
+          className="relative overflow-hidden px-6 py-20 md:py-28"
+          style={{ background: `linear-gradient(180deg, ${MOSS} 0%, #2E3B26 55%, ${INK} 100%)` }}
+        >
+          <div
+            className="pointer-events-none absolute -left-16 top-10 h-64 w-64 rounded-full blur-3xl"
+            style={{ backgroundColor: `${GOLD}22` }}
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute -right-16 bottom-10 h-72 w-72 rounded-full blur-3xl"
+            style={{ backgroundColor: `${CLAY}26` }}
+            aria-hidden="true"
+          />
+
+          <div className="relative mx-auto max-w-6xl">
+            <div className="mb-10 flex flex-col items-center gap-4 text-center md:mb-12">
+              <span className="text-[11px] uppercase tracking-[0.3em]" style={{ ...MONO, color: GOLD }}>
+                Field notes
+              </span>
+              <h3
+                className="max-w-2xl text-3xl leading-tight tracking-tight md:text-5xl"
+                style={{ ...DISPLAY, color: PAPER }}
+              >
+                Let's clear your doubts about these topics — straight from the expert
+              </h3>
+              <span className="text-xs uppercase tracking-[0.2em]" style={{ ...MONO, color: `${PAPER}99` }}>
+                {REELS.length} quick answers
+              </span>
+            </div>
+
+            <div className="overflow-hidden rounded-sm border" style={{ borderColor: `${GOLD}40`, backgroundColor: PAPER_DEEP }}>
+              <Strata />
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
+                {REELS.map((v, i) => (
+                  <button
+                    key={v.id}
+                    onClick={() => setActive(v)}
+                    className="group relative border-b border-r p-3 text-left transition [&:nth-child(4n)]:border-r-0"
+                    style={{ borderColor: `${GOLD}25` }}
+                  >
+                    <div
+                      className="relative aspect-[9/13] w-full overflow-hidden rounded-sm border"
+                      style={{ borderColor: `${INK}15` }}
+                    >
+                      <img
+                        src={thumb(v.id)}
+                        alt={v.title}
+                        className="h-full w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100 group-hover:-rotate-1"
+                        loading="lazy"
+                      />
+                      <div
+                        className="absolute inset-0"
+                        style={{ background: `linear-gradient(to top, ${INK}66, transparent 55%)` }}
+                      />
+
+                      <span
+                        className="absolute left-2 top-2 rounded-full border px-1.5 py-0.5 text-[9px] tracking-[0.1em]"
+                        style={{ ...MONO, color: PAPER, borderColor: `${PAPER}55`, backgroundColor: `${INK}55` }}
+                      >
+                        No.{String(i + 1).padStart(2, "0")}
                       </span>
-                      Area
-                    </span>
-                    <span className="border-l border-white/20 pl-4">
-                      <span className="block text-amber-300 text-sm normal-case tracking-normal font-semibold">
-                        {s.trees}
+                      <span
+                        className="absolute right-2 top-2 rounded px-1.5 py-0.5 text-[9px] tracking-[0.1em]"
+                        style={{ ...MONO, color: PAPER, backgroundColor: `${INK}66` }}
+                      >
+                        {v.runtime}
                       </span>
-                      Trees
-                    </span>
+
+                      <span
+                        className="absolute left-1/2 top-1/2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full opacity-0 shadow-md transition group-hover:opacity-100"
+                        style={{ backgroundColor: GOLD, color: INK }}
+                      >
+                        <Play className="h-4 w-4 translate-x-0.5 fill-current" />
+                      </span>
+                    </div>
+
+                    <p className="mt-2 line-clamp-2 text-xs leading-snug" style={{ color: INK }}>
+                      {v.title}
+                    </p>
+                  </button>
+                ))}
+              </div>
+
+              <Strata />
+            </div>
+          </div>
+        </section>
+
+        {/* Modal */}
+        {active && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md animate-fade-in"
+            style={{ backgroundColor: `${INK}D9` }}
+            onClick={() => setActive(null)}
+          >
+            <div
+              className="relative w-full max-w-5xl overflow-hidden rounded-sm border shadow-2xl animate-scale-in"
+              style={{ borderColor: `${GOLD}55`, backgroundColor: PAPER_DEEP }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Strata />
+
+              <div
+                className="flex items-center justify-between gap-4 border-y px-5 py-4"
+                style={{ borderColor: `${GOLD}30` }}
+              >
+                <div className="min-w-0">
+                  <div className="text-[10px] uppercase tracking-[0.25em]" style={{ ...MONO, color: CLAY }}>
+                    No.{activeIndex >= 0 ? String(activeIndex).padStart(2, "0") : "00"} ·{" "}
+                    {active.kind === "film" ? "Feature specimen" : "Field note"} · {active.runtime}
                   </div>
+                  <h3 className="mt-1 truncate text-lg md:text-xl" style={DISPLAY}>
+                    {active.title}
+                  </h3>
                 </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+                <button
+                  onClick={() => setActive(null)}
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition hover:opacity-85"
+                  style={{ backgroundColor: CLAY, color: PAPER }}
+                  aria-label="Close video"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
 
-      {/* ── CTA ──────────────────────────────────────── */}
-      <section className="relative bg-gradient-to-b from-stone-950 via-emerald-950 to-stone-950">
-        <div className="mx-auto max-w-4xl px-6 py-24 text-center">
-          <h2 className="font-display text-4xl sm:text-5xl leading-tight text-white">
-            Ready to grow a forest{" "}
-            <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-emerald-400 bg-clip-text text-transparent italic">
-              on your land?
-            </span>
-          </h2>
-          <p className="mt-4 text-stone-300 max-w-xl mx-auto">
-            Partner with Redwood Biotech. We plant, manage, and sell — you earn.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <a
-              href="https://redwoodbiotech.in/#contact"
-              className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-ember hover:brightness-110 transition"
-            >
-              Become a Partner →
-            </a>
-            <a
-              href="https://redwoodbiotech.in"
-              className="inline-flex items-center justify-center rounded-md border border-white/20 px-6 py-3 text-sm font-semibold text-white hover:border-amber-300 hover:text-amber-300 transition"
-            >
-              Learn More
-            </a>
+              <div
+                className={
+                  active.kind === "film"
+                    ? "relative aspect-video w-full bg-black"
+                    : "relative mx-auto aspect-[9/16] w-full max-w-[420px] bg-black"
+                }
+              >
+                <iframe
+                  key={active.id}
+                  src={`https://www.youtube.com/embed/${active.id}?autoplay=1&rel=0&modestbranding=1`}
+                  title={active.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 h-full w-full"
+                />
+              </div>
+
+              <div
+                className="flex items-center justify-between border-t px-5 py-3 text-[10px] uppercase tracking-[0.2em]"
+                style={{ ...MONO, borderColor: `${GOLD}25`, color: MUTED }}
+              >
+                <span>Use player controls to pause</span>
+                <span>Esc or ✕ to close</span>
+              </div>
+              <Strata />
+            </div>
           </div>
-        </div>
-      </section>
+        )}
+      </div>
 
       <Footer />
-    </div>
+    </>
   );
 }

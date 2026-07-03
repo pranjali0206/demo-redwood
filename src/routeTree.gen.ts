@@ -9,20 +9,33 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ModelRouteImport } from './routes/model'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as InvestmentRouteImport } from './routes/investment'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AgroforestryRouteImport } from './routes/agroforestry'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ModelRoute = ModelRouteImport.update({
@@ -48,6 +61,11 @@ const GalleryRoute = GalleryRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DisclaimerRoute = DisclaimerRouteImport.update({
+  id: '/disclaimer',
+  path: '/disclaimer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -76,24 +94,30 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/agroforestry': typeof AgroforestryRoute
   '/contact': typeof ContactRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/faq': typeof FaqRoute
   '/gallery': typeof GalleryRoute
   '/investment': typeof InvestmentRoute
   '/login': typeof LoginRoute
   '/model': typeof ModelRoute
+  '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/agroforestry': typeof AgroforestryRoute
   '/contact': typeof ContactRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/faq': typeof FaqRoute
   '/gallery': typeof GalleryRoute
   '/investment': typeof InvestmentRoute
   '/login': typeof LoginRoute
   '/model': typeof ModelRoute
+  '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -101,12 +125,15 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/agroforestry': typeof AgroforestryRoute
   '/contact': typeof ContactRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/faq': typeof FaqRoute
   '/gallery': typeof GalleryRoute
   '/investment': typeof InvestmentRoute
   '/login': typeof LoginRoute
   '/model': typeof ModelRoute
+  '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -115,36 +142,45 @@ export interface FileRouteTypes {
     | '/about'
     | '/agroforestry'
     | '/contact'
+    | '/disclaimer'
     | '/faq'
     | '/gallery'
     | '/investment'
     | '/login'
     | '/model'
+    | '/privacy'
     | '/sitemap.xml'
+    | '/terms'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/agroforestry'
     | '/contact'
+    | '/disclaimer'
     | '/faq'
     | '/gallery'
     | '/investment'
     | '/login'
     | '/model'
+    | '/privacy'
     | '/sitemap.xml'
+    | '/terms'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/agroforestry'
     | '/contact'
+    | '/disclaimer'
     | '/faq'
     | '/gallery'
     | '/investment'
     | '/login'
     | '/model'
+    | '/privacy'
     | '/sitemap.xml'
+    | '/terms'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -152,21 +188,38 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AgroforestryRoute: typeof AgroforestryRoute
   ContactRoute: typeof ContactRoute
+  DisclaimerRoute: typeof DisclaimerRoute
   FaqRoute: typeof FaqRoute
   GalleryRoute: typeof GalleryRoute
   InvestmentRoute: typeof InvestmentRoute
   LoginRoute: typeof LoginRoute
   ModelRoute: typeof ModelRoute
+  PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TermsRoute: typeof TermsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/model': {
@@ -202,6 +255,13 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/disclaimer': {
+      id: '/disclaimer'
+      path: '/disclaimer'
+      fullPath: '/disclaimer'
+      preLoaderRoute: typeof DisclaimerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -240,12 +300,15 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AgroforestryRoute: AgroforestryRoute,
   ContactRoute: ContactRoute,
+  DisclaimerRoute: DisclaimerRoute,
   FaqRoute: FaqRoute,
   GalleryRoute: GalleryRoute,
   InvestmentRoute: InvestmentRoute,
   LoginRoute: LoginRoute,
   ModelRoute: ModelRoute,
+  PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
