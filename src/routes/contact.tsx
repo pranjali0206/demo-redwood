@@ -203,6 +203,8 @@ function MultiStepForm() {
                     </div>
                     <div className="grid sm:grid-cols-2 gap-6">
                       <F label="Full Name" required v={f.name} on={(v) => setF({ ...f, name: v })} />
+                      <F label="Reference Name" required v={f.name} on={(v) => setF({ ...f, name: v })} />
+                      <F label="email" required v={f.email} on={(v) => setF({ ...f, name: v })} />
                       <F label="Mobile Number" type="tel" required v={f.mobile} on={(v) => setF({ ...f, mobile: v })} />
                       <F label="City" required v={f.city} on={(v) => setF({ ...f, city: v })} />
                       <F label="Age" type="number" required v={f.age} on={(v) => setF({ ...f, age: v })} />
