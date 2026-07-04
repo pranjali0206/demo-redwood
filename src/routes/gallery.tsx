@@ -4,6 +4,10 @@ import { X, Play, Sprout } from "lucide-react";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
 import galleryBg from "@/assets/gallerybg.png";
+import galleryPhoto1 from "@/assets/gallery-photo-1.jpg";
+import galleryPhoto2 from "@/assets/gallery-photo-2.jpg";
+import galleryPhoto3 from "@/assets/gallery-photo-3.jpg";
+import galleryPhoto4 from "@/assets/gallery-photo-4.png";
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
@@ -61,6 +65,28 @@ const SHORT_FILM: Video = {
   kind: "film",
   runtime: "06:42",
 };
+
+type Photo = {
+  src: string;
+  caption: string;
+};
+
+const PHOTOS: Photo[] = [
+  { src: galleryPhoto1, caption: "Aerial view of the Nidhivan plantation site" },
+  { src: galleryPhoto2, caption: "Preparing pits ahead of plantation" },
+  { src: galleryPhoto3, caption: "Saplings hardening in the nursery" },
+  { src: galleryPhoto4, caption: "The plantation plot from above" },
+];
+
+const REELS: Video[] = [
+  { id: "Ju7WXknxGUQ", title: "Agroforest Ki Duniya Mein Aapka Swagat Hai!", kind: "short", runtime: "00:38" },
+  { id: "nGSnyZ_gMpE", title: "Every Successful Plantation Starts With a Strong Foundation", kind: "short", runtime: "00:45" },
+  { id: "3Gf3wOLFj0U", title: "Sagwan Ke Liye 5 Feet Ka Gadda Kyun?", kind: "short", runtime: "00:33" },
+  { id: "3uAgPBDLydc", title: "Healthy Trees Start With Healthy Soil", kind: "short", runtime: "00:41" },
+  { id: "eMuN0Mf30e4", title: "Saare Gaddhe Taiyar… Ab Shuru Hoga Plantation!", kind: "short", runtime: "00:29" },
+  { id: "CDc09NbWrXU", title: "African + Desi Earthworms Ka Kya Kaam Hai?", kind: "short", runtime: "00:52" },
+  { id: "iN4HbisWBzk", title: "Sirf 100 Ped… 10,000 Sq Ft Mein! Kyun?", kind: "short", runtime: "00:36" },
+];
 
 function thumb(id: string) {
   return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
@@ -238,6 +264,174 @@ function GalleryPage() {
           </div>
         </section>
 
+        {/* Field photographs — specimen-tag grid */}
+        <section
+          className="relative overflow-hidden px-6 py-20 md:py-28"
+          style={{ background: `linear-gradient(180deg, ${MOSS} 0%, #2E3B26 55%, ${INK} 100%)` }}
+        >
+          <div
+            className="pointer-events-none absolute -left-16 top-10 h-64 w-64 rounded-full blur-3xl"
+            style={{ backgroundColor: `${GOLD}22` }}
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute -right-16 bottom-10 h-72 w-72 rounded-full blur-3xl"
+            style={{ backgroundColor: `${CLAY}26` }}
+            aria-hidden="true"
+          />
+
+          <div className="relative mx-auto max-w-6xl">
+            <div className="mb-10 flex flex-col items-center gap-4 text-center md:mb-12">
+              <span className="text-[11px] uppercase tracking-[0.3em]" style={{ ...MONO, color: GOLD }}>
+                Field notes
+              </span>
+              <h3
+                className="max-w-2xl text-3xl leading-tight tracking-tight md:text-5xl"
+                style={{ ...DISPLAY, color: PAPER }}
+              >
+                From the ground at Nidhivan
+              </h3>
+              <span className="text-xs uppercase tracking-[0.2em]" style={{ ...MONO, color: `${PAPER}99` }}>
+                {PHOTOS.length} photographs
+              </span>
+            </div>
+
+            <div className="overflow-hidden rounded-sm border" style={{ borderColor: `${GOLD}40`, backgroundColor: PAPER_DEEP }}>
+              <Strata />
+
+              <div className="grid grid-cols-2 md:grid-cols-4">
+                {PHOTOS.map((p, i) => (
+                  <div
+                    key={p.src}
+                    className="group relative border-b border-r p-3 text-left transition [&:nth-child(4n)]:border-r-0"
+                    style={{ borderColor: `${GOLD}25` }}
+                  >
+                    <div
+                      className="relative aspect-[4/5] w-full overflow-hidden rounded-sm border"
+                      style={{ borderColor: `${INK}15` }}
+                    >
+                      <img
+                        src={p.src}
+                        alt={p.caption}
+                        className="h-full w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
+                        loading="lazy"
+                      />
+                      <div
+                        className="absolute inset-0"
+                        style={{ background: `linear-gradient(to top, ${INK}66, transparent 55%)` }}
+                      />
+
+                      <span
+                        className="absolute left-2 top-2 rounded-full border px-1.5 py-0.5 text-[9px] tracking-[0.1em]"
+                        style={{ ...MONO, color: PAPER, borderColor: `${PAPER}55`, backgroundColor: `${INK}55` }}
+                      >
+                        No.{String(i + 1).padStart(2, "0")}
+                      </span>
+                    </div>
+
+                    <p className="mt-2 line-clamp-2 text-xs leading-snug" style={{ color: INK }}>
+                      {p.caption}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <Strata />
+            </div>
+          </div>
+        </section>
+
+        {/* Reels — specimen-tag grid */}
+        <section
+          className="relative overflow-hidden px-6 py-20 md:py-28"
+          style={{ background: `linear-gradient(180deg, ${INK} 0%, #2E3B26 55%, ${MOSS} 100%)` }}
+        >
+          <div
+            className="pointer-events-none absolute -left-16 top-10 h-64 w-64 rounded-full blur-3xl"
+            style={{ backgroundColor: `${GOLD}22` }}
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute -right-16 bottom-10 h-72 w-72 rounded-full blur-3xl"
+            style={{ backgroundColor: `${CLAY}26` }}
+            aria-hidden="true"
+          />
+
+          <div className="relative mx-auto max-w-6xl">
+            <div className="mb-10 flex flex-col items-center gap-4 text-center md:mb-12">
+              <span className="text-[11px] uppercase tracking-[0.3em]" style={{ ...MONO, color: GOLD }}>
+                Field notes
+              </span>
+              <h3
+                className="max-w-2xl text-3xl leading-tight tracking-tight md:text-5xl"
+                style={{ ...DISPLAY, color: PAPER }}
+              >
+                Let's clear your doubts about these topics — straight from the expert
+              </h3>
+              <span className="text-xs uppercase tracking-[0.2em]" style={{ ...MONO, color: `${PAPER}99` }}>
+                {REELS.length} quick answers
+              </span>
+            </div>
+
+            <div className="overflow-hidden rounded-sm border" style={{ borderColor: `${GOLD}40`, backgroundColor: PAPER_DEEP }}>
+              <Strata />
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
+                {REELS.map((v, i) => (
+                  <button
+                    key={v.id}
+                    onClick={() => setActive(v)}
+                    className="group relative border-b border-r p-3 text-left transition [&:nth-child(4n)]:border-r-0"
+                    style={{ borderColor: `${GOLD}25` }}
+                  >
+                    <div
+                      className="relative aspect-[9/13] w-full overflow-hidden rounded-sm border"
+                      style={{ borderColor: `${INK}15` }}
+                    >
+                      <img
+                        src={thumb(v.id)}
+                        alt={v.title}
+                        className="h-full w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100 group-hover:-rotate-1"
+                        loading="lazy"
+                      />
+                      <div
+                        className="absolute inset-0"
+                        style={{ background: `linear-gradient(to top, ${INK}66, transparent 55%)` }}
+                      />
+
+                      <span
+                        className="absolute left-2 top-2 rounded-full border px-1.5 py-0.5 text-[9px] tracking-[0.1em]"
+                        style={{ ...MONO, color: PAPER, borderColor: `${PAPER}55`, backgroundColor: `${INK}55` }}
+                      >
+                        No.{String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span
+                        className="absolute right-2 top-2 rounded px-1.5 py-0.5 text-[9px] tracking-[0.1em]"
+                        style={{ ...MONO, color: PAPER, backgroundColor: `${INK}66` }}
+                      >
+                        {v.runtime}
+                      </span>
+
+                      <span
+                        className="absolute left-1/2 top-1/2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full opacity-0 shadow-md transition group-hover:opacity-100"
+                        style={{ backgroundColor: GOLD, color: INK }}
+                      >
+                        <Play className="h-4 w-4 translate-x-0.5 fill-current" />
+                      </span>
+                    </div>
+
+                    <p className="mt-2 line-clamp-2 text-xs leading-snug" style={{ color: INK }}>
+                      {v.title}
+                    </p>
+                  </button>
+                ))}
+              </div>
+
+              <Strata />
+            </div>
+          </div>
+        </section>
+
         {/* Modal */}
         {active && (
           <div
@@ -258,7 +452,7 @@ function GalleryPage() {
               >
                 <div className="min-w-0">
                   <div className="text-[10px] uppercase tracking-[0.25em]" style={{ ...MONO, color: CLAY }}>
-                    No.00 · Feature specimen · {active.runtime}
+                    {active.kind === "film" ? "No.00 · Feature specimen" : "Field note"} · {active.runtime}
                   </div>
                   <h3 className="mt-1 truncate text-lg md:text-xl" style={DISPLAY}>
                     {active.title}
@@ -283,7 +477,7 @@ function GalleryPage() {
               >
                 <iframe
                   key={active.id}
-                  src={`https://www.youtube.com/embed/${active.id}?autoplay=1&rel=0&modestbranding=1`}
+                  src={`https://www.youtube.com/embed/${active.id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
                   title={active.title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
