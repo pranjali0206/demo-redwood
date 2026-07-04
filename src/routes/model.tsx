@@ -6,7 +6,7 @@ import {
   BarChart3, ShieldCheck, Globe2, Rocket, ArrowRight, ChevronDown,
 } from "lucide-react";
 import heroImg from "../assets/teak-plantation-hero.jpg";
-import saplingImg from "../assets/sapling.jpg";
+import saplingImg from "../assets/sapling-new.jpg";
 import forestImg from "../assets/forest-light.jpg";
 import { Navbar } from "../components/site/Navbar";
 import { Footer } from "../components/site/Footer";

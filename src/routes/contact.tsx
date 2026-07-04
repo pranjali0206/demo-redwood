@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Phone, MessageCircle, Mail, Clock, Check, ArrowUpRight,
-  ArrowRight, ArrowLeft, User, Sprout, ChevronDown,
+  ArrowRight, ArrowLeft, User, Sprout, ChevronDown, X,
 } from "lucide-react";
 import { SiteLayout } from "@/components/site/Layout";
 import { Reveal } from "@/components/site/Reveal";
@@ -164,20 +164,16 @@ function MultiStepForm() {
     setStatus("sent");
   };
 
+  const closeModal = () => {
+    setStatus("form");
+    setStep(0);
+    setF(initial);
+  };
+
   return (
-    <div className="relative rounded-3xl bg-white border border-stone-200 shadow-[0_30px_80px_-30px_rgba(20,60,40,0.15)] overflow-hidden">
-      <AnimatePresence mode="wait">
-        {status === "sent" ? (
-          <motion.div key="ok" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="py-20 px-8 text-center">
-            <div className="mx-auto h-16 w-16 rounded-full bg-green-600/10 grid place-items-center mb-6">
-              <Check className="h-8 w-8 text-green-700" strokeWidth={3} />
-            </div>
-            <h3 className="font-serif text-2xl font-bold text-green-900">Thank you, {f.name || "there"}.</h3>
-            <p className="mt-3 text-stone-600 max-w-sm mx-auto">Our team will call you within 24 hours to talk through your land and next steps.</p>
-          </motion.div>
-        ) : (
-          <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <div className="px-8 sm:px-10 pt-8">
+    <>
+      <div className="relative rounded-3xl bg-white border border-stone-200 shadow-[0_30px_80px_-30px_rgba(20,60,40,0.15)] overflow-hidden">
+        <div className="px-8 sm:px-10 pt-8">
               <div className="flex items-center justify-between mb-3">
                 {steps.map((s, i) => (
                   <div key={s} className="flex items-center flex-1 last:flex-none">
@@ -207,8 +203,6 @@ function MultiStepForm() {
                     </div>
                     <div className="grid sm:grid-cols-2 gap-6">
                       <F label="Full Name" required v={f.name} on={(v) => setF({ ...f, name: v })} />
-                      <F label="email" required v={f.email} on={(v) => setF({ ...f, email: v })} />
-                      <F label="Reference Name" required v={f.referenceName} on={(v) => setF({ ...f, referenceName: v })} />
                       <F label="Mobile Number" type="tel" required v={f.mobile} on={(v) => setF({ ...f, mobile: v })} />
                       <F label="City" required v={f.city} on={(v) => setF({ ...f, city: v })} />
                       <F label="Age" type="number" required v={f.age} on={(v) => setF({ ...f, age: v })} />
@@ -285,10 +279,58 @@ function MultiStepForm() {
                 )}
               </div>
             </form>
+      </div>
+
+      {/* Enquiry success modal */}
+      <AnimatePresence>
+        {status === "sent" && (
+          <motion.div
+            key="enquiry-modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            onClick={closeModal}
+          >
+            <motion.div
+              key="enquiry-modal"
+              initial={{ opacity: 0, y: 20, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.96 }}
+              transition={{ duration: 0.25 }}
+              className="relative w-full max-w-md rounded-3xl bg-white p-8 sm:p-10 text-center shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={closeModal}
+                className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full text-stone-400 hover:bg-stone-100 hover:text-stone-600 transition-colors"
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
+
+              <div className="mx-auto h-16 w-16 rounded-full bg-green-600/10 grid place-items-center mb-6">
+                <Check className="h-8 w-8 text-green-700" strokeWidth={3} />
+              </div>
+              <h3 className="font-serif text-2xl font-bold text-green-900">
+                Thank you, {f.name || "there"}!
+              </h3>
+              <p className="mt-3 text-stone-600">We will connect you soon.</p>
+              <p className="mt-1 text-sm text-stone-500">
+                Our team will call you soon... to talk through your land and next steps.
+              </p>
+
+              <button
+                onClick={closeModal}
+                className="mt-7 inline-flex items-center gap-2 rounded-full bg-[var(--brand-red)] px-7 py-3 font-semibold text-white transition-opacity hover:opacity-90"
+              >
+                Done
+              </button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 }
 

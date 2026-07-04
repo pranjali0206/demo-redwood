@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from "react";
 import { Eye, Target, Heart, ArrowRight, Sparkles, TrendingUp } from "lucide-react";
 import heroImg from "../assets/about-hero.jpg";
 import forestImg from "../assets/forest-light.jpg";
-import saplingImg from "../assets/sapling.jpg";
+import saplingImg from "../assets/sapling-new.jpg";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
 import agroforestryField from "../assets/agroforestry-field.jpg";
