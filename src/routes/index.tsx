@@ -187,10 +187,10 @@ function ContactSection() {
             <div className="flex items-center gap-3">
               <Phone className="text-amber-400" size={20} />
               <a
-                href="tel:+919999999999"
+                href="tel:+919752258759"
                 className="hover:text-white"
               >
-                +91 99999 99999
+                +91 9752258759
               </a>
             </div>
 
@@ -201,7 +201,7 @@ function ContactSection() {
           </div>
 
           <a
-            href="https://wa.me/919999999999"
+            href="https://wa.me/919752258759"
             target="_blank"
             rel="noreferrer"
             className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-md bg-green-600 hover:bg-green-500 text-white font-semibold transition-colors"

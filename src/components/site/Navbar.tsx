@@ -85,9 +85,7 @@ export function Navbar({ transparentUntilScroll = true }: { transparentUntilScro
                 {l.label}
               </Link>
             ))}
-            <Link to="/login" onClick={() => setOpen(false)} className="mt-2 inline-flex justify-center px-4 py-2 rounded-md bg-green-700 text-white font-semibold">
-              Login
-            </Link>
+            
           </div>
         </motion.div>
       )}

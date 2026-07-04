@@ -446,11 +446,11 @@ function AboutPage() {
       {/* ── STORY ────────────────────────────────────────────────────────── */}
       <section className="relative px-6 py-32">
         <div className="mx-auto grid max-w-6xl gap-16 lg:grid-cols-[1fr_1.2fr]">
-          <div className="lg:sticky lg:top-32 lg:h-fit">
+          <div className="lg:sticky lg:top-32 lg:h-[calc(100vh-10rem)]">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="overflow-hidden rounded-3xl shadow-[var(--shadow-elegant)]"
+              className="h-[420px] lg:h-[70%] overflow-hidden rounded-3xl shadow-[var(--shadow-elegant)]"
             >
               <img src={saplingImg} alt="Hands planting a sapling" loading="lazy" className="h-full w-full object-cover" />
             </motion.div>

@@ -131,7 +131,7 @@ const pillars = [
 
 /* ---------- BUILDING BLOCKS ---------- */
 
-function Reveal({ children, delay = 0, y = 32 }: { children: React.ReactNode; delay?: number; y?: number }) {
+function Reveal({ children, delay = 0, y = 32, className }: { children: React.ReactNode; delay?: number; y?: number; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   return (
@@ -991,11 +991,11 @@ function EnquiryForm() {
           <div className="mt-10 space-y-4 text-sm">
             <div className="flex items-center gap-3 text-foreground">
               <span className="h-9 w-9 rounded-full bg-primary/10 grid place-items-center"><Phone className="h-4 w-4 text-primary" /></span>
-              <div><div className="font-medium">+91 · Investor Desk</div><div className="text-xs text-muted-foreground">Mon–Sat · 10am–7pm IST</div></div>
+              <div><div className="font-medium">+919752258759· Investor Desk</div><div className="text-xs text-muted-foreground">Mon–Sat · 10am–7pm IST</div></div>
             </div>
             <div className="flex items-center gap-3 text-foreground">
               <span className="h-9 w-9 rounded-full bg-primary/10 grid place-items-center"><Mail className="h-4 w-4 text-primary" /></span>
-              <div><div className="font-medium">invest@redwoodbiotech.in</div><div className="text-xs text-muted-foreground">Replies within 24 hours</div></div>
+              <div><div className="font-medium">info@redwoodbiotech.in</div><div className="text-xs text-muted-foreground">Replies within 24 hours</div></div>
             </div>
             <div className="flex items-center gap-3 text-foreground">
               <span className="h-9 w-9 rounded-full bg-primary/10 grid place-items-center"><Leaf className="h-4 w-4 text-primary" /></span>
@@ -1030,10 +1030,10 @@ function EnquiryForm() {
                       <Field label="Investment range">
                         <select value={form.investment} onChange={e => setForm({ ...form, investment: e.target.value })}
                           className="w-full bg-transparent border-b border-border focus:border-primary outline-none py-2 text-foreground">
-                          <option value="5-10L">₹5–10 Lakh</option>
-                          <option value="10-25L">₹10–25 Lakh</option>
-                          <option value="25-50L">₹25–50 Lakh</option>
-                          <option value="50L+">₹50 Lakh +</option>
+                          <option value="50L-1Cr">₹50L-1Cr</option>
+                          <option value="1Cr-1.5Cr">₹1Cr-1.5Cr Lakh</option>
+                          <option value="1.5Cr-2Cr">₹1.5Cr-2.5Cr Lakh</option>
+                          <option value="2.5Cr+">₹2.5Cr +</option>
                         </select>
                       </Field>
                     </div>
@@ -1121,8 +1121,8 @@ function PillarOutcome() {
               { icon: ShieldCheck,  label: "Legal Framework",     sub: "Registered ownership" },
               { icon: Sparkles,     label: "Multiple Drivers",    sub: "Diversified value" },
             ].map(({ icon: Icon, label, sub }, i) => (
-              <Reveal key={label} delay={0.04 * i}>
-                <div className="flex items-start gap-3 rounded-2xl bg-white/5 border border-white/10 p-5 hover:border-red-500/40 hover:bg-white/10 hover:shadow-[0_4px_24px_-8px_rgba(180,30,20,0.3)] transition-all duration-300">
+             <Reveal key={label} delay={0.04 * i} className="h-full">
+                <div className="flex h-full items-start gap-3 rounded-2xl bg-white/5 border border-white/10 p-5 hover:border-red-500/40 hover:bg-white/10 hover:shadow-[0_4px_24px_-8px_rgba(180,30,20,0.3)] transition-all duration-300">
                   <span className="mt-0.5 h-8 w-8 shrink-0 rounded-full bg-red-600/15 grid place-items-center">
                     <Icon className="h-4 w-4 text-red-400" />
                   </span>
