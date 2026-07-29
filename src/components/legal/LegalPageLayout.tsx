@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import type { ReactNode } from "react";
-import logo from "@/assets/rw-logo.png";
+import logo from "@/assets/rw-logo.webp";
 
 interface LegalPageLayoutProps {
   title: string;

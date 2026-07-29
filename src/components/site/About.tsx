@@ -1,9 +1,9 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { ArrowRight, Landmark, Microscope, TrendingUp, Leaf } from "lucide-react";
-import teamImg from "@/assets/team-field.jpg";
-import labImg from "@/assets/biotech-lab.jpg";
-import woodTex from "@/assets/wood-texture.jpg";
+import teamImg from "@/assets/team-field.webp";
+import labImg from "@/assets/biotech-lab.webp";
+import woodTex from "@/assets/wood-texture.webp";
 import { Reveal } from "./Reveal-2";
 import { CountUp } from "./CountUp";
 import { Link } from "@tanstack/react-router"; 

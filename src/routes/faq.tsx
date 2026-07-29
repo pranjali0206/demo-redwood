@@ -20,21 +20,21 @@ export const Route = createFileRoute("/faq")({
 const categories = [
   {
     id: "about",
-    label: "About Redwood",
+    label: "About Redwood Biotech",
     Icon: Leaf,
     color: "bg-green-50 text-green-800 border-green-200",
     accent: "bg-green-900",
     questions: [
       {
-        q: "What is Redwood?",
-        a: "Redwood is a unique investment model that combines strategically selected real estate with premium Sagwan (Teak) plantations using advanced biotechnology to create long-term wealth through land appreciation and timber value.",
+        q: "What is Redwood Biotech?",
+        a: "Redwood Biotechis a unique investment model that combines strategically selected real estate with premium Sagwan (Teak) plantations using advanced biotechnology to create long-term wealth through land appreciation and timber value.",
       },
       {
-        q: "How is Redwood different from traditional real estate?",
+        q: "How is Redwood Biotech different from traditional real estate?",
         a: "Unlike conventional land investments that rely solely on appreciation, Redwood combines land ownership with high-value timber cultivation — creating two potential sources of long-term value instead of one.",
       },
       {
-        q: "Who can invest in Redwood?",
+        q: "Who can invest in Redwood Biotech?",
         a: "Any individual looking for a long-term, asset-backed investment can become a Redwood investor. No specialised background is required.",
       },
     ],
@@ -63,7 +63,7 @@ const categories = [
         a: "Yes. Investors receive the documents applicable to their investment plan after completion of the legal process.",
       },
       {
-        q: "Where are Redwood projects located?",
+        q: "Where are Redwood Biotech projects located?",
         a: "Projects are strategically located on the outskirts of developing cities where future infrastructure, urban expansion, and tourism have the potential to enhance land value.",
       },
     ],
@@ -76,12 +76,12 @@ const categories = [
     accent: "bg-emerald-800",
     questions: [
       {
-        q: "Why has Redwood chosen Sagwan (Teak)?",
+        q: "Why has Redwood Biotechchosen Sagwan (Teak)?",
         a: "Sagwan is known as the King of Timber because of its exceptional durability, premium quality, and consistently high demand in furniture, construction, luxury interiors, and export markets.",
       },
       {
         q: "Why not plant multiple tree species?",
-        a: "Redwood specialises in Sagwan because of its established commercial value, strong market demand, and long-term investment potential. Focused specialisation allows for a higher standard of care and expertise.",
+        a: "Redwood Biotechspecialises in Sagwan because of its established commercial value, strong market demand, and long-term investment potential. Focused specialisation allows for a higher standard of care and expertise.",
       },
       {
         q: "What is biotechnology?",
@@ -97,7 +97,7 @@ const categories = [
       },
       {
         q: "Who manages the plantation?",
-        a: "Redwood's professional plantation management team handles cultivation, irrigation, nutrition, monitoring, and overall maintenance throughout the investment tenure.",
+        a: "Redwood Biotech's professional plantation management team handles cultivation, irrigation, nutrition, monitoring, and overall maintenance throughout the investment tenure.",
       },
     ],
   },
@@ -114,7 +114,7 @@ const categories = [
       },
       {
         q: "How long is the investment tenure?",
-        a: "The investment follows a long-term horizon. The exact tenure depends on the selected plan. Redwood is designed for patient, wealth-building investors — not short-term speculation.",
+        a: "The investment follows a long-term horizon. The exact tenure depends on the selected plan. Redwood Biotechis designed for patient, wealth-building investors — not short-term speculation.",
       },
       {
         q: "Will I receive periodic updates?",
@@ -122,11 +122,11 @@ const categories = [
       },
       {
         q: "What happens when the timber is harvested?",
-        a: "After harvesting and sale, profits are distributed according to the terms of the selected investment plan. The entire process is managed by Redwood's team.",
+        a: "After harvesting and sale, profits are distributed according to the terms of the selected investment plan. The entire process is managed by Redwood Biotech's team.",
       },
       {
         q: "How is timber sold?",
-        a: "Redwood coordinates the harvesting and sale process through appropriate commercial channels at prevailing market rates, ensuring investors get fair value for their timber.",
+        a: "Redwood Biotechcoordinates the harvesting and sale process through appropriate commercial channels at prevailing market rates, ensuring investors get fair value for their timber.",
       },
       {
         q: "What determines the value of the timber?",
@@ -168,7 +168,7 @@ const categories = [
     questions: [
       {
         q: "Is my investment backed by a real asset?",
-        a: "Yes. Redwood investments are backed by tangible land and professionally managed plantations — physical assets you can visit and verify.",
+        a: "Yes. Redwood Biotech investments are backed by tangible land and professionally managed plantations — physical assets you can visit and verify.",
       },
       {
         q: "Is my plantation insured?",
@@ -176,7 +176,7 @@ const categories = [
       },
       {
         q: "Can I visit the project?",
-        a: "Yes. Investors can visit the project site by scheduling a visit with the Redwood team. Transparency is a core principle — you are always welcome to see your investment in person.",
+        a: "Yes. Investors can visit the project site by scheduling a visit with the Redwood Biotech team. Transparency is a core principle — you are always welcome to see your investment in person.",
       },
       {
         q: "Will I receive plantation reports?",
@@ -299,7 +299,7 @@ function Page() {
             Every Question,<br className="hidden sm:block" /> Answered Honestly.
           </h1>
           <p className="mt-5 text-lg text-green-100/80 max-w-2xl mx-auto">
-            We believe great investments start with clear answers. Browse every question about Redwood — from land ownership to timber returns.
+            We believe great investments start with clear answers. Browse every question about Redwood Biotech — from land ownership to timber returns.
           </p>
           {/* Quick stat strip */}
           <div className="mt-10 flex flex-wrap justify-center gap-8">
@@ -339,7 +339,7 @@ function Page() {
               Still have questions?
             </h2>
             <p className="mt-3 text-stone-600">
-              Our advisors are happy to walk you through any aspect of the Redwood model — from legal structure to plantation science.
+              Our advisors are happy to walk you through any aspect of the Redwood Biotech model — from legal structure to plantation science.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
               <a

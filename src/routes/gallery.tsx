@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { X, Play, Sprout } from "lucide-react";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
-import galleryBg from "@/assets/gallerybg.png";
-import galleryPhoto1 from "@/assets/gallery-photo-1.jpg";
-import galleryPhoto2 from "@/assets/gallery-photo-2.jpg";
-import galleryPhoto3 from "@/assets/gallery-photo-3.jpg";
-import galleryPhoto4 from "@/assets/gallery-photo-4.png";
+import galleryBg from "@/assets/gallerybg.webp";
+import galleryPhoto1 from "@/assets/gallery-photo-1.webp";
+import galleryPhoto2 from "@/assets/gallery-photo-2.webp";
+import galleryPhoto3 from "@/assets/gallery-photo-3.webp";
+import galleryPhoto4 from "@/assets/gallery-photo-4.webp";
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({

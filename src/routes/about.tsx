@@ -2,13 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useScroll, useTransform, useInView, animate } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import { Eye, Target, Heart, ArrowRight, Sparkles, TrendingUp } from "lucide-react";
-import heroImg from "../assets/about-hero.jpg";
-import forestImg from "../assets/forest-light.jpg";
-import saplingImg from "../assets/sapling-new.jpg";
+import heroImg from "../assets/about-hero.webp";
+import forestImg from "../assets/forest-light.webp";
+import saplingImg from "../assets/sapling-new.webp";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
-import agroforestryField from "../assets/agroforestry-field.jpg";
-import commerceBg from "../assets/About-commercebg.png";
+import agroforestryField from "../assets/agroforestry-field.webp";
+import commerceBg from "../assets/About-commercebg.webp";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [

@@ -10,16 +10,16 @@ import {
   Sparkles, Layers, ChevronRight, Phone, Mail, Check, Leaf, TrendingUp,
 } from "lucide-react";
 
-import logo from "../assets/rw-logo.png";
-import heroImg from "../assets/teak-plantation-hero.jpg";
-import timberImg from "../assets/agroforestry-field.jpg";
-import biotechImg from "../assets/biotech-lab.jpg";
-import landImg from "../assets/RealEstateandAgrobg.png";
+import logo from "../assets/rw-logo.webp";
+import heroImg from "../assets/teak-plantation-hero.webp";
+import timberImg from "../assets/agroforestry-field.webp";
+import biotechImg from "../assets/biotech-lab.webp";
+import landImg from "../assets/RealEstateandAgrobg.webp";
 
 import { Navbar } from "../components/site/Navbar";
 import { Footer } from "../components/site/Footer";
 import "../styles/investment-style.css";
-import nidhivanImg from "../assets/nidhivan.png";
+import nidhivanImg from "../assets/nidhivan.webp";
 
 export const Route = createFileRoute("/investment")({
   head: () => ({
@@ -93,8 +93,8 @@ const pillars = [
     n: "04",
     icon: Layers,
     title: "Professional Asset Management",
-    lede: "From planting to harvest, the entire lifecycle is executed by Redwood. You own the asset; we run the operation.",
-    body: "Investors benefit from ownership, while Redwood manages the execution — from plantation development and maintenance to monitoring, compliance, harvesting, and market facilitation. Upon maturity, Redwood facilitates the harvesting and commercialisation of the timber asset.",
+    lede: "From planting to harvest, the entire lifecycle is executed by Redwood Biotech. You own the asset; we run the operation.",
+    body: "Investors benefit from ownership, while Redwood Biotechmanages the execution — from plantation development and maintenance to monitoring, compliance, harvesting, and market facilitation. Upon maturity, Redwood Biotech facilitates the harvesting and commercialisation of the timber asset.",
     img: heroImg,
   },
   {
@@ -813,7 +813,7 @@ function EconomicsSection() {
             </Reveal>
             <Reveal delay={0.2}>
               <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-lg">
-                Upon maturity of the plantation, Redwood facilitates harvesting and commercialisation. As per the agreed structure, <strong className="text-foreground">75% of net proceeds</strong> from timber sales are shared with the investor, while 25% is retained by the company for management, maintenance, operations, and market execution.
+                Upon maturity of the plantation, Redwood Biotech facilitates harvesting and commercialisation. As per the agreed structure, <strong className="text-foreground">75% of net proceeds</strong> from timber sales are shared with the investor, while 25% is retained by the company for management, maintenance, operations, and market execution.
               </p>
             </Reveal>
 
@@ -872,7 +872,7 @@ function EconomicsSection() {
                   <div className="rounded-xl bg-bark/5 p-4 border border-bark/20">
                     <div className="flex items-center gap-2 text-bark">
                       <span className="h-2 w-2 rounded-full bg-bark" />
-                      <span className="text-xs font-medium uppercase tracking-wider">Redwood</span>
+                      <span className="text-xs font-medium uppercase tracking-wider">Redwood Biotech</span>
                     </div>
                     <div className="font-display text-3xl mt-2 text-bark">25%</div>
                     <p className="text-xs text-muted-foreground mt-1">management & execution</p>
@@ -991,7 +991,7 @@ function EnquiryForm() {
           <div className="mt-10 space-y-4 text-sm">
             <div className="flex items-center gap-3 text-foreground">
               <span className="h-9 w-9 rounded-full bg-primary/10 grid place-items-center"><Phone className="h-4 w-4 text-primary" /></span>
-              <div><div className="font-medium">+919752258759· Investor Desk</div><div className="text-xs text-muted-foreground">Mon–Sat · 10am–7pm IST</div></div>
+              <div><div className="font-medium">+...· Investor Desk</div><div className="text-xs text-muted-foreground">Mon–Sat · 10am–7pm IST</div></div>
             </div>
             <div className="flex items-center gap-3 text-foreground">
               <span className="h-9 w-9 rounded-full bg-primary/10 grid place-items-center"><Mail className="h-4 w-4 text-primary" /></span>

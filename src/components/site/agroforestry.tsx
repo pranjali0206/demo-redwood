@@ -6,8 +6,8 @@ import {
   } from "framer-motion";
   import { useRef } from "react";
 import { TreePine, Leaf, TrendingUp, Sprout } from "lucide-react";
-import fieldImg from "@/assets/agroforestry-img.jpeg";
-import bgImg from "@/assets/agroforestry-bg.jpg";
+import fieldImg from "@/assets/agroforestry-img.webp";
+import bgImg from "@/assets/agroforestry-bg.webp";
 
 const benefits = [
   { Icon: TreePine, t: "Long Term Asset Value", d: "Land that appreciates, generation after generation." },
