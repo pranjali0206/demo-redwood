@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
-import { WhatsAppFab } from "./WhatsAppFab";
 
 export function SiteLayout({ children, transparentNav = false }: { children: ReactNode; transparentNav?: boolean }) {
   return (
@@ -9,7 +8,6 @@ export function SiteLayout({ children, transparentNav = false }: { children: Rea
       <Navbar transparentUntilScroll={transparentNav} />
       <main className={transparentNav ? "" : "pt-16"}>{children}</main>
       <Footer />
-      <WhatsAppFab />
     </div>
   );
 }

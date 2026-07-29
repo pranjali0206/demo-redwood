@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+﻿import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
-  Phone, MessageCircle, Mail, Clock, ArrowUpRight, ChevronDown,
+  Mail, Clock, ArrowUpRight, ChevronDown,
 } from "lucide-react";
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
@@ -12,7 +12,7 @@ import heroImg from "@/assets/land-aerial.webp";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — Redwood Biotech, Indore" },
+      { title: "Contact - Redwood Biotech, Indore" },
       { name: "description", content: "Talk to Redwood Biotech about partnering your land for Sagwan teak plantation. Office: Limbodi, Khandwa Road, Indore (MP)." },
       { property: "og:title", content: "Contact Redwood Biotech" },
       { property: "og:description", content: "Reach out about land partnerships, the science, or our investment plans." },
@@ -23,15 +23,13 @@ export const Route = createFileRoute("/contact")({
 });
 
 const contactMethods = [
-  { icon: Phone, label: "Call Us", value: "+....", sub: "Mon – Sat · 10am – 6pm", href: "tel:+917952258759" },
-  { icon: MessageCircle, label: "WhatsApp", value: "Chat instantly", sub: "Fastest response", href: "https://wa.me/917952258759" },
-  { icon: Mail, label: "Email", value: "info@redwoodbiotech.in", sub: "Replies within 24 hrs", href: "mailto:hello@redwoodbiotech.in" },
+  { icon: Mail, label: "Email", value: "info@redwoodbiotech.in", sub: "Replies within 24 hrs", href: "mailto:info@redwoodbiotech.in" },
 ];
 
 const faqs = [
-  { q: "How soon will someone contact me?", a: "Our investment desk reaches out within 24 hours of your enquiry — usually the same day if submitted during business hours." },
-  { q: "Do I need to visit the office in person?", a: "No — everything can be discussed over call or WhatsApp. A site visit to the plantation is optional and arranged on request." },
-  { q: "What details should I have ready?", a: "Just your land size and location if you're a landowner, or your investment range if you're an investor. Our team will guide you through the rest." },
+  { q: "How soon will someone contact me?", a: "Our investment desk reaches out within 24 hours of your enquiry - usually the same day if submitted during business hours." },
+  { q: "Do I need to visit the office in person?", a: "No - everything can be discussed over call or email. A site visit to the plantation is optional and arranged on request." },
+  { q: "What details should I have ready?", a: "Just your land size and location if you are a landowner, or your investment range if you are an investor. Our team will guide you through the rest." },
 ];
 
 function Page() {
@@ -60,12 +58,12 @@ function Hero() {
         </Reveal>
         <Reveal delay={0.1}>
           <h1 className="mt-6 font-serif text-4xl sm:text-6xl lg:text-7xl font-bold leading-tight text-white max-w-4xl">
-            Your land has potential. <span className="italic text-amber-300">Let's talk.</span>
+            Your land has potential. <span className="italic text-amber-300">Let us talk.</span>
           </h1>
         </Reveal>
         <Reveal delay={0.2}>
           <p className="mt-6 text-lg text-white/80 max-w-xl">
-            Whether you're a landowner or an investor — one conversation is where every partnership begins.
+            Whether you are a landowner or an investor - one conversation is where every partnership begins.
           </p>
         </Reveal>
       </div>
@@ -76,7 +74,7 @@ function Hero() {
 function ContactMethods() {
   return (
     <section className="relative -mt-20 z-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto grid sm:grid-cols-3 gap-5">
+      <div className="max-w-md mx-auto grid gap-5">
         {contactMethods.map((m, i) => (
           <Reveal key={m.label} delay={0.05 * i} className="h-full">
             <a
@@ -108,7 +106,7 @@ function MainSection() {
   return (
     <section className="py-24 lg:py-32 bg-stone-50">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Reveal><p className="text-xs uppercase tracking-[0.3em] text-[var(--brand-red)] mb-5">— Head Office</p></Reveal>
+        <Reveal><p className="text-xs uppercase tracking-[0.3em] text-[var(--brand-red)] mb-5">- Head Office</p></Reveal>
         <Reveal delay={0.1}>
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-green-900 leading-snug">
             Come see the <span className="italic">science</span> behind the soil.
@@ -127,7 +125,7 @@ function MainSection() {
         <Reveal delay={0.25}>
           <div className="mt-8 flex items-center gap-3 text-stone-600 text-sm">
             <Clock className="h-4 w-4 text-[var(--brand-red)]" />
-            Mon – Sat · 10:00 – 18:00 IST · Sundays closed
+            Mon - Sat . 10:00 - 18:00 IST . Sundays closed
           </div>
         </Reveal>
       </div>
@@ -140,7 +138,7 @@ function FaqStrip() {
   return (
     <section className="py-20 lg:py-28 bg-white border-t border-stone-100">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Reveal><p className="text-xs uppercase tracking-[0.3em] text-[var(--brand-red)] mb-5 text-center">— Before You Reach Out</p></Reveal>
+        <Reveal><p className="text-xs uppercase tracking-[0.3em] text-[var(--brand-red)] mb-5 text-center">- Before You Reach Out</p></Reveal>
         <Reveal delay={0.1}>
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-green-900 text-center mb-10">Quick answers</h2>
         </Reveal>
