@@ -5,7 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import {
   TreePine, Leaf, TrendingUp, Dna, FlaskConical, Sprout, Trees,
-  Check, ArrowRight, MapPin, Phone, MessageCircle, Sparkles,
+  Check, ArrowRight, MapPin, Sparkles,
 } from "lucide-react";
 import { SiteLayout } from "@/components/site/Layout";
 import { Reveal, CountUp } from "@/components/site/Reveal";
@@ -185,30 +185,10 @@ function ContactSection() {
             </div>
 
             <div className="flex items-center gap-3">
-              <Phone className="text-amber-400" size={20} />
-              <a
-                href="tel:..."
-                className="hover:text-white"
-              >
-                ...
-              </a>
-            </div>
-
-            <div className="flex items-center gap-3">
               <Sparkles className="text-amber-400" size={20} />
               <span>New Laboratory Coming to Indore Soon</span>
             </div>
           </div>
-
-          <a
-            href="https://wa.me/.."
-            target="_blank"
-            rel="noreferrer"
-            className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-md bg-green-600 hover:bg-green-500 text-white font-semibold transition-colors"
-          >
-            <MessageCircle size={20} />
-            Chat on WhatsApp
-          </a>
         </Reveal>
 
         {/* Right Side Form */}

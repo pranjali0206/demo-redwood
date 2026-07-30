@@ -73,7 +73,7 @@ function Page() {
                 <div className="mt-1 flex">
                   <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-stone-300 bg-stone-50 text-stone-600 text-sm">+91</span>
                   <input type="tel" maxLength={10} value={mobile} onChange={(e) => setMobile(e.target.value.replace(/\D/g, ""))}
-                    className="block w-full rounded-r-md border border-stone-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-700" placeholder="...." />
+                    className="block w-full rounded-r-md border border-stone-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-700" />
                 </div>
               </div>
               <button type="submit" className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-md bg-green-700 text-white font-semibold hover:bg-green-800">
