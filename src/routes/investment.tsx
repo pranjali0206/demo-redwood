@@ -1,25 +1,25 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform, useInView, useSpring, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, useInView, useSpring } from "framer-motion";
 import {
   AreaChart, Area, BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadialBarChart, RadialBar,
 } from "recharts";
 import {
   ArrowDownRight, ArrowUpRight, Map, TreePine, FlaskConical, ShieldCheck,
-  Sparkles, Layers, ChevronRight, Phone, Mail, Check, Leaf, TrendingUp,
+  Sparkles, Layers, Check, Leaf, TrendingUp,
 } from "lucide-react";
 
-import logo from "../assets/rw-logo.png";
-import heroImg from "../assets/teak-plantation-hero.jpg";
-import timberImg from "../assets/agroforestry-field.jpg";
-import biotechImg from "../assets/biotech-lab.jpg";
-import landImg from "../assets/RealEstateandAgrobg.png";
+import logo from "../assets/rw-logo.webp";
+import heroImg from "../assets/teak-plantation-hero.webp";
+import timberImg from "../assets/agroforestry-field.webp";
+import biotechImg from "../assets/biotech-lab.webp";
+import landImg from "../assets/RealEstateandAgrobg.webp";
 
 import { Navbar } from "../components/site/Navbar";
 import { Footer } from "../components/site/Footer";
 import "../styles/investment-style.css";
-import nidhivanImg from "../assets/nidhivan.png";
+import nidhivanImg from "../assets/nidhivan.webp";
 
 export const Route = createFileRoute("/investment")({
   head: () => ({
@@ -93,8 +93,8 @@ const pillars = [
     n: "04",
     icon: Layers,
     title: "Professional Asset Management",
-    lede: "From planting to harvest, the entire lifecycle is executed by Redwood. You own the asset; we run the operation.",
-    body: "Investors benefit from ownership, while Redwood manages the execution — from plantation development and maintenance to monitoring, compliance, harvesting, and market facilitation. Upon maturity, Redwood facilitates the harvesting and commercialisation of the timber asset.",
+    lede: "From planting to harvest, the entire lifecycle is executed by Redwood Biotech. You own the asset; we run the operation.",
+    body: "Investors benefit from ownership, while Redwood Biotechmanages the execution — from plantation development and maintenance to monitoring, compliance, harvesting, and market facilitation. Upon maturity, Redwood Biotech facilitates the harvesting and commercialisation of the timber asset.",
     img: heroImg,
   },
   {
@@ -131,7 +131,7 @@ const pillars = [
 
 /* ---------- BUILDING BLOCKS ---------- */
 
-function Reveal({ children, delay = 0, y = 32 }: { children: React.ReactNode; delay?: number; y?: number }) {
+function Reveal({ children, delay = 0, y = 32, className }: { children: React.ReactNode; delay?: number; y?: number; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   return (
@@ -140,6 +140,7 @@ function Reveal({ children, delay = 0, y = 32 }: { children: React.ReactNode; de
       initial={{ opacity: 0, y }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+      className={className}
     >
       {children}
     </motion.div>
@@ -238,13 +239,6 @@ function Hero() {
             className="mt-10 flex flex-wrap items-center gap-4"
           >
             <a
-              href="#enquire"
-              className="group inline-flex items-center gap-2 rounded-full bg-red-600 px-6 py-3.5 text-sm font-medium text-white hover:bg-red-700 transition"
-            >
-              Book a discovery call
-              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </a>
-            <a
               href="#logic"
               className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-transparent px-6 py-3.5 text-sm font-medium text-white hover:bg-white/10 transition"
             >
@@ -336,7 +330,7 @@ function LogicIntro() {
   );
 }
 
-/* ── NEW: Horizontal pillar card (replaces PillarRow) ── */
+/* ── Horizontal pillar card ── */
 function PillarCard({ p, i }: { p: typeof pillars[number]; i: number }) {
   const Icon = p.icon;
   return (
@@ -407,7 +401,7 @@ function PillarCard({ p, i }: { p: typeof pillars[number]; i: number }) {
   );
 }
 
-/* ── NEW: Pillars section — 3 × 2 horizontal grid with gradient bg ── */
+/* ── Pillars section — 3 × 2 horizontal grid with gradient bg ── */
 function Pillars() {
   const topRow = pillars.slice(0, 3);
   const bottomRow = pillars.slice(3, 6);
@@ -478,7 +472,7 @@ function Pillars() {
         </div>
       </div>
 
-      {/* ── Outcome block (unchanged content, re-styled for dark bg) ── */}
+      {/* ── Outcome block ── */}
       <PillarOutcome />
     </section>
   );
@@ -758,7 +752,7 @@ function FarmPlanSection() {
                   <p className="text-xs text-white/40">22°22'30.8"N 75°56'8.2"E</p>
                 </div>
               </div>
-              
+
               <a
                 href="https://www.google.com/maps/place/Green+project/@22.3751268,75.9357087,17z"
                 target="_blank"
@@ -813,7 +807,7 @@ function EconomicsSection() {
             </Reveal>
             <Reveal delay={0.2}>
               <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-lg">
-                Upon maturity of the plantation, Redwood facilitates harvesting and commercialisation. As per the agreed structure, <strong className="text-foreground">75% of net proceeds</strong> from timber sales are shared with the investor, while 25% is retained by the company for management, maintenance, operations, and market execution.
+                Upon maturity of the plantation, Redwood Biotech facilitates harvesting and commercialisation. As per the agreed structure, <strong className="text-foreground">75% of net proceeds</strong> from timber sales are shared with the investor, while 25% is retained by the company for management, maintenance, operations, and market execution.
               </p>
             </Reveal>
 
@@ -872,7 +866,7 @@ function EconomicsSection() {
                   <div className="rounded-xl bg-bark/5 p-4 border border-bark/20">
                     <div className="flex items-center gap-2 text-bark">
                       <span className="h-2 w-2 rounded-full bg-bark" />
-                      <span className="text-xs font-medium uppercase tracking-wider">Redwood</span>
+                      <span className="text-xs font-medium uppercase tracking-wider">Redwood Biotech</span>
                     </div>
                     <div className="font-display text-3xl mt-2 text-bark">25%</div>
                     <p className="text-xs text-muted-foreground mt-1">management & execution</p>
@@ -948,131 +942,8 @@ function OutcomeSection() {
             work together to create lasting value.
           </p>
         </Reveal>
-
-        <Reveal delay={0.3}>
-          <a
-            href="#enquire"
-            className="mt-12 inline-flex items-center gap-2 rounded-full bg-red-600 px-7 py-4 text-sm font-medium text-white hover:bg-red-700 transition"
-          >
-            Book your discovery call
-            <ArrowUpRight className="h-4 w-4" />
-          </a>
-        </Reveal>
       </div>
     </section>
-  );
-}
-
-function EnquiryForm() {
-  const [status, setStatus] = useState<"idle" | "sent">("idle");
-  const [form, setForm] = useState({ name: "", email: "", phone: "", investment: "10-25L", message: "" });
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus("sent");
-  };
-
-  return (
-    <section id="enquire" className="py-28 md:py-36 bg-surface">
-      <div className="mx-auto max-w-6xl px-6 grid md:grid-cols-12 gap-12">
-        <div className="md:col-span-5">
-          <Reveal><p className="text-xs uppercase tracking-[0.3em] text-primary mb-6">— Begin the Conversation</p></Reveal>
-          <Reveal delay={0.1}>
-            <h2 className="font-display text-4xl md:text-5xl leading-tight text-balance">
-               Book Your   <br /><span className="italic text-primary">Appointment Now .</span>
-            </h2>
-          </Reveal>
-          <Reveal delay={0.2}>
-            <p className="mt-6 text-muted-foreground leading-relaxed">
-              Share a few details and our investment team will walk you through plot availability, legal structure, plantation cycle, and projected economics tailored to your goals.
-            </p>
-          </Reveal>
-
-          <div className="mt-10 space-y-4 text-sm">
-            <div className="flex items-center gap-3 text-foreground">
-              <span className="h-9 w-9 rounded-full bg-primary/10 grid place-items-center"><Phone className="h-4 w-4 text-primary" /></span>
-              <div><div className="font-medium">+91 · Investor Desk</div><div className="text-xs text-muted-foreground">Mon–Sat · 10am–7pm IST</div></div>
-            </div>
-            <div className="flex items-center gap-3 text-foreground">
-              <span className="h-9 w-9 rounded-full bg-primary/10 grid place-items-center"><Mail className="h-4 w-4 text-primary" /></span>
-              <div><div className="font-medium">invest@redwoodbiotech.in</div><div className="text-xs text-muted-foreground">Replies within 24 hours</div></div>
-            </div>
-            <div className="flex items-center gap-3 text-foreground">
-              <span className="h-9 w-9 rounded-full bg-primary/10 grid place-items-center"><Leaf className="h-4 w-4 text-primary" /></span>
-              <div><div className="font-medium">Site visit on request</div><div className="text-xs text-muted-foreground">Walk the plantation in person</div></div>
-            </div>
-          </div>
-        </div>
-
-        <div className="md:col-span-7">
-          <Reveal y={48}>
-            <div className="relative rounded-3xl bg-card border border-border p-8 md:p-10 shadow-[0_30px_80px_-30px_rgba(120,30,20,0.2)]">
-              <AnimatePresence mode="wait">
-                {status === "idle" ? (
-                  <motion.form key="form" onSubmit={submit}
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    className="space-y-5">
-                    <div className="grid md:grid-cols-2 gap-5">
-                      <Field label="Full name">
-                        <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
-                          className="w-full bg-transparent border-b border-border focus:border-primary outline-none py-2 text-foreground" />
-                      </Field>
-                      <Field label="Email">
-                        <input required type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
-                          className="w-full bg-transparent border-b border-border focus:border-primary outline-none py-2 text-foreground" />
-                      </Field>
-                    </div>
-                    <div className="grid md:grid-cols-2 gap-5">
-                      <Field label="Phone">
-                        <input required value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
-                          className="w-full bg-transparent border-b border-border focus:border-primary outline-none py-2 text-foreground" />
-                      </Field>
-                      <Field label="Investment range">
-                        <select value={form.investment} onChange={e => setForm({ ...form, investment: e.target.value })}
-                          className="w-full bg-transparent border-b border-border focus:border-primary outline-none py-2 text-foreground">
-                          <option value="5-10L">₹5–10 Lakh</option>
-                          <option value="10-25L">₹10–25 Lakh</option>
-                          <option value="25-50L">₹25–50 Lakh</option>
-                          <option value="50L+">₹50 Lakh +</option>
-                        </select>
-                      </Field>
-                    </div>
-                    <Field label="What would you like to know?">
-                      <textarea rows={3} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })}
-                        className="w-full bg-transparent border-b border-border focus:border-primary outline-none py-2 text-foreground resize-none" />
-                    </Field>
-
-                    <button type="submit"
-                      className="group mt-4 w-full inline-flex items-center justify-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-4 text-sm font-medium hover:bg-primary/90 transition">
-                      Request a call back
-                      <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </button>
-                    <p className="text-xs text-muted-foreground text-center">Your details remain confidential. No spam — ever.</p>
-                  </motion.form>
-                ) : (
-                  <motion.div key="ok" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="py-12 text-center">
-                    <div className="mx-auto h-14 w-14 rounded-full bg-primary/10 grid place-items-center mb-6">
-                      <Check className="h-7 w-7 text-primary" strokeWidth={3} />
-                    </div>
-                    <h3 className="font-display text-2xl">Thank you, {form.name || "investor"}.</h3>
-                    <p className="mt-3 text-muted-foreground max-w-sm mx-auto">Our team will reach out within 24 hours to schedule your discovery call.</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </Reveal>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <label className="block">
-      <span className="text-xs uppercase tracking-widest text-muted-foreground">{label}</span>
-      <div className="mt-1">{children}</div>
-    </label>
   );
 }
 
@@ -1121,8 +992,8 @@ function PillarOutcome() {
               { icon: ShieldCheck,  label: "Legal Framework",     sub: "Registered ownership" },
               { icon: Sparkles,     label: "Multiple Drivers",    sub: "Diversified value" },
             ].map(({ icon: Icon, label, sub }, i) => (
-              <Reveal key={label} delay={0.04 * i}>
-                <div className="flex items-start gap-3 rounded-2xl bg-white/5 border border-white/10 p-5 hover:border-red-500/40 hover:bg-white/10 hover:shadow-[0_4px_24px_-8px_rgba(180,30,20,0.3)] transition-all duration-300">
+             <Reveal key={label} delay={0.04 * i} className="h-full">
+                <div className="flex h-full items-start gap-3 rounded-2xl bg-white/5 border border-white/10 p-5 hover:border-red-500/40 hover:bg-white/10 hover:shadow-[0_4px_24px_-8px_rgba(180,30,20,0.3)] transition-all duration-300">
                   <span className="mt-0.5 h-8 w-8 shrink-0 rounded-full bg-red-600/15 grid place-items-center">
                     <Icon className="h-4 w-4 text-red-400" />
                   </span>
@@ -1155,7 +1026,6 @@ function Page() {
       <EconomicsSection />
       <FarmPlanSection />
       <OutcomeSection />
-      <EnquiryForm />
       <Footer />
     </div>
   );

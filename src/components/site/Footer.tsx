@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin, FlaskConical } from "lucide-react";
-import logoWhite from "../../assets/rw-logo.png";
+import logoWhite from "../../assets/rw-logo.webp";
 export function Footer() { 
   return ( 
     <footer className="bg-stone-900 text-stone-300"> 

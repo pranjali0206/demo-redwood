@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Link } from "@tanstack/react-router";
 import { Check, ArrowRight, Sparkles, TreePine, Building2 } from "lucide-react";
-import combinedBg from "../../assets/combined-bg.png";
+import combinedBg from "../../assets/combined-bg.webp";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -189,8 +189,7 @@ export function CombinedSection() {
         </div>
 
         {/* ── Three Cards ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 items-end">
-
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 items-stretch">
           {/* 1. Agroforestry — smallest */}
           <motion.div
             custom={0.2}
@@ -199,7 +198,7 @@ export function CombinedSection() {
             animate={inView ? "visible" : "hidden"}
             className="sm:self-end"
           >
-            <div className="rounded-2xl bg-green-50 border border-green-200 p-5 shadow-lg shadow-green-900/10">
+           <div className="h-full min-h-[340px] rounded-2xl bg-green-50 border border-green-200 p-8 shadow-xl shadow-green-900/10 flex flex-col">
               <div className="flex items-center gap-2 text-green-800 mb-4">
                 <TreePine size={20} />
                 <h3 className="font-serif text-lg font-bold">Agroforestry</h3>
@@ -223,7 +222,7 @@ export function CombinedSection() {
             animate={inView ? "visible" : "hidden"}
             className="sm:self-end"
           >
-            <div className="rounded-2xl bg-stone-200 border border-stone-300 p-6 shadow-lg shadow-stone-900/10">
+            <div className="h-full min-h-[340px] rounded-2xl bg-stone-200 border border-stone-300 p-8 shadow-xl shadow-stone-900/10 flex flex-col">
               <div className="flex items-center gap-2 text-stone-800 mb-4">
                 <Building2 size={22} />
                 <h3 className="font-serif text-xl font-bold">Real Estate</h3>

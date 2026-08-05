@@ -5,9 +5,9 @@ import {
   Sprout, TrendingUp, Trees, MapPin, Coins, Recycle,
   BarChart3, ShieldCheck, Globe2, Rocket, ArrowRight, ChevronDown,
 } from "lucide-react";
-import heroImg from "../assets/teak-plantation-hero.jpg";
-import saplingImg from "../assets/sapling.jpg";
-import forestImg from "../assets/forest-light.jpg";
+import heroImg from "../assets/teak-plantation-hero.webp";
+import saplingImg from "../assets/sapling-new.webp";
+import forestImg from "../assets/forest-light.webp";
 import { Navbar } from "../components/site/Navbar";
 import { Footer } from "../components/site/Footer";
 

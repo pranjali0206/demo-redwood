@@ -5,14 +5,14 @@ import { useState } from "react";
 import { toast } from "sonner";
 import {
   TreePine, Leaf, TrendingUp, Dna, FlaskConical, Sprout, Trees,
-  Check, ArrowRight, MapPin, Phone, MessageCircle, Sparkles,
+  Check, ArrowRight, MapPin, Sparkles,
 } from "lucide-react";
 import { SiteLayout } from "@/components/site/Layout";
 import { Reveal, CountUp } from "@/components/site/Reveal";
-import heroImg from "@/assets/hero-plantation.jpg";
-import fieldImg from "@/assets/plantation-field.jpg";
-import labImg from "@/assets/lab-tissue.jpg";
-import teamImg from "@/assets/team-field.jpg";
+import heroImg from "@/assets/hero-plantation.webp";
+import fieldImg from "@/assets/plantation-field.webp";
+import labImg from "@/assets/lab-tissue.webp";
+import teamImg from "@/assets/team-field.webp";
 import Agroforestry from "../components/site/agroforestry";
 import { CombinedSection } from "../components/site/CombinedSection";
 import {About} from "../components/site/About";
@@ -106,7 +106,7 @@ function GalleryPreview() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal className="text-center">
         <h2 className="font-serif text-3xl sm:text-5xl font-bold text-green-900">
-        From the Field Of <span className="text-red-500">RedWood</span>
+        From the Field Of <span className="text-red-500">RedWood Biotech</span>
       </h2>          <p className="mt-4 text-lg text-stone-600">Real plantations, real science, real growth.</p>
         </Reveal>
         <motion.div initial="hidden" whileInView="show" viewport={{ once: true }}
@@ -185,35 +185,15 @@ function ContactSection() {
             </div>
 
             <div className="flex items-center gap-3">
-              <Phone className="text-amber-400" size={20} />
-              <a
-                href="tel:+919999999999"
-                className="hover:text-white"
-              >
-                +91 99999 99999
-              </a>
-            </div>
-
-            <div className="flex items-center gap-3">
               <Sparkles className="text-amber-400" size={20} />
               <span>New Laboratory Coming to Indore Soon</span>
             </div>
           </div>
-
-          <a
-            href="https://wa.me/919999999999"
-            target="_blank"
-            rel="noreferrer"
-            className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-md bg-green-600 hover:bg-green-500 text-white font-semibold transition-colors"
-          >
-            <MessageCircle size={20} />
-            Chat on WhatsApp
-          </a>
         </Reveal>
 
         {/* Right Side Form */}
         <Reveal delay={0.15}>
-          <form
+          {/* <form
             onSubmit={handle}
             className="bg-white text-stone-900 rounded-2xl p-7 sm:p-8 shadow-2xl space-y-4"
           >
@@ -225,6 +205,14 @@ function ContactSection() {
               }
               required
             />
+            <Field
+             label="Reference Name"
+             value={form.referenceName}
+             onChange={(v) => setForm({ ...form, referenceName: v })}
+             required
+            />
+
+            
 
             <Field
               label="Mobile Number"
@@ -345,7 +333,7 @@ function ContactSection() {
               Send Enquiry
               <ArrowRight size={18} />
             </button>
-          </form>
+          </form> */}
         </Reveal>
       </div>
     </section>

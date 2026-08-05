@@ -1,9 +1,9 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { MapPinned, TreePine, FlaskConical, ChevronDown, Sparkles } from "lucide-react";
-import forestImg from "@/assets/teak-forest.jpg";
-import landImg from "@/assets/land-aerial.jpg";
-import labImg from "@/assets/biotech-lab.jpg";
+import forestImg from "@/assets/teak-forest.webp";
+import landImg from "@/assets/land-aerial.webp";
+import labImg from "@/assets/biotech-lab.webp";
 import { Reveal } from "./Reveal-2";
 
 const steps = [

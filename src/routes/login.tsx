@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { ArrowRight, Shield } from "lucide-react";
-import field from "@/assets/plantation-field.jpg";
+import field from "@/assets/plantation-field.webp";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -47,7 +47,7 @@ function Page() {
         <img src={field} alt="Plantation" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-br from-green-950/80 via-green-900/60 to-black/80" />
         <div className="relative h-full flex flex-col justify-between p-12 text-white">
-          <a href="/" className="font-serif text-2xl font-bold"><span className="text-amber-300">REDWOOD</span> BIOTECH</a>
+          <a href="/" className="font-serif text-2xl font-bold"><span className="text-amber-300">REDWOOD BIOTECH</span> BIOTECH</a>
           <div>
             <motion.h2 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}
               className="font-serif text-5xl font-bold leading-tight">"Your land is working.<br />Track it here."</motion.h2>
@@ -73,7 +73,7 @@ function Page() {
                 <div className="mt-1 flex">
                   <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-stone-300 bg-stone-50 text-stone-600 text-sm">+91</span>
                   <input type="tel" maxLength={10} value={mobile} onChange={(e) => setMobile(e.target.value.replace(/\D/g, ""))}
-                    className="block w-full rounded-r-md border border-stone-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-700" placeholder="99999 99999" />
+                    className="block w-full rounded-r-md border border-stone-300 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-green-700" />
                 </div>
               </div>
               <button type="submit" className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-md bg-green-700 text-white font-semibold hover:bg-green-800">
