@@ -31,7 +31,7 @@ export function Footer() {
           <ul className="space-y-2 text-sm"> 
             {[ 
               ["/", "Home"], ["/about", "About"], ["/agroforestry", "Agroforestry"], 
-              ["/investment", "Investment Plans"], ["/gallery", "Gallery"], ["/contact", "Contact"], 
+              ["/investment", "Investment Plans"], ["/gallery", "Gallery"], 
             ].map(([to, label]) => ( 
               <li key={to}><Link to={to} className="hover:text-white">{label}</Link></li> 
             ))} 

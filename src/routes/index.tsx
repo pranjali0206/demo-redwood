@@ -82,9 +82,7 @@ function Hero() {
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.7 }}
             className="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
-            <Link to="/contact" className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-md bg-amber-700 hover:bg-amber-800 text-white font-semibold tracking-wide transition-all shadow-lg shadow-amber-900/30 hover:scale-[1.02]">
-              Become a Partner <ArrowRight size={18} />
-            </Link>
+            
             <Link to="/agroforestry" className="inline-flex items-center justify-center px-7 py-3.5 rounded-md border border-white/70 hover:bg-white/10 text-white font-semibold tracking-wide transition-all">
               Learn More
             </Link>
