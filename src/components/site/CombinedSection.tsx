@@ -309,7 +309,7 @@ export function CombinedSection() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-5 rounded-xl bg-amber-50 border border-amber-200">
             <p className="text-base sm:text-lg text-amber-900 font-serif text-center sm:text-left">
               India imports{" "}
-              <span className="font-bold">₹75 crore</span> of teak every year.
+              <span className="font-bold">₹8,848.12 crore</span> of teak every year.
               Your land could be supplying it.
             </p>
             <Link
