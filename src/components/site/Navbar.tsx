@@ -11,7 +11,7 @@ const links = [
   { to: "/investment", label: "Investment" },
   { to: "/gallery", label: "Gallery" },
   { to: "/faq", label: "Faq" },
-  { to: "/contact", label: "Contact" },
+  // { to: "/contact", label: "Contact" },
 ] as const;
 
 export function Navbar({ transparentUntilScroll = true }: { transparentUntilScroll?: boolean }) {

@@ -312,12 +312,7 @@ export function CombinedSection() {
               <span className="font-bold">₹8,848.12 crore</span> of teak every year.
               Your land could be supplying it.
             </p>
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-md bg-amber-700 text-white font-semibold hover:bg-amber-800 transition-colors whitespace-nowrap text-sm"
-            >
-              Become a Partner <ArrowRight size={18} />
-            </Link>
+            
           </div>
         </motion.div>
       </div>
