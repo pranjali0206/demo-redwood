@@ -32,6 +32,16 @@
   --color-brand-green: var(--brand-green);
   --color-brand-amber: var(--brand-amber);
   --color-brand-teak: var(--brand-teak);
+  /* The Urban Farmer campaign palette, sampled from its logo. */
+  --color-uf-paper: #fdfaf2;
+  --color-uf-cream: #f8f2e6;
+  --color-uf-sage: #eef2e2;
+  --color-uf-forest: #173d0a;
+  --color-uf-green: #2c5e14;
+  --color-uf-leaf: #4d8a1c;
+  --color-uf-soil: #7a3612;
+  --color-uf-bark: #4a1d06;
+  --color-uf-sun: #f6b93b;
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
@@ -70,6 +80,7 @@
 
 @layer base {
   * { border-color: var(--color-border); }
+  html { scroll-behavior: smooth; }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
@@ -79,3 +90,19 @@
 }
 
 @utility text-balance { text-wrap: balance; }
+
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* Postage-stamp frame: a paper border with punched perforations, painted behind padded content. */
+@utility stamp-perforated {
+  --stamp-r: 3px;
+  --stamp-paper: var(--color-uf-paper);
+  padding: calc(2 * var(--stamp-r));
+  background:
+    radial-gradient(var(--stamp-r), #0000 97%, var(--stamp-paper)) round
+      calc(-1.5 * var(--stamp-r)) calc(-1.5 * var(--stamp-r)) / calc(3 * var(--stamp-r)) calc(3 * var(--stamp-r)),
+    linear-gradient(var(--stamp-paper) 0 0) no-repeat 50% / calc(100% - 3 * var(--stamp-r))
+      calc(100% - 3 * var(--stamp-r));
+}

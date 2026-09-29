@@ -8,6 +8,7 @@ import {
   Check, ArrowRight, MapPin, Sparkles,
 } from "lucide-react";
 import { SiteLayout } from "@/components/site/Layout";
+import { Hero } from "@/components/site/Hero";
 import { Reveal, CountUp } from "@/components/site/Reveal";
 import heroImg from "@/assets/hero-plantation.webp";
 import fieldImg from "@/assets/plantation-field.webp";
@@ -46,53 +47,6 @@ function Home() {
   );
 }
 
-function Hero() {
-  return (
-    <section className="relative h-screen min-h-[640px] w-full overflow-hidden">
-      <motion.div
-        className="absolute inset-0"
-        initial={{ scale: 1 }}
-        animate={{ scale: 1.08 }}
-        transition={{ duration: 10, repeat: Infinity, repeatType: "reverse", ease: "linear" }}
-      >
-        <img src={heroImg} alt="Sagwan teak plantation" className="w-full h-full object-cover" fetchPriority="high" />
-      </motion.div>
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-black/70" />
-      <div className="relative h-full flex items-center justify-center px-4">
-        <div className="max-w-4xl text-center text-white">
-          
-        <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.7 }}
-            className="mt-5 font-serif text-[1.7rem] sm:text-5xl lg:text-7xl font-bold leading-tight text-center"
-          >
-            <span className="block whitespace-nowrap">
-              Real Estate + Agroforestry
-            </span>
-
-            <span className="block mt-3 text-amber-300">
-            Genetically Engineered Hi-Tech Sagwan Teak 
-            </span>
-          </motion.h1>
-      
-          <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9, duration: 0.7 }}
-            className="mt-6 text-lg sm:text-xl text-stone-100/90 max-w-2xl mx-auto">
-              Grown on your land, managed and  sold by us , profit earned by you .
-          </motion.p>
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.7 }}
-            className="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
-            
-            <Link to="/agroforestry" className="inline-flex items-center justify-center px-7 py-3.5 rounded-md border border-white/70 hover:bg-white/10 text-white font-semibold tracking-wide transition-all">
-              Learn More
-            </Link>
-          </motion.div>
-        </div>
-      </div>
-     
-    </section>
-  );
-}
 // Agroforestry section -------------
 
 
@@ -158,7 +112,7 @@ function ContactSection() {
   };
 
   return (
-    <section className="py-20 lg:py-28 bg-green-900 text-white">
+    <section id="contact" className="scroll-mt-24 py-20 lg:py-28 bg-green-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12">
         {/* Left Side */}
         <Reveal>

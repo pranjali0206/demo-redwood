@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import logoWhite from "../../assets/rw-logo.webp";
 import logoDark from "../../assets/rw-logo2.webp";
+import { UrbanFarmerBadge, UrbanFarmerPopup } from "./UrbanFarmerCampaign";
 const links = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
@@ -14,7 +15,14 @@ const links = [
   // { to: "/contact", label: "Contact" },
 ] as const;
 
-export function Navbar({ transparentUntilScroll = true }: { transparentUntilScroll?: boolean }) {
+export function Navbar({
+  transparentUntilScroll = true,
+  heroTone = "dark",
+}: {
+  transparentUntilScroll?: boolean;
+  /** Brightness of the hero behind the transparent bar — a light hero needs dark links. */
+  heroTone?: "dark" | "light";
+}) {
   const [scrolled, setScrolled] = useState(!transparentUntilScroll);
   const [open, setOpen] = useState(false);
 
@@ -27,6 +35,7 @@ export function Navbar({ transparentUntilScroll = true }: { transparentUntilScro
   }, [transparentUntilScroll]);
 
   const solid = scrolled || open;
+  const darkInk = solid || heroTone === "light";
 
   return (
     <motion.header
@@ -39,13 +48,13 @@ export function Navbar({ transparentUntilScroll = true }: { transparentUntilScro
       transition={{ duration: 0.35, ease: "easeOut" }}
       className="fixed top-0 inset-x-0 z-50"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <Link to="/" className="flex items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+            <Link to="/" className="flex min-w-0 items-center">
         <motion.img
-          key={solid ? "dark" : "light"}
-          src={solid ? logoDark : logoWhite}
+          key={darkInk ? "dark" : "light"}
+          src={darkInk ? logoDark : logoWhite}
           alt="Redwood Biotech"
-          className="h-14 sm:h-16 w-auto"
+          className="h-14 sm:h-16 w-auto min-w-0 max-w-full object-contain object-left"
           initial={{ opacity: 0.8 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
@@ -57,21 +66,21 @@ export function Navbar({ transparentUntilScroll = true }: { transparentUntilScro
               key={l.to}
               to={l.to}
               className={`px-3 py-2 text-sm font-medium tracking-wide transition-colors ${
-                solid ? "text-stone-700 hover:text-[var(--brand-red)]" : "text-white/90 hover:text-white"
+                darkInk ? "text-stone-700 hover:text-[var(--brand-red)]" : "text-white/90 hover:text-white"
               }`}
-              activeProps={{ className: `px-3 py-2 text-sm font-semibold ${solid ? "text-[var(--brand-red)]" : "text-white"}` }}
+              activeProps={{ className: `px-3 py-2 text-sm font-semibold ${darkInk ? "text-[var(--brand-red)]" : "text-white"}` }}
               activeOptions={{ exact: l.to === "/" }}
             >
               {l.label}
             </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-2">
-         
+        <div className="flex items-center gap-2 sm:gap-3">
+          <UrbanFarmerBadge menuOpen={open} />
           <button
             onClick={() => setOpen((v) => !v)}
             aria-label="Toggle menu"
-            className={`lg:hidden p-2 rounded ${solid ? "text-stone-800" : "text-white"}`}
+            className={`lg:hidden p-2 rounded ${darkInk ? "text-stone-800" : "text-white"}`}
           >
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -85,10 +94,11 @@ export function Navbar({ transparentUntilScroll = true }: { transparentUntilScro
                 {l.label}
               </Link>
             ))}
-            
+
           </div>
         </motion.div>
       )}
+      <UrbanFarmerPopup />
     </motion.header>
   );
 }
