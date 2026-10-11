@@ -23,7 +23,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Redwood Biotech — Genetically Engineered Sagwan Teak Plantation, Indore" },
-      { name: "description", content: "Partner your land with Redwood Biotech. 12-year managed Genitically Hi-Tech Sagwan teak plantation using tissue culture biotechnology. 75% yield to landowners. Based in Indore, MP." },
+      { name: "description", content: "Partner your land with Redwood Biotech. 12-year managed Genitically Engineered Hi-Tech Sagwan teak plantation using tissue culture biotechnology. 75% yield to landowners. Based in Indore, MP." },
       { property: "og:title", content: "Redwood Biotech — Innovative Science. Wealthier Tomorrow." },
       { property: "og:description", content: "Genetically Engineered teak plantation, grown on your land, managed by science." },
       { property: "og:type", content: "website" },

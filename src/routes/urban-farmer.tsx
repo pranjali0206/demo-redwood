@@ -8,7 +8,7 @@ import { FarmGetaway } from "@/components/urban-farmer/FarmGetaway";
 import { JoinRevolution } from "@/components/urban-farmer/JoinRevolution";
 
 const DESCRIPTION =
-  "Farming is no longer restricted to rurals. Own registered land, grow Genetically Hi-Tech Sagwan managed by Redwood Biotech, enjoy your own farm getaway — and get your Urban Farmer digital certificate.";
+  "Farming is no longer restricted to rurals. Own registered land, grow Genetically Engineered Hi-Tech Sagwan managed by Redwood Biotech, enjoy your own farm getaway — and get your Urban Farmer digital certificate.";
 
 export const Route = createFileRoute("/urban-farmer")({
   head: () => ({

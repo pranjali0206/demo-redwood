@@ -145,7 +145,7 @@ export function UrbanFarmerPopup() {
                 Now, be the part of the revolution.
               </DialogPrimitive.Description>
               <p className="mt-4 text-sm leading-relaxed text-stone-600 sm:text-[15px]">
-                Own land registered in your name, grow Genetically Hi-Tech Sagwan managed by Redwood
+                Own land registered in your name, grow Genetically Engineered Hi-Tech Sagwan managed by Redwood
                 Biotech — and get your Urban Farmer certificate in the moment.
               </p>
 

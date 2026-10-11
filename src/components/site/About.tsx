@@ -17,7 +17,7 @@ const pillars = [
   {
     Icon: Microscope,
     title: "Biotechnology-Driven Teak",
-    body: "Tissue-cultured Genitically Hi-Tech Sagwan engineered for straighter trunks, faster growth, and higher timber yield.",
+    body: "Tissue-cultured Genitically Engineered Hi-Tech Sagwan engineered for straighter trunks, faster growth, and higher timber yield.",
   },
   {
     Icon: TrendingUp,
@@ -61,7 +61,7 @@ export function About() {
             Know Redwood Biotech
           </h2>
           <p className="mt-6 text-lg text-stone-700 leading-relaxed">
-            At Redwood, returns are driven by a carefully designed combination of premium Genitically Hi-Tech Sagwan
+            At Redwood, returns are driven by a carefully designed combination of premium Genitically Engineered Hi-Tech Sagwan
             (Teak) cultivation and advanced biotechnology. Instead of relying on conventional
             plantation methods, we focus on scientifically selected planting material and modern
             cultivation practices aimed at maximizing growth, quality, and long-term value.

@@ -16,7 +16,7 @@ export function Footer() {
  
           <p className="mt-3 italic text-stone-400">Revolution in Biotechnology</p> 
           <p className="mt-6 text-sm leading-relaxed max-w-md"> 
-            Genetically engineered Hi-Tech Sagwan teak plantations on your land. Managed by science, owned by you. 
+            Genetically Engineered Hi-Tech Sagwan teak plantations on your land. Managed by science, owned by you. 
           </p> 
           <div className="mt-6 flex items-start gap-2 text-sm text-stone-400"> 
             <MapPin size={18} className="mt-0.5 shrink-0 text-[var(--brand-red)]" /> 

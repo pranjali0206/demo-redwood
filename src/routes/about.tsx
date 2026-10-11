@@ -26,7 +26,7 @@ export const Route = createFileRoute("/about")({
 
 const story = [
   "At Redwood Biotech, we believe that the future of wealth creation lies at the intersection of Science, Nature, and Smart Investments.",
-  "Our journey began with a simple vision—to create an investment model that not only generates long-term value for investors but also contributes positively to the environment. After extensive research into land development, biotechnology, and forestry economics, we identified a unique opportunity: combining strategically located real estate with scientifically managed Genitically Hi-Tech Sagwan (Teak) plantations.",
+  "Our journey began with a simple vision—to create an investment model that not only generates long-term value for investors but also contributes positively to the environment. After extensive research into land development, biotechnology, and forestry economics, we identified a unique opportunity: combining strategically located real estate with scientifically managed Genitically Engineered Hi-Tech Sagwan (Teak) plantations.",
   "This dual-asset approach allows investors to benefit from two powerful growth drivers—potential land appreciation and the long-term value of premium timber. We chose Sagwan because of its global demand, durability, and reputation as one of the world's most valuable timber species.",
   "What sets Redwood apart is our commitment to science-backed plantation management, careful land selection, and complete transparency. Every project is designed with a long-term perspective, ensuring that growth is driven by both natural and economic fundamentals.",
   "But beyond land and plantations, our greatest asset is the trust of our investors. We believe relationships are built through honesty, communication, and consistent delivery. That's why we focus on creating lifelong partnerships rather than one-time transactions.",
@@ -41,7 +41,7 @@ const vision = [
 ];
 
 const mission = [
-  "Develop premium Genitically Hi-Tech Sagwan plantations on strategic land.",
+  "Develop premium Genitically Engineered Hi-Tech Sagwan plantations on strategic land.",
   "Create long-term value through land and timber growth.",
   "Maintain transparency and investor trust.",
   "Promote sustainable and responsible development.",
@@ -666,7 +666,7 @@ function AboutPage() {
                 transition={{ duration: 0.7, delay: 0.25 }}
                 className="mt-5 text-lg leading-relaxed text-muted-foreground"
               >
-                Redwood Biotech's model is built around a dual-asset strategy that combines the growth potential of strategically selected land with the long-term value creation of premium Genitically Hi-Tech Sagwan (Teak) plantations. Unlike traditional investments that depend on a single source of returns, our model is designed around multiple growth drivers working simultaneously.
+                Redwood Biotech's model is built around a dual-asset strategy that combines the growth potential of strategically selected land with the long-term value creation of premium Genitically Engineered Hi-Tech Sagwan (Teak) plantations. Unlike traditional investments that depend on a single source of returns, our model is designed around multiple growth drivers working simultaneously.
               </motion.p>
 
               {/* Stat pills */}

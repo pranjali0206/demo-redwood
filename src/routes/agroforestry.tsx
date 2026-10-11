@@ -12,7 +12,7 @@ export const Route = createFileRoute("/agroforestry")({
       {
         name: "description",
         content:
-          "From ancient bread-making to engineered teak — how biotechnology is reshaping forestry and the Hi-Tech Sagwan investment.",
+          "From ancient bread-making to engineered teak — how biotechnology is reshaping forestry and the Genetically Engineered Hi-Tech Sagwan investment.",
       },
       { property: "og:title", content: "What is Biotechnology? — Redwood Biotech" },
       {
@@ -249,14 +249,14 @@ function AgroforestryPage() {
         <div className="mx-auto max-w-4xl text-center">
           <Reveal>
             <p className="text-xs font-medium uppercase tracking-widest text-green-700">
-              Hi-Tech Sagwan · Cloned & Engineered
+              Genetically Engineered Hi-Tech Sagwan · Cloned & Engineered
             </p>
             <h2 className="mt-4 font-serif text-5xl text-green-900">
               The Tree That Changed the Numbers
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-stone-600">
               Normal teak grows slowly, branches heavily, and needs 25–30 years before it yields
-              meaningful timber. Hi-Tech Sagwan — produced through 13 months and 20 days of sterile
+              meaningful timber. Genetically Engineered Hi-Tech Sagwan — produced through 13 months and 20 days of sterile
               tissue culture — grows at 3× the speed, produces minimal branches (meaning
               higher-grade timber), and is ready in 12–18 years.
             </p>
@@ -270,7 +270,7 @@ function AgroforestryPage() {
                     <th className="px-6 py-4 text-sm font-semibold text-amber-300">Parameter</th>
                     <th className="px-6 py-4 text-sm font-semibold text-amber-300">Normal Teak</th>
                     <th className="px-6 py-4 text-sm font-semibold text-amber-300">
-                      Hi-Tech Sagwan
+                      Genetically Engineered Hi-Tech Sagwan
                     </th>
                   </tr>
                 </thead>

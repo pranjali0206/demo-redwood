@@ -18,7 +18,7 @@ const steps = [
   {
     n: "02",
     Icon: TreePine,
-    title: "Premium Genitically Hi-Tech Sagwan Plantation",
+    title: "Premium Genitically Engineered Hi-Tech Sagwan Plantation",
     body: "Sagwan (Teak) is globally recognized as the King of Timber — renowned for exceptional strength, durability, and timeless beauty. The preferred choice for luxury furniture, premium interiors, and high-value wood applications, with consistent demand and limited quality supply.",
     image: forestImg,
     tag: "Sagwan",
@@ -27,7 +27,7 @@ const steps = [
     n: "03",
     Icon: FlaskConical,
     title: "Biotechnology-Driven Cultivation",
-    body: "Traditional teak develops multiple branches and inconsistent growth. Redwood uses advanced biotechnology and scientifically selected planting material to cultivate superior Genitically Hi-Tech Sagwan — greater height, girth, straighter trunks, minimal branching. Higher-quality timber, improved yield, greater market value.",
+    body: "Traditional teak develops multiple branches and inconsistent growth. Redwood uses advanced biotechnology and scientifically selected planting material to cultivate superior Genitically Engineered Hi-Tech Sagwan — greater height, girth, straighter trunks, minimal branching. Higher-quality timber, improved yield, greater market value.",
     image: labImg,
     tag: "Biotech",
   },
@@ -92,7 +92,7 @@ export function Process() {
             The Science Behind the Returns.
           </h2>
           <p className="mt-5 text-lg text-green-100/80">
-            Premium <span className="text-[color:var(--brand-red)] font-semibold">Genitically Hi-Tech Sagwan</span>{" "}
+            Premium <span className="text-[color:var(--brand-red)] font-semibold">Genitically Engineered Hi-Tech Sagwan</span>{" "}
             cultivation with the help of advanced{" "}
             <span className="text-[color:var(--brand-red)] font-semibold">biotechnology</span> on
             the most valuable{" "}
@@ -147,7 +147,7 @@ export function Process() {
             {[
               { label: "Strategic Land", color: "var(--brand-amber)" },
               { op: "+" },
-              { label: "Premium Genitically Hi-Tech Sagwan", color: "var(--leaf-400)" },
+              { label: "Premium Genitically Engineered Hi-Tech Sagwan", color: "var(--leaf-400)" },
               { op: "+" },
               { label: "Biotechnology", color: "var(--brand-red)" },
               { op: "=" },

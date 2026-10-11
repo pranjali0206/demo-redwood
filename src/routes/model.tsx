@@ -15,7 +15,7 @@ export const Route = createFileRoute("/model")({
   head: () => ({
     meta: [
       { title: "The Model — Redwood Biotech" },
-      { name: "description", content: "Dual-asset strategy: strategic land appreciation combined with premium Genitically Hi-Tech Sagwan (Teak) plantations." },
+      { name: "description", content: "Dual-asset strategy: strategic land appreciation combined with premium Genitically Engineered Hi-Tech Sagwan (Teak) plantations." },
       { property: "og:title", content: "The Redwood Biotech Model" },
       { property: "og:description", content: "Where land appreciation meets the long-term value of premium teak." },
       { property: "og:image", content: heroImg },
@@ -239,7 +239,7 @@ function ModelPage() {
             transition={{ delay: 0.9, duration: 0.75 }}
             className="mt-6 max-w-md text-base leading-relaxed text-white/75 sm:text-lg"
           >
-            A dual-asset investment model combining strategic land ownership with scientifically managed premium Genitically Hi-Tech Sagwan (Teak) plantations.
+            A dual-asset investment model combining strategic land ownership with scientifically managed premium Genitically Engineered Hi-Tech Sagwan (Teak) plantations.
           </motion.p>
 
           {/* CTA row */}

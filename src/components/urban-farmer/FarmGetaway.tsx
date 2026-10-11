@@ -14,7 +14,7 @@ const SPACES: Space[] = [
     Icon: TreePine,
     title: "Plantation Greenery",
     tag: "Walk your own forest",
-    body: "Rows of Genetically Hi-Tech Sagwan turn your land into a living green canopy you can walk through.",
+    body: "Rows of Genetically Engineered Hi-Tech Sagwan turn your land into a living green canopy you can walk through.",
     img: greeneryImg,
   },
   {
@@ -42,7 +42,7 @@ const SPACES: Space[] = [
 
 const TICKER = [
   "Land Registered in Your Name",
-  "Genetically Hi-Tech Sagwan",
+  "Genetically Engineered Hi-Tech Sagwan",
   "12-Year Managed Cycle",
   "75% of Net Proceeds",
   "Farm Cottage",

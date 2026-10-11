@@ -39,8 +39,8 @@ const STEPS: Step[] = [
   {
     n: "02",
     Icon: FlaskConical,
-    title: "We Plant Hi-Tech Sagwan",
-    body: "Tissue-culture, Genetically Hi-Tech Sagwan saplings, planted and nurtured by our experts.",
+    title: "We Plant Genetically Engineered Hi-Tech Sagwan",
+    body: "Tissue-culture, Genetically Engineered Hi-Tech Sagwan saplings, planted and nurtured by our experts.",
     img: nurseryImg,
   },
   {

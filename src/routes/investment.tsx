@@ -25,9 +25,9 @@ export const Route = createFileRoute("/investment")({
   head: () => ({
     meta: [
       { title: "The Commerce Behind the Opportunity — Redwood Biotech" },
-      { name: "description", content: "An investment is only as strong as the logic behind it. Explore the Redwood Biotech Genitically Hi-Tech Sagwan plantation investment model." },
+      { name: "description", content: "An investment is only as strong as the logic behind it. Explore the Redwood Biotech Genitically Engineered Hi-Tech Sagwan plantation investment model." },
       { property: "og:title", content: "The Logic Behind the Opportunity — Redwood Biotech" },
-      { property: "og:description", content: "Strategic land, premium Genitically Hi-Tech Sagwan timber, scientific management — one structured asset." },
+      { property: "og:description", content: "Strategic land, premium Genitically Engineered Hi-Tech Sagwan timber, scientific management — one structured asset." },
       { property: "og:image", content: heroImg },
       { name: "twitter:image", content: heroImg },
     ],
@@ -230,7 +230,7 @@ function Hero() {
               transition={{ delay: 0.9, duration: 1 }}
               className="mt-8 max-w-xl text-lg text-white/80 leading-relaxed"
             >
-              Where strategic land, premium Genitically Hi-Tech Sagwan timber, and scientific management converge into one structured ecosystem for long-term value.
+              Where strategic land, premium Genitically Engineered Hi-Tech Sagwan timber, and scientific management converge into one structured ecosystem for long-term value.
             </motion.p>
             <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -986,7 +986,7 @@ function PillarOutcome() {
           <div className="mt-14 grid grid-cols-2 md:grid-cols-3 gap-4 text-left">
             {[
               { icon: Map,          label: "Strategic Land",      sub: "Emerging corridors" },
-              { icon: TreePine,     label: "Premium Genitically Hi-Tech Sagwan",      sub: "Grade-A teak timber" },
+              { icon: TreePine,     label: "Premium Genetically Engineered Hi-Tech Sagwan",      sub: "Grade-A teak timber" },
               { icon: FlaskConical, label: "Biotech Management",  sub: "Science-led growth" },
               { icon: TrendingUp,   label: "Rising Demand",       sub: "Supply-gap opportunity" },
               { icon: ShieldCheck,  label: "Legal Framework",     sub: "Registered ownership" },

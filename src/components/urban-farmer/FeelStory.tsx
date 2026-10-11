@@ -12,7 +12,7 @@ const CHAPTERS = [
   {
     kicker: "Chapter 02",
     title: "But your roots can still grow.",
-    body: "A piece of land registered in your name, turning green with Genetically Hi-Tech Sagwan.",
+    body: "A piece of land registered in your name, turning green with Genetically Engineered Hi-Tech Sagwan.",
   },
   {
     kicker: "Chapter 03",
