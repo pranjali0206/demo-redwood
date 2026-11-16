@@ -1,0 +1,214 @@
+/*
+ * Home hero effects that Tailwind utilities can't express.
+ *
+ * Every element's resting style is its final look, and keyframes only describe where it starts.
+ * That keeps the hero complete when animations are off or before any JavaScript has loaded.
+ */
+
+/* Home page: Playfair Display for the sections; the triangle section (.rw) keeps Fraunces. */
+body:has(.rwb-hero) :is(.font-serif, h1, h2, h3, h4, h5, h6):not(.rw *) {
+  font-family: var(--font-playfair);
+}
+
+/* Background ---------------------------------------------------------------------------------- */
+
+.rwb-hero__canvas {
+  background-image: linear-gradient(135deg, #dcebe1 0%, #f4eddc 100%);
+  background-size: 200% 200%;
+  animation: rwb-gradient-shift 30s ease-in-out infinite alternate;
+}
+
+/*
+ * The brief's fade (transparent 20% → .4 at 46% → solid at 80%) let the photo darken the right end
+ * of the text column, pulling the eyebrow, tagline and "Grown on your land" line to about 4:1.
+ * The same ramp starts 22 points later here, which keeps every text colour above 4.5:1.
+ */
+.rwb-hero__forest {
+  background-size: cover;
+  background-position: center 35%;
+  opacity: 0.34;
+  -webkit-mask-image: linear-gradient(100deg, transparent 42%, rgba(0, 0, 0, 0.4) 66%, #000 92%);
+  mask-image: linear-gradient(100deg, transparent 42%, rgba(0, 0, 0, 0.4) 66%, #000 92%);
+  transform: scale(1.02);
+  animation: rwb-forest-zoom 40s ease-in-out infinite alternate;
+}
+
+/* Once the columns stack the card sits below the text, so the fade runs top to bottom instead. */
+@media (max-width: 1173px) {
+  .rwb-hero__forest {
+    -webkit-mask-image: linear-gradient(180deg, transparent 42%, rgba(0, 0, 0, 0.4) 58%, #000 82%);
+    mask-image: linear-gradient(180deg, transparent 42%, rgba(0, 0, 0, 0.4) 58%, #000 82%);
+  }
+}
+
+/* Load-in ------------------------------------------------------------------------------------- */
+
+.rwb-rise {
+  animation: rwb-rise 1s cubic-bezier(0.22, 1, 0.36, 1) var(--rise-delay, 0s) backwards;
+}
+
+.rwb-highlight {
+  background-image: linear-gradient(
+    transparent 60%,
+    rgba(217, 184, 103, 0.42) 60%,
+    rgba(217, 184, 103, 0.42) 92%,
+    transparent 92%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  animation: rwb-highlight 1.4s ease-out 1.3s backwards;
+}
+
+.rwb-silhouette {
+  transform-origin: bottom;
+  animation: rwb-silhouette 1.8s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/*
+ * Hidden only until StatCount takes over, so visitors never see the real figure drop back to 0.
+ * If JavaScript never arrives, the real figure appears after 5s.
+ */
+.rwb-count {
+  animation: rwb-count-fallback 0s linear 5s backwards;
+}
+
+/* Card sunrise -------------------------------------------------------------------------------- */
+
+.rwb-scene {
+  transform-origin: center;
+  animation: rwb-scene-zoom 28s ease-in-out infinite alternate;
+}
+
+.rwb-scene__sun {
+  animation: rwb-sun-rise 6s cubic-bezier(0.22, 0.61, 0.36, 1) 0.8s backwards;
+}
+
+.rwb-scene__halo {
+  animation: rwb-halo 7s ease-in-out infinite alternate;
+}
+
+.rwb-scene__dusk {
+  opacity: 0;
+  animation: rwb-dusk 6s ease-out 0.8s backwards;
+}
+
+.rwb-scene__warm {
+  opacity: 0.3;
+  animation: rwb-warm 6s ease-out 0.8s backwards;
+}
+
+/* Stats strip --------------------------------------------------------------------------------- */
+
+.rwb-stat {
+  flex: 1 1 220px;
+  border-color: rgba(217, 184, 103, 0.18);
+}
+
+.rwb-stat + .rwb-stat {
+  border-left-width: 1px;
+}
+
+@media (max-width: 959px) {
+  .rwb-stat {
+    flex-basis: 50%;
+  }
+
+  .rwb-stat:nth-child(odd) {
+    border-left-width: 0;
+    padding-left: 0;
+  }
+
+  .rwb-stat:nth-child(n + 3) {
+    border-top-width: 1px;
+  }
+}
+
+/* Keyframes ----------------------------------------------------------------------------------- */
+
+@keyframes rwb-gradient-shift {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 100% 100%;
+  }
+}
+
+@keyframes rwb-forest-zoom {
+  to {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes rwb-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+}
+
+@keyframes rwb-highlight {
+  from {
+    background-size: 0% 100%;
+  }
+}
+
+@keyframes rwb-silhouette {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes rwb-count-fallback {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes rwb-scene-zoom {
+  to {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes rwb-sun-rise {
+  from {
+    transform: translateY(70px);
+  }
+}
+
+@keyframes rwb-halo {
+  from {
+    opacity: 0.75;
+  }
+}
+
+@keyframes rwb-dusk {
+  from {
+    opacity: 0.45;
+  }
+}
+
+@keyframes rwb-warm {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Reduced motion ------------------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .rwb-hero *,
+  .rwb-hero *::before,
+  .rwb-hero *::after,
+  .rwb-nav-link,
+  .rwb-nav-link::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .rwb-hero a:hover,
+  .rwb-hero a:hover * {
+    translate: none !important;
+  }
+}

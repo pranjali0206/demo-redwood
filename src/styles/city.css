@@ -1,0 +1,563 @@
+/*
+ * "The City Is Coming to You." — light theme, scoped under .rwc.
+ * A refined architectural site plan: the city in pale warm-grey line-art, Redwood land the only
+ * area in colour. Two accents only: the logo crimson and the forest green of the nav button.
+ * Motion lives in components/city/CitySection.tsx (GSAP); the map in cityPaint.ts (canvas).
+ */
+
+.rwc {
+  /* Brand, sampled from the live site: logo wordmark and the "Be the Urban Farmer" button. */
+  --rwb-crimson: #c1152a;
+  --rwb-crimson-soft: #dd7e8a; /* crimson at 55% over white */
+  --rwb-forest: #0e3b2e;
+  --teak-green-500: #6fa35f;
+  --teak-green-300: #a6cc92;
+  --teak-green-soft: #9cc48a;
+  --paper-0: #ffffff;
+  --paper-50: #faf8f4;
+  --paper-100: #f5f2ec;
+  --paper-200: #ede8df;
+  --paper-300: #e3dccf;
+  --ink-900: #17201b;
+  --ink-600: #4a544e;
+  --ink-300: rgba(23, 32, 27, 0.2);
+  --ink-100: rgba(23, 32, 27, 0.06);
+  --meadow: #eef5e8;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* The site's own faces: Playfair Display (the high-contrast serif closest to the logo) and
+     Plus Jakarta Sans (the nav). Both are loaded site-wide in __root. */
+  --font-display: "Playfair Display", ui-serif, Georgia, "Times New Roman", serif;
+  --font-body: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #f7f3ea 0%, var(--paper-50) 80px, var(--paper-50) 100%);
+  color: var(--ink-900);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The section above is light too: one continuous ground, split by a hairline. */
+.rwc::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: max(16px, 50% - 640px);
+  right: max(16px, 50% - 640px);
+  height: 1px;
+  background: var(--ink-100);
+  transition: opacity 0.3s linear;
+}
+html.rwc-nav-hidden .rwc::before {
+  opacity: 0;
+}
+/* Thin divider after the city section. */
+
+.rwc-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* While the section fills the screen the site navigation steps out of the way. */
+.rwb-site-header {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+html.rwc-nav-hidden .rwb-site-header {
+  transform: translateY(calc(-100% - 120px));
+}
+
+/* Layout switch ------------------------------------------------------------------------------- */
+
+.rwc-scene--desk {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .rwc-scene--desk {
+    display: block;
+  }
+  .rwc-scene--mob {
+    display: none;
+  }
+}
+
+/* Type ---------------------------------------------------------------------------------------- */
+
+.rwc-eyebrow,
+.rwc-year__label,
+.rwc-ylink,
+.rwc-gauge__label,
+.rwc-hint,
+.rwc-pin__label,
+.rwc-chip {
+  font-family: var(--font-body);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.rwc-eyebrow {
+  margin: 0;
+  color: var(--rwb-forest);
+  font-size: 12px;
+  line-height: 1.2;
+}
+.rwc-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+.rwc-mask__in {
+  display: block;
+}
+.rwc-headline,
+.rwc-year__num,
+.rwc-close {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ink-900);
+}
+.rwc-headline {
+  margin: 10px 0 0;
+  font-size: clamp(36px, 3.6vw, 56px);
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+}
+.rwc-year {
+  flex: none;
+  text-align: right;
+}
+.rwc-year__label {
+  margin: 0;
+  color: var(--ink-600);
+  font-size: 11px;
+  line-height: 1.2;
+}
+.rwc-year__num {
+  margin: 2px 0 0;
+  font-size: clamp(40px, 4vw, 64px);
+  line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+/* Year links: plain text buttons; the active one underlined in forest. */
+.rwc-ylinks {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-top: 8px;
+}
+.rwc-ylink {
+  position: relative;
+  padding: 2px 0 4px;
+  border: 0;
+  background: none;
+  color: var(--ink-600);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  font-variant-numeric: lining-nums tabular-nums;
+  cursor: pointer;
+  transition: color 0.2s var(--ease-out);
+}
+.rwc-ylink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--rwb-forest);
+  transform: scaleX(0);
+  transition: transform 0.3s var(--ease-out);
+}
+.rwc-ylink:hover,
+.rwc-ylink.is-active {
+  color: var(--ink-900);
+}
+.rwc-ylink.is-active::after {
+  transform: none;
+}
+.rwc-ylink:focus-visible {
+  outline: 2px solid var(--rwb-forest);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Desktop: everything in one screen ----------------------------------------------------------- */
+
+.rwc-scene,
+.rwc-frame {
+  height: 100%;
+}
+.rwc-scene--desk .rwc-frame {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  align-content: center;
+  gap: clamp(10px, 2svh, 22px);
+  max-width: calc(1280px + 128px);
+  margin: 0 auto;
+  padding: clamp(16px, 3.2svh, 40px) 64px;
+}
+.rwc-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+.rwc-scene--desk .rwc-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 140px;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Map panel ----------------------------------------------------------------------------------- */
+
+.rwc-map {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--paper-100);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+  isolation: isolate;
+}
+.rwc-map::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: inherit;
+  border: 1px solid var(--ink-100);
+  pointer-events: none;
+}
+.rwc-scene--desk .rwc-map {
+  height: min(60svh, 560px);
+}
+.rwc-world {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+.rwc-cv {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.rwc-stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.rwc-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.rwc-boundary {
+  fill: none;
+  stroke: var(--rwb-crimson);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 5;
+  vector-effect: non-scaling-stroke;
+}
+.rwc-peg {
+  fill: var(--rwb-crimson);
+}
+.rwc-gate line {
+  stroke: var(--rwb-crimson);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.rwc-gate rect {
+  fill: var(--rwb-crimson);
+}
+
+.rwc-chip {
+  position: absolute;
+  z-index: 3;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: var(--rwb-crimson);
+  color: #ffffff;
+  font-size: 11px;
+  line-height: 1;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 2px 8px rgba(23, 32, 27, 0.12);
+}
+
+/* Landmark pins */
+.rwc-pin {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  pointer-events: none;
+}
+.rwc-pin--above {
+  transform: translate(-50%, -100%);
+}
+.rwc-pin--centre {
+  transform: translate(-50%, -14px);
+}
+.rwc-pin__disc {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: var(--paper-0);
+  color: var(--ink-900);
+  box-shadow: 0 2px 8px rgba(23, 32, 27, 0.12);
+}
+.rwc-pin__label {
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: var(--paper-0);
+  color: var(--ink-900);
+  font-size: 10px;
+  line-height: 1.1;
+  white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(23, 32, 27, 0.1);
+}
+
+/* Gauges: quiet evidence, not a chart. No numbers, ticks or axes. ------------------------- */
+
+.rwc-scene--desk .rwc-meters {
+  display: flex;
+  justify-content: center;
+  gap: 34px;
+}
+.rwc-gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.rwc-gauge__bar {
+  position: relative;
+  width: 10px;
+}
+.rwc-gauge__track {
+  position: relative;
+  overflow: hidden;
+  width: 10px;
+  height: 200px;
+  border-radius: 5px;
+  background: var(--paper-200);
+}
+.rwc-gauge__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 5px;
+  transform: translate3d(0, 100%, 0);
+  will-change: transform;
+}
+.rwc-gauge__chev {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 10px;
+  height: 6px;
+  overflow: visible;
+  will-change: transform;
+}
+.rwc-gauge__chev path {
+  fill: none;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+[data-m="land"] .rwc-gauge__fill {
+  background: var(--rwb-crimson-soft);
+}
+[data-m="land"] .rwc-gauge__chev path {
+  stroke: var(--rwb-crimson-soft);
+}
+[data-m="timber"] .rwc-gauge__fill {
+  background: var(--teak-green-soft);
+}
+[data-m="timber"] .rwc-gauge__chev path {
+  stroke: var(--teak-green-soft);
+}
+.rwc-gauge__label {
+  margin: 14px 0 0;
+  color: var(--ink-600);
+  font-size: 11px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+/* Closing ------------------------------------------------------------------------------------- */
+
+.rwc-closing {
+  position: relative;
+  text-align: center;
+}
+.rwc-scene--desk .rwc-closing {
+  height: 100px;
+  padding-top: 6px;
+}
+.rwc-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--ink-600);
+  font-size: 11px;
+}
+.rwc-hint svg {
+  width: 10px;
+  height: 6px;
+}
+.rwc-hint path,
+.rwc-ylink path {
+  fill: none;
+  stroke: var(--rwb-forest);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.rwc-close {
+  margin: 0;
+  font-size: clamp(26px, 2.4vw, 38px);
+  line-height: 1.2;
+}
+.rwc-scene--desk .rwc-close {
+  white-space: nowrap;
+}
+.rwc-ph {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding: 0 0.05em 0.14em;
+  margin-bottom: -0.14em;
+}
+.rwc-ph__in {
+  display: inline-block;
+}
+.rwc-accent {
+  color: var(--rwb-crimson);
+  font-style: normal;
+  font-weight: inherit;
+}
+.rwc-sub {
+  margin: 6px 0 0;
+  color: var(--ink-600);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Phones -------------------------------------------------------------------------------------- */
+
+.rwc-scene--mob {
+  height: 100%;
+}
+.rwc-scene--mob .rwc-frame {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(10px, 1.8svh, 16px);
+  max-width: 600px;
+  margin: 0 auto;
+  padding: clamp(12px, 2.2svh, 24px) 16px;
+}
+.rwc-scene--mob .rwc-eyebrow {
+  font-size: 11px;
+}
+.rwc-scene--mob .rwc-headline {
+  margin-top: 6px;
+  font-size: clamp(24px, 7vw, 30px);
+  line-height: 1.08;
+}
+.rwc-scene--mob .rwc-year__num {
+  font-size: clamp(30px, 8.6vw, 36px);
+}
+.rwc-scene--mob .rwc-body {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.6svh, 14px);
+}
+.rwc-scene--mob .rwc-map {
+  height: min(48svh, 400px);
+  border-radius: 12px;
+}
+.rwc-scene--mob .rwc-meters {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+}
+.rwc-scene--mob .rwc-gauge {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+.rwc-scene--mob .rwc-gauge__bar,
+.rwc-scene--mob .rwc-gauge__track,
+.rwc-scene--mob .rwc-gauge__chev {
+  width: 8px;
+}
+.rwc-scene--mob .rwc-gauge__track {
+  height: 56px;
+  border-radius: 4px;
+}
+.rwc-scene--mob .rwc-gauge__fill {
+  border-radius: 4px;
+}
+.rwc-scene--mob .rwc-gauge__label {
+  margin: 0;
+  text-align: left;
+}
+.rwc-scene--mob .rwc-closing {
+  min-height: 74px;
+}
+.rwc-scene--mob .rwc-pin__label {
+  padding: 2px 6px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+.rwc-scene--mob .rwc-hint {
+  top: 10px;
+}
+.rwc-scene--mob .rwc-close {
+  font-size: clamp(18px, 5.2vw, 22px);
+  line-height: 1.25;
+}
+.rwc-scene--mob .rwc-sub {
+  font-size: 13.5px;
+}
+
+/* Reduced motion ------------------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .rwc *,
+  .rwc *::before,
+  .rwc *::after {
+    transition-duration: 0.01ms !important;
+    animation: none !important;
+  }
+  .rwb-site-header {
+    transition: none;
+  }
+}

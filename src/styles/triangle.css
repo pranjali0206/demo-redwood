@@ -1,0 +1,883 @@
+/*
+ * Redwood triangle section — light theme.
+ * Everything is scoped under .rw. Motion lives in TriangleSection.tsx (GSAP); this file holds the
+ * resting styles, the light's sparkle and the reduced-motion fallbacks.
+ *
+ * Each corner has a brand colour, set as --c / --c-ink / --c-glow / --c-wash on [data-i]:
+ * 1 Ownership = brown (the land), 2 Growth = green (the teak), 3 Returns = the logo's red.
+ */
+
+.rw {
+  /* colour */
+  --forest-900: #0e1a14;
+  --ink-900: #0e1a14; /* headlines */
+  --ink-700: #33473c; /* intro copy */
+  --ink-600: #4a5c51; /* secondary copy, tags */
+  --parchment-100: #f1eadb;
+  --parchment-50: #f7f3ea;
+  --paper: #ffffff;
+  --sage-300: #a9b3a6;
+  --teak-300: #e8b26b; /* primary button hover */
+  --teak-400: #e0a458; /* primary button */
+  --teak-600: #b5652b;
+  --earth-300: #d9bb96;
+  --earth-400: #c09468; /* plot fill, pegs */
+  --earth-500: #98663b; /* corner 1 */
+  --earth-600: #7c4f2a; /* scene strokes */
+  --earth-700: #5e3b1e; /* brown text */
+  --leaf-300: #8dbf8b;
+  --leaf-600: #3d8645; /* corner 2 */
+  --leaf-700: #2b6532; /* green text */
+  --red-300: #ec9aa3;
+  --red-600: #c1132b; /* corner 3: the logo red */
+  --red-700: #9e1024; /* red text */
+  --water-400: #86aebf;
+  --bark-900: #3a2a1c;
+  --line-light: rgba(14, 26, 20, 0.1);
+  --glow-amber: rgba(224, 164, 88, 0.35);
+
+  /* motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 200ms;
+
+  /* type */
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+  font-family: var(--font-body);
+  color: var(--ink-900);
+  -webkit-font-smoothing: antialiased;
+}
+
+.rw [data-i="1"] {
+  --c: var(--earth-500);
+  --c-ink: var(--earth-700);
+  --c-glow: rgba(152, 102, 59, 0.6);
+  --c-wash: rgba(152, 102, 59, 0.09);
+}
+.rw [data-i="2"] {
+  --c: var(--leaf-600);
+  --c-ink: var(--leaf-700);
+  --c-glow: rgba(61, 134, 69, 0.55);
+  --c-wash: rgba(61, 134, 69, 0.09);
+}
+.rw [data-i="3"] {
+  --c: var(--red-600);
+  --c-ink: var(--red-700);
+  --c-glow: rgba(193, 19, 43, 0.45);
+  --c-wash: rgba(193, 19, 43, 0.07);
+}
+
+.rw *:focus-visible {
+  outline: 2px solid var(--earth-600);
+  outline-offset: 2px;
+}
+
+.rw-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Type ---------------------------------------------------------------------------------------- */
+
+.rw-display,
+.rw-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-variation-settings:
+    "SOFT" 50,
+    "WONK" 0,
+    "opsz" 144;
+}
+.rw-title {
+  font-size: clamp(22px, 19.8px + 0.57vw, 28px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  font-variation-settings:
+    "SOFT" 50,
+    "WONK" 0,
+    "opsz" 72;
+}
+.rw-body-l {
+  font-size: clamp(17px, 15.9px + 0.29vw, 20px);
+  line-height: 1.6;
+}
+.rw-eyebrow {
+  font-size: clamp(12px, 11.6px + 0.1vw, 13px);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.rw-tag {
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.rw-tab {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.rw-italic {
+  font-style: normal;
+  font-weight: 600;
+}
+.rw-mask {
+  display: block;
+  overflow: hidden;
+}
+.rw-mask__in {
+  display: block;
+}
+
+/* A step's name in its corner colour, with a short rule pointing at its tile. */
+.rw-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: var(--c-ink);
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.rw-key::before {
+  content: "";
+  flex: none;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--c);
+}
+
+/* SVG paint (tokens only) --------------------------------------------------------------------- */
+
+.rw-f-teak {
+  fill: var(--earth-400);
+}
+.rw-f-teak6 {
+  fill: var(--earth-600);
+}
+.rw-f-leaf {
+  fill: var(--leaf-300);
+}
+.rw-f-leaf6 {
+  fill: var(--leaf-600);
+}
+.rw-f-red {
+  fill: var(--red-600);
+}
+.rw-f-bark {
+  fill: var(--bark-900);
+}
+.rw-f-water {
+  fill: var(--water-400);
+}
+.rw-paper {
+  fill: var(--paper);
+  stroke: rgba(14, 26, 20, 0.2);
+  stroke-width: 1;
+}
+.rw-s-ink {
+  stroke: var(--ink-900);
+}
+.rw-s-parch50 {
+  stroke: var(--parchment-50);
+}
+.rw-s-teak {
+  stroke: var(--earth-400);
+}
+.rw-s-teak6 {
+  stroke: var(--earth-600);
+}
+.rw-s-leaf6 {
+  stroke: var(--leaf-600);
+}
+.rw-s-red {
+  stroke: var(--red-600);
+}
+
+/* The tree-ring mark: one ring per corner, brown → green → red from the centre out. */
+.rw-mark {
+  color: var(--earth-700);
+}
+.rw-ring--1 {
+  stroke: var(--earth-500);
+}
+.rw-ring--2 {
+  stroke: var(--leaf-600);
+}
+.rw-ring--3 {
+  stroke: var(--red-600);
+}
+
+/* Buttons ------------------------------------------------------------------------------------- */
+
+.rw-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 54px;
+  padding: 0 28px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: clamp(16px, 15.6px + 0.1vw, 17px);
+  line-height: 1;
+  letter-spacing: 0.005em;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+.rw-btn__arrow {
+  display: inline-block;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.rw-btn--primary {
+  background: var(--teak-400);
+  color: var(--forest-900);
+}
+.rw-btn--primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 24px var(--glow-amber);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out);
+  pointer-events: none;
+}
+.rw-btn--primary:hover {
+  background: var(--teak-300);
+}
+.rw-btn--primary:hover::after {
+  opacity: 1;
+}
+.rw-btn--primary:hover .rw-btn__arrow {
+  transform: translateX(4px);
+}
+.rw-btn--primary:active {
+  transform: scale(0.98);
+  background: var(--teak-600);
+}
+.rw-btn--block {
+  width: 100%;
+}
+.rw-btn-ring {
+  position: absolute;
+  inset: -1px;
+  border-radius: 999px;
+  box-shadow:
+    0 0 0 1px var(--teak-400),
+    0 0 32px var(--glow-amber);
+  opacity: 0;
+  pointer-events: none;
+}
+.rw-cta {
+  display: inline-block;
+  margin-top: 24px;
+}
+
+/* Section ------------------------------------------------------------------------------------- */
+
+.rw-tri {
+  position: relative;
+  overflow: hidden;
+  background: var(--parchment-50);
+}
+.rw-survey {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: radial-gradient(var(--forest-900) 1px, transparent 1.5px);
+  background-size: 32px 32px;
+  background-position: 16px 16px;
+}
+
+/* Photographs: greenery, growth and timber, feathered into the paper. */
+.rw-photo {
+  position: absolute;
+  pointer-events: none;
+  background-size: cover;
+  background-position: center;
+}
+.rw-photo--greenery {
+  left: 77%;
+  top: 0;
+  width: 26%;
+  height: 72%;
+  -webkit-mask-image: radial-gradient(closest-side at 62% 44%, #000 10%, transparent 70%);
+  mask-image: radial-gradient(closest-side at 62% 44%, #000 10%, transparent 70%);
+  opacity: 0.35;
+}
+.rw-photo--growth {
+  left: -3%;
+  top: 37%;
+  width: 28%;
+  height: 38%;
+  -webkit-mask-image: radial-gradient(closest-side at 42% 50%, #000 10%, transparent 70%);
+  mask-image: radial-gradient(closest-side at 42% 50%, #000 10%, transparent 70%);
+  opacity: 0.3;
+}
+.rw-photo--logs {
+  /* Under the triangle base, between the two lower tiles, clear of the section edge. */
+  left: 35%;
+  top: 84.5%;
+  width: 30%;
+  height: 17%;
+  -webkit-mask-image: radial-gradient(closest-side at 50% 50%, #000 10%, transparent 70%);
+  mask-image: radial-gradient(closest-side at 50% 50%, #000 10%, transparent 70%);
+  opacity: 0.25;
+}
+
+/* Before GSAP takes over, hide what the intro reveals. If scripts never run, show it after 4s. */
+.rw-pre .rw-anim {
+  opacity: 0;
+  animation: rw-failsafe 0s linear 4s forwards;
+}
+@keyframes rw-failsafe {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Layout switch ------------------------------------------------------------------------------- */
+
+.rw-desk {
+  display: none;
+}
+@media (min-width: 1180px) {
+  .rw-desk {
+    display: block;
+  }
+  .rw-mob {
+    display: none;
+  }
+}
+
+/* Triangle (both layouts) --------------------------------------------------------------------- */
+
+.rw-stage__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.rw-edge--idle {
+  stroke: var(--forest-900);
+  stroke-opacity: 0;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 4 10;
+  fill: none;
+}
+.rw-edge--eraser {
+  stroke: var(--parchment-50);
+  stroke-width: 4;
+  fill: none;
+  opacity: 0;
+}
+/* The drawn edges: stroke comes from each edge's gradient (set in the markup). */
+.rw-seg {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0;
+}
+.rw-seg--glow {
+  stroke-width: 9;
+  opacity: 0;
+  filter: blur(5px);
+}
+
+/* Wood beams forming the triangle edges */
+.rw-beams {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.rw-beam {
+  position: absolute;
+  border-radius: 999px;
+  background:
+    repeating-linear-gradient(
+      to right,
+      transparent 0px,
+      transparent 30px,
+      rgba(80, 45, 12, 0.06) 30px,
+      rgba(80, 45, 12, 0.06) 31px,
+      transparent 31px,
+      transparent 52px,
+      rgba(80, 45, 12, 0.04) 52px,
+      rgba(80, 45, 12, 0.04) 53px
+    ),
+    linear-gradient(
+      to bottom,
+      #6b4520 0%,
+      #8b6035 12%,
+      #a07840 30%,
+      #b8944e 50%,
+      #a07840 70%,
+      #8b6035 88%,
+      #6b4520 100%
+    );
+  box-shadow:
+    0 3px 10px rgba(58, 42, 28, 0.35),
+    inset 0 2px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+}
+.rw-stop--1 {
+  stop-color: var(--earth-500);
+}
+.rw-stop--2 {
+  stop-color: var(--leaf-600);
+}
+.rw-stop--3 {
+  stop-color: var(--red-600);
+}
+.rw-tri-fill {
+  fill: var(--earth-400);
+  opacity: 0;
+}
+.rw-loop {
+  fill: none;
+  stroke: none;
+}
+
+/* The travelling light: a bright head with a fading comet tail, in --lc (set every frame). */
+.rw-light {
+  --lc: var(--earth-500);
+  opacity: 0;
+}
+.rw-tail {
+  fill: none;
+  stroke: var(--lc);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.rw-tail--1 {
+  stroke-width: 3;
+}
+.rw-tail--2 {
+  stroke-width: 5;
+  opacity: 0.45;
+  filter: blur(2px);
+}
+.rw-tail--3 {
+  stroke-width: 9;
+  opacity: 0.22;
+  filter: blur(5px);
+}
+.rw-head__halo {
+  fill: var(--lc);
+  opacity: 0.5;
+  filter: blur(5px);
+}
+.rw-head__core {
+  fill: #fffaf0;
+  stroke: var(--lc);
+  stroke-width: 2;
+}
+.rw-head__spark {
+  fill: var(--lc);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: rw-twinkle 1.6s ease-in-out infinite alternate;
+}
+@keyframes rw-twinkle {
+  from {
+    transform: rotate(0deg) scale(0.65);
+    opacity: 0.55;
+  }
+  to {
+    transform: rotate(90deg) scale(1.15);
+    opacity: 1;
+  }
+}
+
+/* Corner tiles (both layouts): white card, a colour bar on top, a soft wash of the colour. */
+.rw-tile {
+  position: relative;
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, var(--c-wash), transparent 58%),
+    var(--paper);
+  border: 1px solid var(--line-light);
+  box-shadow:
+    0 1px 2px rgba(14, 26, 20, 0.06),
+    0 20px 40px -24px rgba(14, 26, 20, 0.45);
+}
+.rw-tile::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 18px;
+  right: 18px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--c);
+}
+.rw-tile__glow,
+.rw-tile__ring {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+}
+.rw-tile__glow {
+  box-shadow: 0 0 34px var(--c-glow);
+}
+.rw-tile__ring {
+  border: 1.5px solid var(--c);
+}
+.rw-scene {
+  display: block;
+  width: 172px;
+  height: 84px;
+  overflow: hidden;
+}
+.rw-tile .rw-tag,
+.rw-step .rw-tag {
+  color: var(--ink-600);
+  white-space: nowrap;
+  margin: 0;
+}
+.rw-tag__land {
+  color: var(--red-700);
+}
+.rw-tag__timber {
+  color: var(--earth-700);
+}
+.s2-year {
+  color: var(--leaf-700);
+}
+
+/* Desktop stage ------------------------------------------------------------------------------- */
+
+.rw-desk {
+  position: relative;
+  padding: 24px 0;
+}
+.rw-stage {
+  position: relative;
+  width: min(100%, 1440px);
+  margin: 0 auto;
+  aspect-ratio: 1440 / 900;
+  container-type: inline-size;
+}
+.rw-intro {
+  position: absolute;
+  z-index: 3;
+  left: 4.44%;
+  top: 11%;
+  max-width: 400px;
+}
+.rw-intro .rw-eyebrow {
+  color: var(--earth-700);
+}
+.rw-intro .rw-body-l {
+  margin-top: 16px;
+  color: var(--ink-700);
+}
+
+.rw-corner {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: 2;
+}
+.rw-corner .rw-tile {
+  position: absolute;
+  left: -100px;
+  top: -70px;
+  width: 200px;
+  height: 140px;
+  padding: 13px 13px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.rw-label {
+  position: absolute;
+  top: 0;
+  transform: translateY(-50%);
+  width: 300px;
+}
+.rw-label--right {
+  left: 124px;
+  text-align: left;
+}
+.rw-label--left {
+  right: 124px;
+  text-align: right;
+}
+/* The rule always points back at the tile. */
+.rw-label--left .rw-key {
+  flex-direction: row-reverse;
+}
+/* Labels beside the base corners only have the stage margin to live in: 27.78cqi = 400/1440. */
+.rw-corner[data-i="2"] .rw-label,
+.rw-corner[data-i="3"] .rw-label {
+  width: min(300px, 27.78cqi - 144px);
+}
+.rw-label__title {
+  margin: 10px 0 0;
+  color: var(--ink-900);
+}
+.rw-label__line {
+  margin: 8px 0 0;
+  color: var(--ink-600);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* Centre: mark, headline, button */
+.rw-centre {
+  position: absolute;
+  left: 50%;
+  top: 64.44%;
+  transform: translate(-50%, -50%);
+  width: 380px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.rw-centre .rw-mark {
+  width: 44px;
+  height: 44px;
+}
+.rw-headline {
+  margin: 16px 0 0;
+  color: var(--ink-900);
+  font-size: clamp(36px, 3.6cqi, 56px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+.rw-headline .rw-hl-accent {
+  color: var(--ink-900);
+}
+
+/* Mobile -------------------------------------------------------------------------------------- */
+
+.rw-mob {
+  position: relative;
+  padding: 80px 20px 0;
+}
+/* Phones: a soft canopy centred behind the triangle. */
+.rw-mob .rw-photo--greenery {
+  left: -30%;
+  top: -14%;
+  width: 160%;
+  height: 128%;
+  -webkit-mask-image: radial-gradient(closest-side at 50% 50%, #000 8%, transparent 60%);
+  mask-image: radial-gradient(closest-side at 50% 50%, #000 8%, transparent 60%);
+  opacity: 0.15;
+}
+.rw-mob .rw-photo--logs {
+  left: 50%;
+  top: auto;
+  bottom: 0;
+  width: 300px;
+  height: 180px;
+  margin-left: -150px;
+  opacity: 0.2;
+}
+.rw-intro--m {
+  position: relative;
+  left: auto;
+  top: auto;
+  max-width: 560px;
+  margin: 0 auto;
+}
+.rw-intro--m .rw-body-l {
+  font-size: 16px;
+  line-height: 1.55;
+  margin-top: 10px;
+}
+
+/* The triangle with a live tile at each corner, like the desktop stage at phone size. */
+.rw-mtri {
+  position: relative;
+  width: min(440px, 100%);
+  aspect-ratio: 340 / 380;
+  margin: 28px auto 0;
+  container-type: inline-size;
+}
+.rw-mmark {
+  stroke-width: 1.75;
+  fill: none;
+}
+.rw-mmark__seed {
+  fill: var(--earth-700);
+  stroke: none;
+}
+/* A zero-size anchor on the corner point; flex centring puts the tile's middle on the point. */
+.rw-mcorner {
+  position: absolute;
+  z-index: 2;
+  width: 0;
+  height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rw-mcorner .rw-tile {
+  flex: none;
+  width: 42cqi;
+  padding: 2.6cqi 2.4cqi 2.4cqi;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.rw-mcorner .rw-tile::before {
+  left: 14px;
+  right: 14px;
+}
+.rw-mcorner .rw-scene {
+  width: 100%;
+  height: auto;
+}
+.rw-mtile__title {
+  margin: 1.2cqi 0 0;
+  color: var(--c-ink);
+  font-size: clamp(12px, 4.1cqi, 16px);
+  line-height: 1.15;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* The process, step by step, on a rail that runs brown → green → red. */
+.rw-steps {
+  position: relative;
+  max-width: 560px;
+  margin: 40px auto 0;
+  padding-left: 30px;
+}
+.rw-steps__rail {
+  position: absolute;
+  left: 8px;
+  top: 26px;
+  bottom: 26px;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(
+    180deg,
+    var(--earth-500),
+    var(--leaf-600) 50%,
+    var(--red-600)
+  );
+  transform-origin: 50% 0;
+}
+.rw-steps__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+.rw-step {
+  position: relative;
+  padding: 18px 20px 18px;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, var(--c-wash), transparent 60%),
+    var(--paper);
+  border: 1px solid var(--line-light);
+  box-shadow:
+    0 1px 2px rgba(14, 26, 20, 0.05),
+    0 16px 34px -26px rgba(14, 26, 20, 0.4);
+}
+/* The dot sits on the rail: rail centre is 9px into .rw-steps, the card starts 30px in. */
+.rw-step__dot {
+  position: absolute;
+  left: -28px;
+  top: 19px;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--c);
+  border: 3px solid var(--parchment-50);
+  box-shadow: 0 0 0 1px var(--c);
+}
+.rw-step__pulse {
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  border: 2px solid var(--c);
+  opacity: 0;
+}
+.rw-step__title {
+  margin: 10px 0 0;
+  color: var(--ink-900);
+  font-size: 22px;
+}
+.rw-step__line {
+  margin: 6px 0 0;
+  color: var(--ink-600);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.rw-step .rw-tag {
+  margin-top: 12px;
+}
+
+.rw-mfinale {
+  position: relative;
+  max-width: 560px;
+  margin: 56px auto 0;
+  padding-bottom: 190px;
+}
+.rw-mfinale .rw-mark {
+  display: block;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 14px;
+}
+.rw-mfinale .rw-headline {
+  margin: 0;
+  font-size: 44px;
+}
+.rw-mfinale .rw-cta {
+  display: block;
+}
+
+/* Reduced motion ------------------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .rw *,
+  .rw *::before,
+  .rw *::after {
+    transition-duration: 200ms !important;
+    transition-property: opacity, background-color, color !important;
+    animation: none !important;
+  }
+  .rw-pre .rw-anim {
+    opacity: 1;
+  }
+  .rw-light {
+    display: none;
+  }
+}

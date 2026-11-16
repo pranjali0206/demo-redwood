@@ -1,324 +1,243 @@
-import type { MouseEvent, ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import {
-  motion,
-  useMotionTemplate,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-} from "framer-motion";
 import { ArrowRight, ArrowUpRight, FlaskConical, Sprout } from "lucide-react";
-import heroBg from "@/assets/teak-plantation-hero.webp";
-import urbanFarmImg from "@/assets/land-aerial.webp";
-import { CountUp } from "./Reveal";
-
-const EASE = [0.22, 1, 0.36, 1] as const;
-const BG = "#06130b";
-
-const NOISE =
-  "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")";
+import forestBg from "@/assets/forest-bg.jpg";
+import { PlantationSilhouette, SunriseScene, TeakLeaf, TeakLeafOutline } from "./HeroScenery";
+import { Reveal } from "./Reveal";
 
 // Figures mirror the Investment page stats row — keep them in sync.
-const stats: { value: ReactNode; label: string }[] = [
-  { value: <CountUp to={75} suffix="%" />, label: "Investor Share of Proceeds" },
-  { value: <CountUp to={12} suffix=" yrs" />, label: "Plantation Cycle" },
-  { value: <CountUp to={100} suffix="%" />, label: "Professionally Managed" },
-  { value: "Tax-Free", label: "Agricultural Income" },
+const stats: { value: ReactNode; label: string; gold?: boolean }[] = [
+  { value: <StatCount to={75} suffix="%" />, label: "Investor Share of Proceeds" },
+  { value: <StatCount to={12} suffix=" yrs" />, label: "Plantation Cycle" },
+  { value: <StatCount to={100} suffix="%" />, label: "Professionally Managed" },
+  { value: "Tax-Free", label: "Agricultural Income", gold: true },
 ];
 
-const statCellClass = [
-  "pl-0 sm:pl-0",
-  "border-l",
-  "border-t pl-0 sm:pl-0 lg:border-t-0 lg:border-l lg:pl-6",
-  "border-l border-t lg:border-t-0",
-];
+/** Load-in delay for an element with the `rwb-rise` class (see styles/hero.css). */
+const rise = (seconds: number) => ({ "--rise-delay": `${seconds}s` }) as CSSProperties;
 
 export function Hero() {
-  const reduce = useReducedMotion() ?? false;
-
-  const px = useMotionValue(0);
-  const py = useMotionValue(0);
-  const bgX = useSpring(useTransform(px, [-1, 1], [14, -14]), { stiffness: 50, damping: 20 });
-  const bgY = useSpring(useTransform(py, [-1, 1], [14, -14]), { stiffness: 50, damping: 20 });
-
-  const handleMove = (e: MouseEvent<HTMLElement>) => {
-    if (reduce) return;
-    const r = e.currentTarget.getBoundingClientRect();
-    px.set(((e.clientX - r.left) / r.width - 0.5) * 2);
-    py.set(((e.clientY - r.top) / r.height - 0.5) * 2);
-  };
-  const handleLeave = () => {
-    px.set(0);
-    py.set(0);
-  };
-
   return (
-    <section
-      onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
-      className="relative isolate flex min-h-svh flex-col overflow-hidden text-white"
-      style={{ backgroundColor: BG }}
-    >
-      {/* Background */}
-      <motion.div aria-hidden className="absolute -inset-6 -z-10" style={{ x: bgX, y: bgY }}>
-        <motion.img
-          src={heroBg}
-          alt=""
-          fetchPriority="high"
-          className="h-full w-full object-cover object-[50%_35%]"
-          initial={reduce ? false : { scale: 1.15, opacity: 0 }}
-          animate={{ scale: 1.03, opacity: 1 }}
-          transition={{ duration: 2.2, ease: EASE }}
+    <section className="rwb-hero flex min-h-svh flex-col font-jakarta text-rwb-ink">
+      <div className="relative isolate flex flex-1 flex-col overflow-hidden">
+        {/* Background: gradient, a faint forest photo, two outline leaves */}
+        <div aria-hidden className="rwb-hero__canvas absolute inset-0" />
+        <div
+          aria-hidden
+          className="rwb-hero__forest absolute inset-0"
+          style={{ backgroundImage: `url(${forestBg})` }}
         />
-      </motion.div>
-      <div aria-hidden className="absolute inset-0 -z-10 bg-[#06130b]/50 lg:bg-transparent" />
-      <div
-        aria-hidden
-        className="absolute inset-0 -z-10 bg-gradient-to-r from-[#06130b]/95 via-[#06130b]/60 to-transparent"
-      />
-      <div
-        aria-hidden
-        className="absolute inset-0 -z-10 bg-gradient-to-t from-[#06130b] via-[#06130b]/10 to-transparent"
-      />
-      <div
-        aria-hidden
-        className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-[#06130b]/70 to-transparent"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.07] mix-blend-overlay"
-        style={{ backgroundImage: NOISE }}
-      />
+        <TeakLeafOutline className="pointer-events-none absolute -right-28 -top-24 w-[300px] rotate-[215deg] opacity-50 sm:w-[400px]" />
+        <TeakLeafOutline className="pointer-events-none absolute -left-36 top-[40%] w-[280px] rotate-[62deg] opacity-50 sm:w-[360px]" />
 
-      {/* Content */}
-      <div className="relative flex flex-1 items-center">
-        <div className="mx-auto grid w-full max-w-7xl items-center gap-14 px-4 pb-16 pt-28 sm:px-6 lg:grid-cols-12 lg:gap-10 lg:px-8 lg:pb-12 lg:pt-28">
-          <div className="lg:col-span-7">
-            <motion.p
-              initial={reduce ? false : { opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, ease: EASE, delay: 0.2 }}
-              className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.35em] text-amber-300 sm:text-xs"
+        {/* Content */}
+        <div className="relative mx-auto flex w-full max-w-[1280px] flex-1 flex-wrap items-center gap-16 px-5 pb-[170px] pt-[108px] sm:px-10 sm:pt-[136px]">
+          <div className="@container min-w-0 flex-[1_1_560px]">
+            <p
+              className="rwb-rise flex items-center gap-3.5 text-xs font-extrabold uppercase tracking-[3.5px] text-rwb-label"
+              style={rise(0.1)}
             >
-              <span className="h-px w-10 bg-gradient-to-r from-amber-300 to-transparent" />
+              <span aria-hidden className="h-px w-10 shrink-0 bg-rwb-gold-deep" />
               Innovative Science · Wealthier Tomorrow
-            </motion.p>
+            </p>
 
-            <h1 className="mt-6 font-serif font-bold">
-              <MaskLine
-                reduce={reduce}
-                delay={0.3}
-                className="text-[2.75rem] leading-[1.04] tracking-tight sm:text-6xl xl:text-[5.25rem]"
-              >
-                Real Estate
-              </MaskLine>
-              <MaskLine
-                reduce={reduce}
-                delay={0.42}
-                className="text-[2.75rem] leading-[1.04] tracking-tight sm:text-6xl xl:text-[5.25rem]"
-              >
-                <span className="text-amber-400">+</span> Agroforestry
-              </MaskLine>
-              <MaskLine
-                reduce={reduce}
-                delay={0.56}
-                outerClassName="mt-4"
-                className="bg-gradient-to-r from-amber-200 via-amber-300 to-amber-500 bg-clip-text text-xl font-semibold italic leading-snug text-transparent sm:text-2xl lg:text-[1.75rem]"
-              >
-                Genetically Engineered Hi-Tech Sagwan Teak
-              </MaskLine>
+            {/* 10.3cqi caps the size so each line fits the column on one row (a line is ~9.5em). */}
+            <h1
+              className="rwb-rise mt-6 font-playfair text-[clamp(46px,min(5.4vw,10.3cqi),78px)] font-bold leading-[1.08] tracking-[-1px]"
+              style={rise(0.2)}
+            >
+              <span className="block">Genetically Premium</span>{" "}
+              <span className="block">
+                <em className="italic text-rwb-emerald">Sagwan</em> Agroforestry
+              </span>
             </h1>
 
-            <motion.p
-              initial={reduce ? false : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: EASE, delay: 0.75 }}
-              className="mt-7 max-w-xl text-base leading-relaxed text-stone-200/85 sm:text-lg"
+            <p
+              className="rwb-rise mt-6 max-w-[560px] text-[19px] leading-[1.55] text-rwb-sub sm:text-[21px]"
+              style={rise(0.35)}
+            >
+              Purchase agricultural land with{" "}
+              <strong className="rwb-highlight font-bold">premium Sagwan plantations done</strong>
+            </p>
+
+            <p
+              className="rwb-rise mt-4 flex items-center gap-2.5 font-playfair text-[22px] font-semibold italic leading-snug text-rwb-emerald"
+              style={rise(0.45)}
+            >
+              <TeakLeaf className="size-[18px] shrink-0 -rotate-30 text-rwb-gold-deep" />
+              Be a part of timber producers
+            </p>
+
+            <hr
+              className="rwb-rise mt-8 max-w-[560px] border-t border-[rgba(14,59,46,0.14)]"
+              style={rise(0.55)}
+            />
+
+            <p
+              className="rwb-rise mt-6 max-w-[560px] text-base leading-relaxed text-rwb-body sm:text-[17px]"
+              style={rise(0.65)}
             >
               Grown on your land, managed and sold by us,{" "}
-              <span className="font-semibold text-white">profit earned by you.</span>
-            </motion.p>
+              <strong className="font-extrabold text-rwb-ink">profit earned by you.</strong>
+            </p>
 
-            <motion.div
-              initial={reduce ? false : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: EASE, delay: 0.9 }}
-              className="mt-10 flex flex-col gap-3 sm:flex-row"
-            >
+            <div className="rwb-rise mt-9 flex flex-wrap gap-3.5" style={rise(0.75)}>
               <Link
                 to="/agroforestry"
-                className="group inline-flex items-center justify-center gap-2 rounded-full bg-amber-500 px-7 py-3.5 text-sm font-semibold tracking-wide text-green-950 shadow-[0_12px_32px_-12px_rgba(245,158,11,0.8)] transition-colors duration-300 hover:bg-amber-400"
+                className="group inline-flex h-14 items-center justify-center gap-2.5 rounded-full bg-rwb-gold px-8 text-[15px] font-bold text-rwb-ink shadow-[0_14px_30px_-12px_rgba(217,164,65,0.75)] transition-[translate,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_36px_-12px_rgba(217,164,65,0.85)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rwb-ink"
               >
                 Learn More
                 <ArrowRight
-                  size={16}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
+                  size={17}
+                  className="transition-transform duration-300 group-hover:translate-x-[3px]"
                 />
               </Link>
               <Link
                 to="/model"
-                className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/5 px-7 py-3.5 text-sm font-semibold tracking-wide text-white backdrop-blur-sm transition-colors duration-300 hover:border-white/50 hover:bg-white/10"
+                className="group inline-flex h-14 items-center justify-center gap-2.5 rounded-full border-[1.5px] border-rwb-ink bg-white/45 px-8 text-[15px] font-bold text-rwb-ink transition-[translate,background-color] duration-300 hover:-translate-y-0.5 hover:bg-white/75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rwb-ink"
               >
                 Explore the Model
                 <ArrowUpRight
-                  size={16}
-                  className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  size={17}
+                  className="transition-transform duration-300 group-hover:translate-x-[3px]"
                 />
               </Link>
-            </motion.div>
+            </div>
           </div>
 
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: EASE, delay: 0.7 }}
-            className="relative lg:col-span-5"
-          >
-            <UrbanFarmerCard reduce={reduce} />
-          </motion.div>
+          {/* Once the columns stack (≤1173px) the card moves below the triangle section instead. */}
+          <div className="rwb-rise min-w-0 flex-[0_1_470px] max-[1173px]:hidden" style={rise(0.9)}>
+            <UrbanFarmerCard />
+          </div>
         </div>
+
+        <PlantationSilhouette className="rwb-silhouette pointer-events-none absolute inset-x-0 bottom-0 h-[150px] w-full" />
       </div>
 
       {/* Stats */}
-      <motion.div
-        initial={reduce ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 1.1 }}
-        className="relative border-t border-white/10 bg-[#06130b]/60 backdrop-blur-md"
-      >
-        <dl className="mx-auto grid max-w-7xl grid-cols-2 px-4 sm:px-6 lg:grid-cols-4 lg:px-8">
-          {stats.map((s, i) => (
+      <div className="bg-rwb-ink">
+        <dl className="mx-auto flex max-w-[1280px] flex-wrap px-5 sm:px-10">
+          {stats.map((s) => (
             <div
               key={s.label}
-              className={`flex flex-col-reverse justify-end border-white/10 px-4 py-5 sm:px-6 sm:py-6 ${statCellClass[i]}`}
+              className="rwb-stat flex flex-col-reverse justify-end px-4 py-6 first:pl-0 sm:px-7 sm:py-8"
             >
-              <dt className="mt-1 text-[10px] font-medium uppercase tracking-[0.22em] text-stone-300/70 sm:text-[11px]">
+              <dt className="mt-2.5 text-[11.5px] font-bold uppercase leading-snug tracking-[1.6px] text-rwb-mist sm:tracking-[2.6px]">
                 {s.label}
               </dt>
-              <dd className="text-2xl font-semibold tracking-tight text-white tabular-nums sm:text-3xl">
+              <dd
+                className={`whitespace-nowrap font-playfair text-[clamp(24px,7.4vw,32px)] font-semibold leading-none lining-nums min-[960px]:text-[clamp(34px,3.6vw,44px)] ${
+                  s.gold ? "text-rwb-gold-soft" : "text-rwb-cream"
+                }`}
+              >
                 {s.value}
               </dd>
             </div>
           ))}
         </dl>
-      </motion.div>
+      </div>
     </section>
   );
 }
 
-function MaskLine({
-  children,
-  delay,
-  reduce,
-  className = "",
-  outerClassName = "",
-}: {
-  children: ReactNode;
-  delay: number;
-  reduce: boolean;
-  className?: string;
-  outerClassName?: string;
-}) {
+/**
+ * The Urban Farmer card on phones and tablets: there the hero stacks, so instead of sitting under
+ * the hero copy the card follows the triangle section (hero → triangle → card). On a parchment
+ * ground so it runs on from the triangle section. Hidden once the hero shows it beside the copy.
+ */
+export function UrbanFarmerAfterTriangle() {
   return (
-    // Bottom padding keeps descenders (g, y) from being clipped by the mask.
-    <span className={`block overflow-hidden pb-[0.12em] ${outerClassName}`}>
-      <motion.span
-        className={`block ${className}`}
-        initial={reduce ? false : { y: "110%" }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.9, ease: EASE, delay }}
-      >
-        {children}
-      </motion.span>
-    </span>
+    <div className="rwb-uf-after bg-[#f7f3ea] px-5 pb-16 pt-2 font-jakarta text-rwb-ink sm:px-10 min-[1174px]:hidden">
+      <Reveal className="mx-auto max-w-[560px]">
+        <UrbanFarmerCard />
+      </Reveal>
+    </div>
   );
 }
 
-function UrbanFarmerCard({ reduce }: { reduce: boolean }) {
-  const mx = useMotionValue(0.5);
-  const my = useMotionValue(0.5);
-  const rotateX = useSpring(useTransform(my, [0, 1], [6, -6]), { stiffness: 150, damping: 18 });
-  const rotateY = useSpring(useTransform(mx, [0, 1], [-6, 6]), { stiffness: 150, damping: 18 });
-  const glareX = useTransform(mx, (v) => `${v * 100}%`);
-  const glareY = useTransform(my, (v) => `${v * 100}%`);
-  const glare = useMotionTemplate`radial-gradient(420px circle at ${glareX} ${glareY}, rgba(255,255,255,0.14), transparent 45%)`;
+function UrbanFarmerCard() {
+  return (
+    <Link
+      to="/urban-farmer"
+      className="group block overflow-hidden rounded-[24px] border border-[rgba(14,59,46,0.12)] bg-white shadow-[0_30px_70px_-30px_rgba(14,59,46,0.45)] outline-none transition-[translate,box-shadow] duration-500 hover:-translate-y-1 hover:shadow-[0_40px_90px_-28px_rgba(14,59,46,0.55)] focus-visible:ring-2 focus-visible:ring-rwb-gold focus-visible:ring-offset-2"
+    >
+      <div className="relative h-[250px] overflow-hidden">
+        <SunriseScene className="absolute inset-0 size-full" />
+        <span className="absolute left-3.5 top-3.5 inline-flex max-w-[calc(100%-1.75rem)] items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-[11.5px] font-bold uppercase leading-tight tracking-[1.6px] text-rwb-label sm:tracking-[2.4px]">
+          <Sprout size={13} className="shrink-0 text-rwb-emerald" />
+          A Movement Beyond Rural Boundaries
+        </span>
+        <span className="absolute bottom-3.5 left-3.5 flex items-center gap-2.5 rounded-[14px] bg-white py-2 pl-2 pr-4 shadow-[0_10px_24px_-12px_rgba(14,59,46,0.5)]">
+          <span className="flex size-9 items-center justify-center rounded-[10px] bg-rwb-ink text-rwb-gold-soft">
+            <FlaskConical size={18} />
+          </span>
+          <span className="leading-tight">
+            <span className="block font-playfair text-[15px] font-bold text-rwb-ink">
+              Hi-Tech Sagwan
+            </span>
+            <span className="block text-[11.5px] text-rwb-body">Tissue-culture grown</span>
+          </span>
+        </span>
+      </div>
 
-  const handleMove = (e: MouseEvent<HTMLElement>) => {
-    if (reduce) return;
-    const r = e.currentTarget.getBoundingClientRect();
-    mx.set((e.clientX - r.left) / r.width);
-    my.set((e.clientY - r.top) / r.height);
-  };
-  const handleLeave = () => {
-    mx.set(0.5);
-    my.set(0.5);
-  };
+      <div className="px-6 pb-7 pt-[30px] sm:px-8 sm:pb-8">
+        <p className="text-xs font-extrabold uppercase tracking-[3.5px] text-rwb-label">
+          The Urban Farmer
+        </p>
+        <h2 className="mt-2.5 font-playfair text-[26px] font-bold leading-[1.2] text-rwb-ink sm:text-[28px]">
+          Farming isn't just a rural legacy anymore.
+        </h2>
+        <p className="mt-3 text-[15px] leading-relaxed text-rwb-body">
+          Your address doesn't decide your roots. Wherever you live, your land can still grow your
+          future — with Redwood Biotech.
+        </p>
+        <span className="mt-6 flex h-[58px] items-center justify-between gap-3 rounded-[14px] bg-rwb-gold pl-5 pr-2 text-[15px] font-bold text-rwb-ink">
+          Become The Urban Farmer
+          <span className="flex size-[42px] items-center justify-center rounded-[10px] bg-rwb-ink/10 transition-transform duration-300 group-hover:translate-x-[3px]">
+            <ArrowRight size={17} />
+          </span>
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+/**
+ * Counts up from 0 once the strip is on screen. The server HTML carries the real figure, and the
+ * `rwb-count` CSS keeps it hidden until this takes over, so it never visibly drops back to 0.
+ * With reduced motion, or if JavaScript arrives after the CSS fallback, the real figure stays.
+ */
+function StatCount({ to, suffix = "" }: { to: number; suffix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    // The dataset guard makes a second effect run (Strict Mode, hot reload) a no-op.
+    if (!el || el.dataset.counted || getComputedStyle(el).opacity !== "0") return;
+    el.dataset.counted = "true";
+    el.textContent = `0${suffix}`;
+    el.style.animation = "none";
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        const start = Math.max(performance.now(), 900); // no earlier than ~0.9s after page load
+        const tick = (now: number) => {
+          const p = Math.min(1, Math.max(0, (now - start) / 1800));
+          el.textContent = `${Math.round(to * (1 - (1 - p) ** 3))}${suffix}`;
+          if (p < 1 && el.isConnected) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      },
+      { threshold: 0.5 },
+    );
+    observer.observe(el);
+  }, [to, suffix]);
 
   return (
-    <div className="relative">
-      <motion.div
-        onMouseMove={handleMove}
-        onMouseLeave={handleLeave}
-        style={{ rotateX, rotateY, transformPerspective: 1200 }}
-        className="group relative overflow-hidden rounded-3xl border border-white/15 bg-[#0b1f14]/75 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)] backdrop-blur-xl transition-colors duration-500 hover:border-amber-400/50"
-      >
-        <Link
-          to="/urban-farmer"
-          className="block rounded-3xl outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-amber-300"
-        >
-          <div className="relative aspect-[16/9] overflow-hidden lg:aspect-[2/1]">
-            <img
-              src={urbanFarmImg}
-              alt="Green farmland rolling toward a city skyline at sunrise"
-              className="h-full w-full object-cover object-[50%_40%] transition-transform duration-1000 ease-out group-hover:scale-110"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0b1f14] via-[#0b1f14]/20 to-transparent" />
-            <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/35 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white backdrop-blur-md">
-              <Sprout size={12} className="text-amber-300" /> A Movement Beyond Rural Boundaries
-            </span>
-          </div>
-
-          <div className="relative px-6 pb-6 pt-1 sm:px-7 sm:pb-7">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-amber-300">
-              The Urban Farmer
-            </p>
-            <h2 className="mt-2 font-serif text-2xl font-bold leading-snug text-white sm:text-[1.7rem]">
-              Farming Isn't Just a Rural Legacy Anymore.
-            </h2>
-            <p className="mt-3 text-sm leading-relaxed text-stone-300/90 sm:text-[15px]">
-              Your address doesn't decide your roots. Wherever you live, your land can still grow
-              your future — with Redwood Biotech.
-            </p>
-            <span className="mt-6 flex items-center justify-between gap-3 rounded-2xl bg-amber-500 py-2.5 pl-5 pr-2.5 text-sm font-bold tracking-wide text-green-950 transition-colors duration-300 group-hover:bg-amber-400">
-              Become The Urban Farmer
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-green-950/10 transition-transform duration-300 group-hover:translate-x-1">
-                <ArrowRight size={16} />
-              </span>
-            </span>
-          </div>
-        </Link>
-
-        <motion.div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-          style={{ background: glare }}
-        />
-      </motion.div>
-
-      <motion.div
-        className="absolute -left-8 top-20 hidden items-center gap-3 rounded-2xl border border-white/15 bg-[#0b1f14]/70 py-3 pl-3 pr-5 shadow-2xl backdrop-blur-xl xl:flex"
-        animate={reduce ? undefined : { y: [0, -10, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-400/15 text-amber-300">
-          <FlaskConical size={20} />
-        </span>
-        <span>
-          <span className="block font-serif text-sm font-bold text-white">Hi-Tech Sagwan</span>
-          <span className="block text-[11px] text-stone-300/80">Tissue-culture grown</span>
-        </span>
-      </motion.div>
-    </div>
+    <span ref={ref} className="rwb-count">
+      {`${to}${suffix}`}
+    </span>
   );
 }
