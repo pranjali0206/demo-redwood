@@ -1,13 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import logo from "../../assets/rw-logo2.webp";
-import {
-  CONTACT,
-  isFilled,
-  LEGAL_DISCLAIMER,
-  LOCATIONS,
-  whatsappHref,
-} from "@/components/home/content";
-import { Icon, track, WhatsAppGlyph } from "@/components/home/ui";
+import { CONTACT, isFilled, LEGAL_DISCLAIMER, LOCATIONS } from "@/components/home/content";
+import { Icon } from "@/components/home/ui";
 
 const LINKS = [
   ["/about", "About"],
@@ -53,18 +47,6 @@ export function Footer() {
         <div>
           <h2 className="rwh-footer__h">Contact</h2>
           <ul className="rwh-footer__list rwh-footer__contact">
-            <li>
-              <a
-                className="rwh-footer__row"
-                href={whatsappHref()}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => track("whatsapp_click", { location: "footer" })}
-              >
-                <WhatsAppGlyph size={18} />
-                <span>WhatsApp</span>
-              </a>
-            </li>
             <li>
               <span className="rwh-footer__row rwh-footer__row--addr">
                 <Icon name="pin" size={18} />

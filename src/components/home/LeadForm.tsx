@@ -8,13 +8,12 @@ import {
   isFilled,
   LEAD_ENDPOINT,
   PRIVACY_NOTE,
-  whatsappHref,
   type ContactTime,
 } from "./content";
+import { Icon, track } from "./ui";
 
 const BUDGET_RANGES = BUDGETS.filter((b) => isFilled(b.label));
 const HAS_BUDGETS = BUDGET_RANGES.some((b) => b.value);
-import { Icon, track, WhatsAppButton } from "./ui";
 
 /* Schema ------------------------------------------------------------------------------------- */
 
@@ -341,34 +340,12 @@ export function LeadForm({
           {status === "error" ? (
             <>
               <Icon name="alert" size={16} />
-              <span>Something went wrong. Please try again or WhatsApp us.</span>
+              <span>Something went wrong. Please try again.</span>
             </>
           ) : null}
         </p>
 
-        {full ? (
-          <>
-            <p className="rwh-form__note">{PRIVACY_NOTE}</p>
-            <div className="rwh-or" aria-hidden="true">
-              <span>or</span>
-            </div>
-            <WhatsAppButton location={location} className="rwh-btn--block">
-              Prefer to chat? WhatsApp us
-            </WhatsAppButton>
-          </>
-        ) : (
-          <p className="rwh-form__alt">
-            <span>Prefer to chat?</span>{" "}
-            <a
-              href={whatsappHref()}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => track("whatsapp_click", { location })}
-            >
-              WhatsApp us
-            </a>
-          </p>
-        )}
+        {full ? <p className="rwh-form__note">{PRIVACY_NOTE}</p> : null}
       </form>
 
       <div
