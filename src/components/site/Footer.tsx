@@ -38,18 +38,7 @@ export function Footer() {
     ...(isFilled(CONTACT.phone) ? { telephone: CONTACT.phone } : {}),
     ...(isFilled(CONTACT.email) ? { email: CONTACT.email } : {}),
   };
-  const row = (icon: "phone" | "mail", label: string, href: string) =>
-    href ? (
-      <a className="rwh-footer__row" href={href}>
-        <Icon name={icon} size={18} />
-        <span>{label}</span>
-      </a>
-    ) : (
-      <span className="rwh-footer__row">
-        <Icon name={icon} size={18} />
-        <span>{label}</span>
-      </span>
-    );
+  const sites = LOCATIONS.filter(isFilled);
 
   return (
     <footer className="rwh rwh-footer">
@@ -64,8 +53,6 @@ export function Footer() {
         <div>
           <h2 className="rwh-footer__h">Contact</h2>
           <ul className="rwh-footer__list rwh-footer__contact">
-            <li>{row("phone", CONTACT.phone, CONTACT.phoneHref)}</li>
-            <li>{row("mail", CONTACT.email, CONTACT.emailHref)}</li>
             <li>
               <a
                 className="rwh-footer__row"
@@ -89,11 +76,13 @@ export function Footer() {
 
         <div>
           <h2 className="rwh-footer__h">Locations</h2>
-          <ul className="rwh-footer__list">
-            {LOCATIONS.map((l) => (
-              <li key={l}>{l}</li>
-            ))}
-          </ul>
+          {sites.length ? (
+            <ul className="rwh-footer__list">
+              {sites.map((l) => (
+                <li key={l}>{l}</li>
+              ))}
+            </ul>
+          ) : null}
           <span className="rwh-tag rwh-footer__soon">NEW LOCATIONS COMING SOON</span>
         </div>
 
@@ -112,7 +101,9 @@ export function Footer() {
       <div className="rwh-footer__bar">
         <div className="rwh-wrap rwh-footer__bar-in">
           <span>© {new Date().getFullYear()} Redwood Biotech. All rights reserved.</span>
-          <span className="rwh-footer__legal">{LEGAL_DISCLAIMER}</span>
+          {isFilled(LEGAL_DISCLAIMER) ? (
+            <span className="rwh-footer__legal">{LEGAL_DISCLAIMER}</span>
+          ) : null}
         </div>
       </div>
       <script

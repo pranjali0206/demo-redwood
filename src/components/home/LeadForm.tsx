@@ -5,11 +5,15 @@ import { z } from "zod";
 import {
   BUDGETS,
   CONTACT_TIMES,
+  isFilled,
   LEAD_ENDPOINT,
   PRIVACY_NOTE,
   whatsappHref,
   type ContactTime,
 } from "./content";
+
+const BUDGET_RANGES = BUDGETS.filter((b) => isFilled(b.label));
+const HAS_BUDGETS = BUDGET_RANGES.some((b) => b.value);
 import { Icon, track, WhatsAppButton } from "./ui";
 
 /* Schema ------------------------------------------------------------------------------------- */
@@ -267,19 +271,21 @@ export function LeadForm({
                 {err("city")}
               </div>
 
-              <div className="rwh-field" data-field="budget">
-                <label htmlFor={id("budget")}>Investment Budget</label>
-                <div className="rwh-input rwh-input--select">
-                  <select id={id("budget")} {...register("budget")}>
-                    {BUDGETS.map((b) => (
-                      <option key={b.value} value={b.value}>
-                        {b.label}
-                      </option>
-                    ))}
-                  </select>
-                  <Icon name="right" size={16} className="rwh-input__chev" />
+              {HAS_BUDGETS ? (
+                <div className="rwh-field" data-field="budget">
+                  <label htmlFor={id("budget")}>Investment Budget</label>
+                  <div className="rwh-input rwh-input--select">
+                    <select id={id("budget")} {...register("budget")}>
+                      {BUDGET_RANGES.map((b) => (
+                        <option key={b.value} value={b.value}>
+                          {b.label}
+                        </option>
+                      ))}
+                    </select>
+                    <Icon name="right" size={16} className="rwh-input__chev" />
+                  </div>
                 </div>
-              </div>
+              ) : null}
 
               <fieldset className="rwh-field rwh-times">
                 <legend>Preferred Contact Time</legend>
