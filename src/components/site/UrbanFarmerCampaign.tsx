@@ -1,9 +1,9 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useLocation } from "@tanstack/react-router";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { ArrowRight, Sprout, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Sprout, X } from "lucide-react";
+import stampImg from "@/assets/urban-farmer-stamp.webp";
 import logoImg from "@/assets/urban-farmer-logo.webp";
-import { TeakLeaf } from "./HeroScenery";
 import { hasSavedLead } from "@/components/urban-farmer/lead";
 
 const POPUP_SEEN_KEY = "rwb:urban-farmer-popup-seen";
@@ -37,31 +37,43 @@ export function UrbanFarmerBadge({ menuOpen = false }: { menuOpen?: boolean }) {
   return (
     <CampaignLink
       aria-label="Be The Urban Farmer"
-      className="group relative flex shrink-0 items-center rounded-full font-jakarta outline-none focus-visible:ring-2 focus-visible:ring-rwb-gold"
+      className="group relative flex shrink-0 items-center rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-uf-sun"
     >
-      <span className="relative flex items-center gap-2.5 rounded-full sm:border sm:border-[rgba(14,59,46,0.12)] sm:bg-white sm:py-1 sm:pl-1 sm:pr-5 sm:shadow-[0_8px_22px_-10px_rgba(14,59,46,0.35)]">
-        <span className="flex size-[42px] shrink-0 items-center justify-center rounded-full bg-rwb-ink text-rwb-gold-soft">
-          <TeakLeaf className="size-5 -rotate-30" />
-        </span>
-        <span className="hidden leading-none sm:block">
-          <span className="block text-[10px] font-extrabold uppercase tracking-[3px] text-rwb-label">
-            Be The
-          </span>
-          <span className="mt-1 block whitespace-nowrap font-playfair text-[15px] font-bold text-rwb-ink">
-            Urban Farmer
-          </span>
-        </span>
-        <span
-          aria-hidden
-          className="absolute -right-0.5 -top-0.5 box-content size-2.5 rounded-full border-2 border-white bg-rwb-gold sm:right-3"
+      <span className="stamp-perforated relative z-10 block w-11 -rotate-6 drop-shadow-[0_6px_10px_rgba(23,61,10,0.35)] transition-transform duration-300 group-hover:rotate-0 group-hover:scale-105 sm:w-12">
+        <img
+          src={stampImg}
+          alt=""
+          width={200}
+          height={200}
+          className="block aspect-square w-full object-cover"
         />
       </span>
 
-      {/* Phones have no room beside the badge, so the label hangs below the bar instead. */}
+      <span className="-ml-3 hidden h-10 items-center gap-2 rounded-l-md rounded-r-full border border-uf-green/15 bg-uf-cream/95 pl-5 pr-3.5 shadow-[0_10px_24px_-12px_rgba(23,61,10,0.55)] backdrop-blur transition-colors duration-300 group-hover:bg-uf-paper sm:flex">
+        <span className="leading-none">
+          <span className="block text-[9px] font-bold uppercase tracking-[0.3em] text-uf-soil">
+            Be The
+          </span>
+          <span className="mt-1 block whitespace-nowrap font-serif text-[15px] font-bold text-uf-forest">
+            Urban Farmer
+          </span>
+        </span>
+        <ArrowUpRight
+          size={15}
+          className="text-uf-green transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+        />
+      </span>
+
+      {/* Phones have no room beside the stamp, so the label hangs below the bar instead. */}
       <span
-        className={`absolute left-1/2 top-[calc(100%+8px)] -translate-x-1/2 whitespace-nowrap rounded-full bg-rwb-ink px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-rwb-cream shadow-[0_8px_18px_-8px_rgba(14,59,46,0.7)] sm:hidden ${menuOpen ? "hidden" : ""}`}
+        className={`absolute left-1/2 top-[calc(100%+10px)] -translate-x-1/2 whitespace-nowrap rounded-full bg-uf-green px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] text-uf-cream shadow-[0_8px_18px_-8px_rgba(23,61,10,0.7)] sm:hidden ${menuOpen ? "hidden" : ""}`}
       >
         Be The Urban Farmer
+      </span>
+
+      <span aria-hidden className="absolute -right-1 -top-1 z-20 flex h-3 w-3">
+        <span className="absolute inline-flex h-full w-full rounded-full bg-uf-sun opacity-75 motion-safe:animate-ping" />
+        <span className="relative inline-flex h-3 w-3 rounded-full border-2 border-uf-paper bg-uf-sun" />
       </span>
     </CampaignLink>
   );

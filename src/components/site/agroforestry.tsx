@@ -82,8 +82,8 @@ export default function Agroforestry() {
   Why Smart Indians Are Investing In
   <br />
   <span className="relative inline-block">
-    <span className="relative z-10 text-[1.7rem] sm:text-5xl lg:text-6xl bg-gradient-to-r from-[oklch(0.55_0.2_30)] to-[oklch(0.5_0.22_20)] bg-clip-text text-transparent">
-      Genetically Premium Sagwan Agroforestry
+    <span className="relative z-10 text-[1.7rem] sm:text-5xl lg:text-6xl whitespace-nowrap bg-gradient-to-r from-[oklch(0.55_0.2_30)] to-[oklch(0.5_0.22_20)] bg-clip-text text-transparent">
+      Real Estate + Agroforestry
     </span>
   </span>
 </h2>
