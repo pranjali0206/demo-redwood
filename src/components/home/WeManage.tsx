@@ -56,10 +56,7 @@ export function WeManage() {
                 <Icon name={s.icon} size={40} draw />
               </span>
               <h3 className="rwh-svc__title">{s.title}</h3>
-              <p className="rwh-svc__body">
-                {s.body}
-                {s.note ? <span className="rwh-ph"> {s.note}</span> : null}
-              </p>
+              <p className="rwh-svc__body">{s.body}</p>
               <Media
                 src={s.photo}
                 alt={s.alt}

@@ -3,7 +3,7 @@ import { TriangleSection } from "@/components/triangle/TriangleSection";
 import { TRIANGLE_FONTS } from "@/components/triangle/constants";
 import { CitySection } from "@/components/city/CitySection";
 import { SiteLayout } from "@/components/site/Layout";
-import { Hero, UrbanFarmerAfterTriangle } from "@/components/site/Hero";
+import { Hero } from "@/components/site/Hero";
 import { BookSection } from "@/components/home/Book";
 import { BiotechTeak } from "@/components/home/BiotechTeak";
 import { WeManage } from "@/components/home/WeManage";
@@ -54,7 +54,6 @@ function Home() {
     <SiteLayout transparentNav heroTone="light">
       <Hero />
       <TriangleSection />
-      <UrbanFarmerAfterTriangle />
       <CitySection />
       <BookSection />
       <BiotechTeak />

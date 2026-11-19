@@ -53,18 +53,27 @@
   margin: 0 auto;
   padding: 0 64px;
 }
+/* Section rhythm: enough air to separate the sections, not so much that they read as gaps. */
 .rwh-sec {
-  padding: 120px 0;
+  padding: 84px 0;
 }
 .rwh-bg-0 {
-  background: linear-gradient(to bottom,
-    #fdfcfa 0%, var(--paper-0) 60px,
-    var(--paper-0) calc(100% - 60px), #fdfcfa 100%);
+  background: linear-gradient(
+    to bottom,
+    #fdfcfa 0%,
+    var(--paper-0) 60px,
+    var(--paper-0) calc(100% - 60px),
+    #fdfcfa 100%
+  );
 }
 .rwh-bg-50 {
-  background: linear-gradient(to bottom,
-    #fdfcfa 0%, var(--paper-50) 60px,
-    var(--paper-50) calc(100% - 60px), #fdfcfa 100%);
+  background: linear-gradient(
+    to bottom,
+    #fdfcfa 0%,
+    var(--paper-50) 60px,
+    var(--paper-50) calc(100% - 60px),
+    #fdfcfa 100%
+  );
 }
 
 /* Type ---------------------------------------------------------------------------------------- */
@@ -633,22 +642,41 @@
   stroke: var(--stone-200);
   stroke-width: 1.5;
 }
-.rwh-strip__trunk {
-  stroke: rgba(23, 32, 27, 0.28);
-  stroke-width: 2;
-  stroke-linecap: round;
+/* The two halves side by side, on one ground. */
+.rwh-strip__pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 6.6%;
+  align-items: end;
 }
-.rwh-strip__crown {
-  fill: #e8e9e1;
-  stroke: rgba(23, 32, 27, 0.24);
-  stroke-width: 1.2;
+/* The mixed trees each sway to their own rhythm; the clones sway together, in step. */
+.rwh-strip__tree {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: rwh-sway var(--sway-dur, 6s) ease-in-out var(--sway-delay, 0s) infinite alternate;
 }
-.is-even .rwh-strip__crown {
-  fill: #d4e7c8;
-  stroke: #6fa35f;
+/* The clones: one tree, repeated. They sway together, in step, from the base of the trunk. */
+.rwh-strip__shadow {
+  fill: rgba(23, 32, 27, 0.14);
 }
-.is-even .rwh-strip__trunk {
-  stroke: rgba(14, 59, 46, 0.45);
+.rwh-strip__clone {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: rwh-sway 6s ease-in-out infinite alternate;
+}
+@keyframes rwh-sway {
+  from {
+    transform: rotate(-0.9deg);
+  }
+  to {
+    transform: rotate(0.9deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rwh-strip__clone,
+  .rwh-strip__tree {
+    animation: none;
+  }
 }
 .rwh-strip__labels {
   display: grid;
@@ -673,13 +701,13 @@
 .rwh-compare {
   display: grid;
   grid-template-columns: 1fr 72px 1fr;
-  grid-template-rows: auto repeat(5, auto);
+  grid-template-rows: auto repeat(4, auto);
   max-width: 1040px;
   margin: 0 auto;
 }
 .rwh-cmp {
   display: grid;
-  grid-row: 1 / span 6;
+  grid-row: 1 / span 5;
   grid-template-rows: subgrid;
   padding: 8px 32px 12px;
   border-radius: 16px;
@@ -696,7 +724,7 @@
 }
 .rwh-vs {
   grid-column: 2;
-  grid-row: 1 / span 6;
+  grid-row: 1 / span 5;
   align-self: center;
   justify-self: center;
   color: var(--ink-500);
@@ -776,6 +804,194 @@
   font-size: clamp(20px, 0.8vw + 15px, 26px);
   line-height: 1.35;
   text-align: center;
+}
+
+/* Proof band: crops where biotech already pays, leading to Redwood's Sagwan. */
+.rwh-proof {
+  max-width: 1040px;
+  margin: 56px auto 0;
+  text-align: center;
+}
+.rwh-proof__eyebrow {
+  margin: 0;
+  color: var(--rwb-crimson);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.rwh-proof__title {
+  margin: 10px 0 0;
+  color: var(--ink-900);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(22px, 1vw + 16px, 30px);
+  line-height: 1.25;
+}
+.rwh-proof__title em {
+  color: var(--rwb-crimson);
+  font-style: italic;
+}
+.rwh-proof__list {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  text-align: left;
+  counter-reset: proof;
+}
+/*
+ * Each crop is a photo card: the field fills it, and the text sits on a deep gradient at the foot so
+ * it reads bright and crisp over any photo. The photo leans in slightly on hover.
+ */
+.rwh-proof__item {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+  min-height: 400px;
+  padding: 22px 20px 22px;
+  border-radius: 16px;
+  color: #fff;
+  box-shadow: 0 22px 40px -26px rgba(14, 40, 30, 0.7);
+}
+.rwh-proof__media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  overflow: hidden;
+  background: #1d3a2c;
+}
+.rwh-proof__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s var(--ease);
+}
+.rwh-proof__item:hover .rwh-proof__media img {
+  transform: scale(1.06);
+}
+/* The gradient that carries the text. */
+.rwh-proof__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(8, 22, 16, 0.92) 0%,
+    rgba(8, 22, 16, 0.72) 32%,
+    rgba(8, 22, 16, 0.18) 62%,
+    rgba(8, 22, 16, 0) 80%
+  );
+}
+/* Redwood's Sagwan: the payoff card, its photo washed in the brand green. */
+.rwh-proof__item.is-ours .rwh-proof__media::after {
+  background: linear-gradient(
+    to top,
+    rgba(14, 59, 46, 0.96) 0%,
+    rgba(14, 59, 46, 0.8) 36%,
+    rgba(14, 59, 46, 0.35) 66%,
+    rgba(14, 59, 46, 0.1) 100%
+  );
+}
+/* A thin arrow between cards: each success leads to the next. */
+.rwh-proof__item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -11px;
+  z-index: 1;
+  width: 8px;
+  height: 8px;
+  border-top: 1.5px solid var(--ink-500);
+  border-right: 1.5px solid var(--ink-500);
+  transform: translateY(-50%) rotate(45deg);
+  opacity: 0.5;
+}
+.rwh-proof__crop {
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 1.1;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+.rwh-proof__how {
+  align-self: flex-start;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(242, 201, 122, 0.18);
+  color: #f6d48d;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.rwh-proof__result {
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.rwh-proof__item.is-ours {
+  box-shadow:
+    0 0 0 2px #f2c97a,
+    0 24px 44px -24px rgba(14, 59, 46, 0.8);
+}
+.rwh-proof__tag {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+}
+@media (max-width: 899px) {
+  .rwh-proof {
+    margin-top: 40px;
+  }
+  .rwh-proof__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .rwh-proof__item {
+    min-height: 300px;
+    padding: 16px 14px 16px;
+  }
+  .rwh-proof__result {
+    font-size: 13px;
+  }
+}
+/* Phones: one card per row, so the text can be read at a comfortable size. */
+@media (max-width: 599px) {
+  .rwh-proof__title {
+    font-size: 26px;
+  }
+  .rwh-proof__list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .rwh-proof__item {
+    min-height: 260px;
+    padding: 20px 18px 20px;
+  }
+  .rwh-proof__crop {
+    font-size: 26px;
+  }
+  .rwh-proof__how {
+    font-size: 13px;
+  }
+  .rwh-proof__result {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .rwh-proof__item::after {
+    display: none;
+  }
+  .rwh-proof__crop {
+    font-size: 19px;
+  }
 }
 
 /* 3.3 You Own. We Manage. --------------------------------------------------------------------- */
@@ -979,6 +1195,7 @@
   border-radius: 16px;
 }
 .rwh-gallery__btn img {
+  object-position: var(--focus, 50% 50%);
   transition: transform 0.6s var(--ease);
 }
 .rwh-gallery__btn:hover img {
@@ -1263,9 +1480,12 @@
 
 .rwh-band {
   padding: 72px 0;
-  background: linear-gradient(to bottom,
-    #e7ebea 0%, var(--rwb-green-soft) 80px,
-    var(--rwb-green-soft) 100%);
+  background: linear-gradient(
+    to bottom,
+    #e7ebea 0%,
+    var(--rwb-green-soft) 80px,
+    var(--rwb-green-soft) 100%
+  );
 }
 .rwh-band__grid {
   display: grid;
@@ -1525,7 +1745,7 @@ html.rwc-nav-hidden .rwh-sticky {
     padding: 0 40px;
   }
   .rwh-sec {
-    padding: 96px 0;
+    padding: 72px 0;
   }
   .rwh-book__grid {
     grid-template-columns: 1fr;
@@ -1562,10 +1782,10 @@ html.rwc-nav-hidden .rwh-sticky {
     padding: 0 20px;
   }
   .rwh-sec {
-    padding: 72px 0;
+    padding: 52px 0;
   }
   .rwh-head {
-    margin-bottom: 36px;
+    margin-bottom: 32px;
   }
   .rwh-book__card {
     padding: 24px 20px;
@@ -1647,10 +1867,65 @@ html.rwc-nav-hidden .rwh-sticky {
     display: none;
   }
 
+  /* Phones: a tidy 2×2 grid of portrait tiles, no sideways scrolling. The captions sit under
+     each photo rather than over it, so the small tiles stay clear. */
   .rwh-gallery {
-    grid-auto-columns: 72%;
-    margin-right: -20px;
-    padding-right: 20px;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-columns: auto;
+    gap: 16px 12px;
+    margin-top: 16px;
+    padding-bottom: 0;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+  .rwh-gallery .rwh-media {
+    aspect-ratio: 4 / 5 !important;
+    border-radius: 12px;
+  }
+  .rwh-gallery__btn {
+    border-radius: 12px;
+  }
+  .rwh-gallery .rwh-chip {
+    position: static;
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    max-width: none;
+    margin-top: 8px;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    color: var(--ink-700);
+    font-size: 12.5px;
+    line-height: 1.3;
+  }
+  .rwh-gallery .rwh-chip .rwh-icon {
+    width: 12px;
+    height: 12px;
+    margin-top: 2px;
+  }
+  /* The viewer: shorter image so the caption and the arrows below it stay on screen. */
+  .rwh-lightbox__fig img {
+    max-height: 66vh;
+    max-height: 66svh;
+  }
+  /* The video: full width, a touch taller than 16:9 so the rows of trees read on a phone. */
+  .rwh-video .rwh-media {
+    aspect-ratio: 16 / 11 !important;
+    border-radius: 14px;
+  }
+  .rwh-video__btn {
+    width: 60px;
+    height: 60px;
+    margin: -30px 0 0 -30px;
+  }
+  .rwh-video__btn.is-playing {
+    top: 10px;
+    right: 10px;
+    width: 38px;
+    height: 38px;
   }
   .rwh-video__chip {
     left: 10px;

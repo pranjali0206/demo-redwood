@@ -1,9 +1,10 @@
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, ArrowUpRight, FlaskConical, Sprout } from "lucide-react";
-import forestBg from "@/assets/forest-bg.jpg";
-import { PlantationSilhouette, SunriseScene, TeakLeaf, TeakLeafOutline } from "./HeroScenery";
-import { Reveal } from "./Reveal";
+import { ArrowRight, ArrowUpRight, HandCoins, LandPlot, Trees } from "lucide-react";
+import forestPhoto from "@/assets/hero-forest.webp";
+import timberLog from "@/assets/hero-timber-log.webp";
+import urbanFarmerStamp from "@/assets/urban-farmer-stamp.webp";
+import { PlantationTreeRow } from "./HeroScenery";
 
 // Figures mirror the Investment page stats row — keep them in sync.
 const stats: { value: ReactNode; label: string; gold?: boolean }[] = [
@@ -13,105 +14,275 @@ const stats: { value: ReactNode; label: string; gold?: boolean }[] = [
   { value: "Tax-Free", label: "Agricultural Income", gold: true },
 ];
 
+// The three promises, in plain words.
+const points = [
+  {
+    icon: LandPlot,
+    text: (
+      <>
+        Purchase agricultural land with{" "}
+        <strong className="rwb-keyphrase">premium Sagwan plantations</strong>.
+      </>
+    ),
+  },
+  {
+    icon: Trees,
+    text: (
+      <>
+        Become part of <strong className="rwb-keyphrase">timber production</strong>.
+      </>
+    ),
+  },
+  {
+    icon: HandCoins,
+    text: (
+      <>
+        Land grown, managed and sold by Redwood Biotech, with{" "}
+        <strong className="rwb-keyphrase">proceeds earned by the landowner</strong>.
+      </>
+    ),
+  },
+];
+
 /** Load-in delay for an element with the `rwb-rise` class (see styles/hero.css). */
 const rise = (seconds: number) => ({ "--rise-delay": `${seconds}s` }) as CSSProperties;
 
-export function Hero() {
+/** Whether fine-pointer hover effects should run (not on touch, not with reduced motion). */
+function canHover() {
   return (
-    <section className="rwb-hero flex min-h-svh flex-col font-jakarta text-rwb-ink">
-      <div className="relative isolate flex flex-1 flex-col overflow-hidden">
-        {/* Background: gradient, a faint forest photo, two outline leaves */}
-        <div aria-hidden className="rwb-hero__canvas absolute inset-0" />
-        <div
-          aria-hidden
-          className="rwb-hero__forest absolute inset-0"
-          style={{ backgroundImage: `url(${forestBg})` }}
-        />
-        <TeakLeafOutline className="pointer-events-none absolute -right-28 -top-24 w-[300px] rotate-[215deg] opacity-50 sm:w-[400px]" />
-        <TeakLeafOutline className="pointer-events-none absolute -left-36 top-[40%] w-[280px] rotate-[62deg] opacity-50 sm:w-[360px]" />
+    typeof window !== "undefined" &&
+    window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
 
-        {/* Content */}
-        <div className="relative mx-auto flex w-full max-w-[1280px] flex-1 flex-wrap items-center gap-16 px-5 pb-[170px] pt-[108px] sm:px-10 sm:pt-[136px]">
-          <div className="@container min-w-0 flex-[1_1_560px]">
-            <p
-              className="rwb-rise flex items-center gap-3.5 text-xs font-extrabold uppercase tracking-[3.5px] text-rwb-label"
-              style={rise(0.1)}
-            >
-              <span aria-hidden className="h-px w-10 shrink-0 bg-rwb-gold-deep" />
-              Innovative Science · Wealthier Tomorrow
-            </p>
+/**
+ * Eased pointer position over an element, written to --px / --py (each -1…1) on that element.
+ * The forest layers read the two variables to drift gently against the pointer.
+ */
+function usePointerParallax<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !canHover()) return;
+    let tx = 0;
+    let ty = 0;
+    let x = 0;
+    let y = 0;
+    let frame = 0;
+    const tick = () => {
+      x += (tx - x) * 0.05;
+      y += (ty - y) * 0.05;
+      el.style.setProperty("--px", x.toFixed(4));
+      el.style.setProperty("--py", y.toFixed(4));
+      frame = Math.abs(tx - x) + Math.abs(ty - y) > 0.001 ? requestAnimationFrame(tick) : 0;
+    };
+    const onMove = (e: PointerEvent) => {
+      const r = el.getBoundingClientRect();
+      tx = ((e.clientX - r.left) / r.width) * 2 - 1;
+      ty = ((e.clientY - r.top) / r.height) * 2 - 1;
+      if (!frame) frame = requestAnimationFrame(tick);
+    };
+    const onLeave = () => {
+      tx = 0;
+      ty = 0;
+      if (!frame) frame = requestAnimationFrame(tick);
+    };
+    el.addEventListener("pointermove", onMove);
+    el.addEventListener("pointerleave", onLeave);
+    return () => {
+      cancelAnimationFrame(frame);
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerleave", onLeave);
+    };
+  }, []);
+  return ref;
+}
 
-            {/* 10.3cqi caps the size so each line fits the column on one row (a line is ~9.5em). */}
-            <h1
-              className="rwb-rise mt-6 font-playfair text-[clamp(46px,min(5.4vw,10.3cqi),78px)] font-bold leading-[1.08] tracking-[-1px]"
-              style={rise(0.2)}
-            >
-              <span className="block">Genetically Premium</span>{" "}
-              <span className="block">
-                <em className="italic text-rwb-emerald">Sagwan</em> Agroforestry
+/** Tilts an element slightly towards the pointer and moves a soft glare with it. */
+function useTilt<T extends HTMLElement>(max = 4) {
+  const ref = useRef<T>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !canHover()) return;
+    const onMove = (e: PointerEvent) => {
+      const r = el.getBoundingClientRect();
+      const nx = (e.clientX - r.left) / r.width;
+      const ny = (e.clientY - r.top) / r.height;
+      el.style.setProperty("--ry", `${((nx - 0.5) * 2 * max).toFixed(2)}deg`);
+      el.style.setProperty("--rx", `${((0.5 - ny) * 2 * max).toFixed(2)}deg`);
+      el.style.setProperty("--gx", `${(nx * 100).toFixed(1)}%`);
+      el.style.setProperty("--gy", `${(ny * 100).toFixed(1)}%`);
+      el.dataset.tilting = "true";
+    };
+    const onLeave = () => {
+      el.style.setProperty("--rx", "0deg");
+      el.style.setProperty("--ry", "0deg");
+      delete el.dataset.tilting;
+    };
+    el.addEventListener("pointermove", onMove);
+    el.addEventListener("pointerleave", onLeave);
+    return () => {
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerleave", onLeave);
+    };
+  }, [max]);
+  return ref;
+}
+
+/** Words that rise out of a soft blur one after another; `start` is the first word's index. */
+function Words({ text, start, className }: { text: string; start: number; className?: string }) {
+  return (
+    <>
+      {text.split(" ").map((w, i) => (
+        <span key={i}>
+          <span
+            className={className ? `rwb-word ${className}` : "rwb-word"}
+            style={{ "--i": start + i } as CSSProperties}
+          >
+            {w}
+          </span>{" "}
+        </span>
+      ))}
+    </>
+  );
+}
+
+/** A plus or equals sign built from two short timber logs; each log drops into place on load. */
+function TimberSign({ kind, delay }: { kind: "plus" | "equals"; delay: number }) {
+  return (
+    <span className={`rwb-sign rwb-sign--${kind}`}>
+      <span className="rwb-sign__log" style={{ "--log-delay": `${delay}s` } as CSSProperties} />
+      <span
+        className="rwb-sign__log"
+        style={{ "--log-delay": `${delay + 0.18}s` } as CSSProperties}
+      />
+    </span>
+  );
+}
+
+export function Hero() {
+  const sceneRef = usePointerParallax<HTMLDivElement>();
+
+  return (
+    <section className="rwb-hero flex min-h-svh flex-col font-manrope text-rwb-ink">
+      <div
+        ref={sceneRef}
+        className="relative isolate flex flex-1 flex-col overflow-hidden bg-white"
+      >
+        <ForestSide />
+
+        <div className="@container relative mx-auto flex w-full max-w-[1280px] flex-1 flex-col px-5 pb-[168px] pt-[108px] sm:px-10 sm:pt-[124px]">
+          <p
+            className="rwb-rise flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-rwb-champagne sm:text-xs"
+            style={rise(0.05)}
+          >
+            <span aria-hidden className="h-px w-8 shrink-0 bg-rwb-champagne/60" />
+            Innovative Science · Wealthier Tomorrow
+          </p>
+
+          {/*
+              The Redwood formula as the headline, one term per line, in one face and weight: the
+              plus and equals are timber logs closing their lines, and only the result is in red.
+              Solid colour throughout; "Redwood Biotech" catches one champagne sweep on load.
+            */}
+          <h1
+            aria-label="Farmland plus Genetically Engineered Sagwan equals Redwood Biotech"
+            className="rwb-headline mt-6 font-lobster text-[clamp(42px,6.4cqi,84px)] font-normal leading-[1.08] tracking-[0.005em] text-rwb-ink max-sm:font-abril max-sm:text-[clamp(39px,12.2cqi,52px)] max-sm:leading-[1.08] max-sm:tracking-normal"
+            style={{ "--log": `url(${timberLog})` } as CSSProperties}
+          >
+            <span aria-hidden className="block">
+              <Words text="Farmland" start={0} />
+              <TimberSign kind="plus" delay={0.45} />
+            </span>
+            <span aria-hidden className="block">
+              <Words text="Genetically Engineered" start={1} />
+              {/* The last word and its sign wrap together, so the sign never starts a line. */}
+              <span className="whitespace-nowrap">
+                <Words text="Sagwan" start={3} />
+                <TimberSign kind="equals" delay={0.75} />
               </span>
-            </h1>
+            </span>
+            <span aria-hidden className="rwb-brand-line block text-rwb-red">
+              <Words text="Redwood Biotech" start={4} />
+            </span>
+          </h1>
 
-            <p
-              className="rwb-rise mt-6 max-w-[560px] text-[19px] leading-[1.55] text-rwb-sub sm:text-[21px]"
-              style={rise(0.35)}
-            >
-              Purchase agricultural land with{" "}
-              <strong className="rwb-highlight font-bold">premium Sagwan plantations done</strong>
-            </p>
-
-            <p
-              className="rwb-rise mt-4 flex items-center gap-2.5 font-playfair text-[22px] font-semibold italic leading-snug text-rwb-emerald"
-              style={rise(0.45)}
-            >
-              <TeakLeaf className="size-[18px] shrink-0 -rotate-30 text-rwb-gold-deep" />
-              Be a part of timber producers
-            </p>
-
-            <hr
-              className="rwb-rise mt-8 max-w-[560px] border-t border-[rgba(14,59,46,0.14)]"
-              style={rise(0.55)}
-            />
-
-            <p
-              className="rwb-rise mt-6 max-w-[560px] text-base leading-relaxed text-rwb-body sm:text-[17px]"
-              style={rise(0.65)}
-            >
-              Grown on your land, managed and sold by us,{" "}
-              <strong className="font-extrabold text-rwb-ink">profit earned by you.</strong>
-            </p>
-
-            <div className="rwb-rise mt-9 flex flex-wrap gap-3.5" style={rise(0.75)}>
-              <Link
-                to="/agroforestry"
-                className="group inline-flex h-14 items-center justify-center gap-2.5 rounded-full bg-rwb-gold px-8 text-[15px] font-bold text-rwb-ink shadow-[0_14px_30px_-12px_rgba(217,164,65,0.75)] transition-[translate,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_36px_-12px_rgba(217,164,65,0.85)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rwb-ink"
+          <div className="mt-10 grid flex-1 items-end gap-x-16 gap-y-12 sm:mt-12 min-[1100px]:grid-cols-[minmax(0,1fr)_minmax(0,360px)]">
+            <div className="min-w-0 max-w-[620px]">
+              <p
+                className="rwb-rise text-[21px] font-semibold leading-[1.3] tracking-[-0.02em] text-rwb-ink sm:text-[24px]"
+                style={rise(0.6)}
               >
-                Learn More
-                <ArrowRight
-                  size={17}
-                  className="transition-transform duration-300 group-hover:translate-x-[3px]"
-                />
-              </Link>
-              <Link
-                to="/model"
-                className="group inline-flex h-14 items-center justify-center gap-2.5 rounded-full border-[1.5px] border-rwb-ink bg-white/45 px-8 text-[15px] font-bold text-rwb-ink transition-[translate,background-color] duration-300 hover:-translate-y-0.5 hover:bg-white/75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rwb-ink"
-              >
-                Explore the Model
-                <ArrowUpRight
-                  size={17}
-                  className="transition-transform duration-300 group-hover:translate-x-[3px]"
-                />
-              </Link>
+                Growth of land, growth of timber,
+                <br className="hidden sm:inline" /> is actually{" "}
+                <span className="whitespace-nowrap font-instrument text-[1.14em] font-normal italic tracking-normal text-rwb-emerald">
+                  growth of yours.
+                </span>
+              </p>
+
+              <ul className="mt-7 grid gap-3.5 font-dmsans text-[16px] leading-[1.6] text-[#3f6b57] sm:text-[17px]">
+                {points.map((p, i) => (
+                  <li
+                    key={i}
+                    className="rwb-rise flex items-start gap-3.5"
+                    style={rise(0.8 + i * 0.1)}
+                  >
+                    <span
+                      aria-hidden
+                      className="mt-[3px] flex size-7 shrink-0 items-center justify-center rounded-full bg-rwb-emerald/[0.08] text-rwb-emerald"
+                    >
+                      <p.icon size={15} strokeWidth={1.75} />
+                    </span>
+                    <span className="text-pretty">{p.text}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="rwb-rise mt-10 flex flex-wrap gap-3" style={rise(1.15)}>
+                <Link
+                  to="/agroforestry"
+                  className="rwb-cta group inline-flex h-[52px] items-center justify-center gap-3 rounded-[10px] bg-rwb-ink px-7 text-[15px] font-semibold text-white transition-colors duration-300 hover:bg-rwb-emerald focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rwb-ink"
+                >
+                  Learn More
+                  <ArrowRight
+                    size={17}
+                    strokeWidth={2}
+                    className="transition-transform duration-300 ease-out group-hover:translate-x-1"
+                  />
+                </Link>
+                <Link
+                  to="/model"
+                  className="group inline-flex h-[52px] items-center justify-center gap-3 rounded-[10px] border border-rwb-ink/25 px-7 text-[15px] font-semibold text-rwb-ink transition-colors duration-300 hover:border-rwb-ink hover:bg-rwb-ink/[0.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rwb-ink"
+                >
+                  Explore the Model
+                  <ArrowUpRight
+                    size={17}
+                    strokeWidth={2}
+                    className="transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  />
+                </Link>
+              </div>
             </div>
-          </div>
 
-          {/* Once the columns stack (≤1173px) the card moves below the triangle section instead. */}
-          <div className="rwb-rise min-w-0 flex-[0_1_470px] max-[1173px]:hidden" style={rise(0.9)}>
-            <UrbanFarmerCard />
+            {/* The campaign, set into the forest. On phones the forest becomes this block's backdrop. */}
+            <div className="rwb-campaign relative w-full max-w-[460px] min-[1100px]:max-w-none min-[1100px]:self-end min-[1100px]:pb-4">
+              <p
+                className="rwb-rise rwb-growth relative flex items-center gap-2.5 text-[10.5px] font-semibold uppercase tracking-[0.14em]"
+                style={rise(1.0)}
+              >
+                <span aria-hidden className="h-px w-6 bg-current opacity-60" />
+                Growth of land &amp; growth of timber
+              </p>
+              <div className="rwb-rise relative mt-4" style={rise(1.1)}>
+                <UrbanFarmerCard />
+              </div>
+            </div>
           </div>
         </div>
 
-        <PlantationSilhouette className="rwb-silhouette pointer-events-none absolute inset-x-0 bottom-0 h-[150px] w-full" />
+        {/* The plantation along the bottom edge of the hero. */}
+        <PlantationTreeRow className="rwb-treerow pointer-events-none absolute inset-x-0 bottom-0 h-[150px] w-full" />
       </div>
 
       {/* Stats */}
@@ -141,64 +312,71 @@ export function Hero() {
 }
 
 /**
- * The Urban Farmer card on phones and tablets: there the hero stacks, so instead of sitting under
- * the hero copy the card follows the triangle section (hero → triangle → card). On a parchment
- * ground so it runs on from the triangle section. Hidden once the hero shows it beside the copy.
+ * The forest photograph on the right, full height, eased into the white page. It breathes very
+ * slowly, drifts against the pointer, and carries a soft shimmer in its sunbeams.
  */
-export function UrbanFarmerAfterTriangle() {
+function ForestSide() {
   return (
-    <div className="rwb-uf-after bg-[#f7f3ea] px-5 pb-16 pt-2 font-jakarta text-rwb-ink sm:px-10 min-[1174px]:hidden">
-      <Reveal className="mx-auto max-w-[560px]">
-        <UrbanFarmerCard />
-      </Reveal>
+    <div aria-hidden className="rwb-forest pointer-events-none absolute inset-y-0 right-0">
+      <div className="rwb-forest__layer absolute -inset-[3%]">
+        <img
+          src={forestPhoto}
+          alt=""
+          decoding="async"
+          fetchPriority="high"
+          className="rwb-forest__photo size-full object-cover"
+        />
+        <div className="rwb-forest__rays absolute inset-0" />
+      </div>
     </div>
   );
 }
 
+/**
+ * The Urban Farmer campaign: an ivory card over the forest. The whole card is one link; it leans
+ * slightly towards the pointer with a soft glare.
+ */
 function UrbanFarmerCard() {
+  const tiltRef = useTilt<HTMLAnchorElement>();
   return (
-    <Link
-      to="/urban-farmer"
-      className="group block overflow-hidden rounded-[24px] border border-[rgba(14,59,46,0.12)] bg-white shadow-[0_30px_70px_-30px_rgba(14,59,46,0.45)] outline-none transition-[translate,box-shadow] duration-500 hover:-translate-y-1 hover:shadow-[0_40px_90px_-28px_rgba(14,59,46,0.55)] focus-visible:ring-2 focus-visible:ring-rwb-gold focus-visible:ring-offset-2"
-    >
-      <div className="relative h-[250px] overflow-hidden">
-        <SunriseScene className="absolute inset-0 size-full" />
-        <span className="absolute left-3.5 top-3.5 inline-flex max-w-[calc(100%-1.75rem)] items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-[11.5px] font-bold uppercase leading-tight tracking-[1.6px] text-rwb-label sm:tracking-[2.4px]">
-          <Sprout size={13} className="shrink-0 text-rwb-emerald" />
-          A Movement Beyond Rural Boundaries
-        </span>
-        <span className="absolute bottom-3.5 left-3.5 flex items-center gap-2.5 rounded-[14px] bg-white py-2 pl-2 pr-4 shadow-[0_10px_24px_-12px_rgba(14,59,46,0.5)]">
-          <span className="flex size-9 items-center justify-center rounded-[10px] bg-rwb-ink text-rwb-gold-soft">
-            <FlaskConical size={18} />
-          </span>
-          <span className="leading-tight">
-            <span className="block font-playfair text-[15px] font-bold text-rwb-ink">
-              Hi-Tech Sagwan
-            </span>
-            <span className="block text-[11.5px] text-rwb-body">Tissue-culture grown</span>
-          </span>
-        </span>
-      </div>
+    <div className="rwb-tilt-stage">
+      <Link
+        ref={tiltRef}
+        to="/urban-farmer"
+        className="rwb-card group relative block rounded-[16px] p-7 text-rwb-ink outline-none focus-visible:ring-2 focus-visible:ring-rwb-champagne focus-visible:ring-offset-4"
+      >
+        <span aria-hidden className="rwb-card__glare" />
 
-      <div className="px-6 pb-7 pt-[30px] sm:px-8 sm:pb-8">
-        <p className="text-xs font-extrabold uppercase tracking-[3.5px] text-rwb-label">
-          The Urban Farmer
-        </p>
-        <h2 className="mt-2.5 font-playfair text-[26px] font-bold leading-[1.2] text-rwb-ink sm:text-[28px]">
-          Farming isn't just a rural legacy anymore.
-        </h2>
-        <p className="mt-3 text-[15px] leading-relaxed text-rwb-body">
-          Your address doesn't decide your roots. Wherever you live, your land can still grow your
-          future — with Redwood Biotech.
-        </p>
-        <span className="mt-6 flex h-[58px] items-center justify-between gap-3 rounded-[14px] bg-rwb-gold pl-5 pr-2 text-[15px] font-bold text-rwb-ink">
-          Become The Urban Farmer
-          <span className="flex size-[42px] items-center justify-center rounded-[10px] bg-rwb-ink/10 transition-transform duration-300 group-hover:translate-x-[3px]">
-            <ArrowRight size={17} />
+        <span className="relative flex items-center gap-3.5">
+          <img
+            src={urbanFarmerStamp}
+            alt=""
+            className="size-11 shrink-0 rounded-full object-cover ring-1 ring-rwb-ink/10"
+          />
+          <span className="leading-tight">
+            <span className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-rwb-red">
+              New campaign
+            </span>
+            <span className="mt-1 block text-[15px] font-semibold tracking-[-0.01em] text-rwb-ink">
+              The Urban Farmer
+            </span>
           </span>
         </span>
-      </div>
-    </Link>
+
+        <span className="relative mt-6 block font-instrument text-[30px] leading-[1.1] tracking-[-0.01em] text-rwb-ink">
+          Biotech grows the forest.{" "}
+          <em className="text-rwb-emerald">The forest grows your business.</em>
+        </span>
+
+        <span className="relative mt-7 flex h-[50px] items-center justify-between gap-3 rounded-[10px] bg-rwb-ink pl-5 pr-4 text-[15px] font-semibold text-white transition-colors duration-300 group-hover:bg-rwb-emerald">
+          Become The Urban Farmer
+          <ArrowRight
+            size={17}
+            className="transition-transform duration-300 ease-out group-hover:translate-x-1"
+          />
+        </span>
+      </Link>
+    </div>
   );
 }
 

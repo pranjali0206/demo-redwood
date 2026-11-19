@@ -49,7 +49,7 @@ export function Navbar({
       // rwb-site-header: the city section hides the bar while it is pinned (styles/city.css).
       className="rwb-site-header fixed top-0 inset-x-0 z-50"
     >
-      <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between gap-3 px-4 font-jakarta sm:px-6 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:px-10">
+      <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between gap-3 px-4 font-manrope sm:px-6 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:px-10">
         <Link to="/" className="flex min-w-0 items-center lg:justify-self-start">
           <motion.img
             key={darkInk ? "dark" : "light"}
@@ -61,18 +61,18 @@ export function Navbar({
             transition={{ duration: 0.3 }}
           />
         </Link>
-        <nav className="hidden items-center gap-6 lg:flex xl:gap-[34px]">
+        <nav className="hidden items-center gap-7 lg:flex xl:gap-9">
           {links.map((l) => (
             <Link
               key={l.to}
               to={l.to}
-              className={`rwb-nav-link relative py-2 text-[14.5px] font-medium transition-colors after:absolute after:inset-x-0 after:bottom-0.5 after:h-[1.5px] after:origin-left after:scale-x-0 after:rounded-full after:transition-transform after:duration-300 hover:after:scale-x-100 ${
+              className={`rwb-nav-link relative py-2 text-[15px] font-medium tracking-[-0.01em] transition-colors duration-300 after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-right after:scale-x-0 after:transition-transform after:duration-500 after:ease-[cubic-bezier(0.22,1,0.36,1)] hover:after:origin-left hover:after:scale-x-100 ${
                 darkInk
                   ? "text-rwb-nav after:bg-rwb-emerald hover:text-rwb-emerald"
                   : "text-white/90 after:bg-white hover:text-white"
               }`}
               activeProps={{
-                className: `font-semibold after:scale-x-100! ${darkInk ? "text-rwb-ink!" : "text-white!"}`,
+                className: `after:origin-left! after:scale-x-100! ${darkInk ? "text-rwb-ink!" : "text-white!"}`,
               }}
               activeOptions={{ exact: l.to === "/" }}
             >
@@ -95,7 +95,7 @@ export function Navbar({
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="lg:hidden bg-white border-t border-[rgba(14,59,46,0.12)] font-jakarta"
+          className="lg:hidden bg-white border-t border-[rgba(14,59,46,0.12)] font-manrope"
         >
           <div className="px-4 py-3 flex flex-col">
             {links.map((l) => (

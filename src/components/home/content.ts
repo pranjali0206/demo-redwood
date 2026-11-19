@@ -9,8 +9,8 @@ import site1 from "@/assets/gallery-photo-1.webp";
 import site2 from "@/assets/gallery-photo-2.webp";
 import site3 from "@/assets/gallery-photo-3.webp";
 import site4 from "@/assets/gallery-photo-4.webp";
-import droneMp4 from "@/assets/drone-site.mp4";
-import dronePoster from "@/assets/drone-site-poster.webp";
+import droneMp4 from "@/assets/see-it-plantation.mp4";
+import dronePoster from "@/assets/see-it-plantation-poster.webp";
 import irrigationImg from "@/assets/manage-irrigation.webp";
 import securityImg from "@/assets/manage-security.webp";
 import careImg from "@/assets/manage-care.webp";
@@ -18,6 +18,11 @@ import saleImg from "@/assets/manage-sale.webp";
 import ufCityImg from "@/assets/uf-city.webp";
 import ufFarmImg from "@/assets/uf-farm.webp";
 import labImg from "@/assets/biotech-lab.webp";
+import bookImg from "@/assets/city-plantation.webp";
+import proofCotton from "@/assets/proof-cotton.webp";
+import proofTectona from "@/assets/proof-tectona.webp";
+import proofRose from "@/assets/proof-rose.webp";
+import proofSagwan from "@/assets/proof-sagwan.webp";
 
 /* Contact ------------------------------------------------------------------------------------ */
 
@@ -73,7 +78,7 @@ export const COMPARISON = [
   {
     point: "Planting material",
     normal: "Seeds or stumps from mixed sources",
-    redwood: "Lab-grown clones of [selected mother trees]",
+    redwood: "Lab-grown clones of selected mother trees",
   },
   {
     point: "Uniformity",
@@ -83,10 +88,47 @@ export const COMPARISON = [
   {
     point: "Health at planting",
     normal: "Can carry pests or disease",
-    redwood: "[Lab-screened, disease-free at planting]",
+    redwood: "Lab-screened, disease-free at planting",
   },
-  { point: "Trunk", normal: "Varies", redwood: "[Straight, tall trunks]" },
-  { point: "Harvest cycle", normal: "[X] years", redwood: "[Y] years under Redwood care" },
+  { point: "Trunk", normal: "Varies", redwood: "Straight, tall trunks" },
+];
+
+/**
+ * Biotech already pays in Indian farming; Sagwan is next. General, well-established outcomes only:
+ * put Redwood's own figure in the bracket on the Sagwan line once it is confirmed.
+ */
+export const BIOTECH_PROOF: {
+  crop: string;
+  how: string;
+  result: string;
+  img: string;
+  ours?: boolean;
+}[] = [
+  {
+    crop: "BT Cotton",
+    how: "Pest-resistant biotech seed",
+    result: "Now grown on most of India's cotton fields, with higher yields and fewer crop losses.",
+    img: proofCotton,
+  },
+  {
+    crop: "Tectona grandis",
+    how: "Clonal, nursery-raised saplings",
+    result: "Planted in even rows, with straighter stems and steadier growth than seed-raised stock.",
+    img: proofTectona,
+  },
+  {
+    crop: "Rose",
+    how: "Tissue-culture plantlets",
+    result: "Uniform, disease-free stock behind India's flower farms and exports.",
+    img: proofRose,
+  },
+  {
+    crop: "Sagwan",
+    how: "Redwood tissue-culture clones",
+    result: "Even, straight, healthy teak, growing on your own land.",
+    img: proofSagwan,
+    ours: true,
+  },
 ];
 
 /* You Own. We Manage. ------------------------------------------------------------------------ */
@@ -98,7 +140,6 @@ export const SERVICES = [
     alt: "Drip irrigation line watering a row of young plants",
     title: "Irrigation",
     body: "Drip irrigation and regular watering through every season.",
-    note: "[confirm system]",
   },
   {
     icon: "shield",
@@ -106,7 +147,6 @@ export const SERVICES = [
     alt: "Barbed-wire boundary fence along a field",
     title: "Security",
     body: "Fencing and on-site care, so your land and trees are safe.",
-    note: "[confirm: fencing, guards, CCTV]",
   },
   {
     icon: "leaf",
@@ -122,43 +162,49 @@ export const SERVICES = [
     alt: "Stacks of harvested timber logs beside a plantation",
     title: "Sale",
     body: "At harvest, we cut, sell the timber and pay you your share.",
-    note: "[confirm share terms]",
   },
 ] as const;
 
-export const YOUR_PART = "[visit any time · get regular updates]";
+export const YOUR_PART = "Visit any time · get regular updates";
 
 /* See It for Yourself ------------------------------------------------------------------------ */
 
 /** [Drone video]: H.264 MP4 + WebM loop, ≤ 8 MB, and a poster frame. Empty until supplied. */
 export const DRONE_VIDEO = { mp4: droneMp4, webm: "", poster: dronePoster, ratio: "16 / 9" };
-export const DRONE_CAPTION = "Drone view — [Site name], [District], [Month Year]";
+export const DRONE_CAPTION = "Site walk-through — Redwood teak plantation";
+/** The photo beside the "Your Land Is Waiting." form (separate from the gallery's site photos). */
+export const BOOK_IMG = {
+  src: bookImg,
+  alt: "Young teak trees on bamboo stakes, growing in rows on a Redwood plantation",
+};
+
 /** [Full video URL]: the "Watch full video" button appears once this is set. */
 export const FULL_VIDEO_URL = "";
 
-export const SITE_PHOTOS: { src: string; alt: string; caption: string }[] = [
+/** `focus` is the CSS object-position that keeps each photo's subject in frame when it is cropped. */
+export const SITE_PHOTOS: { src: string; alt: string; caption: string; focus?: string }[] = [
   {
     src: site1,
     alt: "Aerial view of a Redwood site cleared and marked out for planting",
-    caption: "[Site name] · Year [N] trees · [Month Year]",
+    caption: "Site cleared and marked out",
+    focus: "50% 72%",
   },
   {
     src: site2,
     alt: "An excavator digging planting pits in rows across the prepared field",
-    caption: "[Site name] · Year [N] trees · [Month Year]",
+    caption: "Planting pits dug in rows",
+    focus: "50% 20%",
   },
   {
     src: site3,
     alt: "Young teak plants growing under shade netting in the nursery",
-    caption: "[Site name] · Year [N] trees · [Month Year]",
+    caption: "Young teak in the nursery",
   },
   {
     src: site4,
     alt: "Rows of young teak with drip irrigation lines along each row",
-    caption: "[Site name] · Year [N] trees · [Month Year]",
+    caption: "Drip-irrigated teak rows",
   },
-  { src: "", alt: "", caption: "[Site photo — Redwood plantation]" },
-  { src: "", alt: "", caption: "[Site photo — Redwood plantation]" },
 ];
 
 /* Built on Trust ----------------------------------------------------------------------------- */
@@ -182,20 +228,26 @@ export const REGISTRY_STEPS = [
 export const LAB = {
   title: "The Redwood Lab",
   /** The site already says a new laboratory is coming to Indore; the rest is a placeholder. */
-  line: "A new Redwood laboratory is coming to Indore. [One line on the tissue-culture lab and when it opens]",
+  line: "A new Redwood laboratory is coming to Indore.",
   photo: labImg,
   alt: "Inside the Redwood biotech laboratory",
 };
 
 /* Urban Farmer images */
-export const UF_CITY_IMG = { src: ufCityImg, alt: "A city workspace with high-rise buildings outside the window" };
-export const UF_FARM_IMG = { src: ufFarmImg, alt: "A person walking through a forest plantation at sunset" };
+export const UF_CITY_IMG = {
+  src: ufCityImg,
+  alt: "A city workspace with high-rise buildings outside the window",
+};
+export const UF_FARM_IMG = {
+  src: ufFarmImg,
+  alt: "A person walking through a forest plantation at sunset",
+};
 
 /* Urban Farmer ------------------------------------------------------------------------------- */
 
 export const URBAN_POINTS = [
   "Own farmland without leaving your job",
-  "Updates from your plot, wherever you are [confirm format]",
+  "Updates from your plot, wherever you are",
   "Visit with family whenever you like",
 ];
 

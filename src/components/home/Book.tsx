@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { gsap } from "@/components/triangle/gsapSetup";
-import { SITE_PHOTOS } from "./content";
+import { BOOK_IMG } from "./content";
 import { LeadForm } from "./LeadForm";
 import { EASE, Headline, Media, useReveal } from "./ui";
 
@@ -21,7 +21,7 @@ export function BookSection() {
       },
     });
   });
-  const still = SITE_PHOTOS[0];
+  const still = BOOK_IMG;
   return (
     <section
       ref={ref}

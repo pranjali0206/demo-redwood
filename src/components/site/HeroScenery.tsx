@@ -1,9 +1,10 @@
 /**
- * Artwork for the home hero: teak-leaf icons, the plantation silhouette above the stats strip
+ * Artwork for the home hero: teak-leaf icons, the row of trees above the stats strip
  * and the sunrise scene in the Urban Farmer card. Animation classes live in styles/hero.css.
  */
 
-import { useId } from "react";
+import { useId, type CSSProperties } from "react";
+import treeRow from "@/assets/hero-tree-row.webp";
 
 // Seeded rather than Math.random, so the server and the browser draw identical paths.
 function seeded(seed: number) {
@@ -88,48 +89,19 @@ export function TeakLeaf({ className }: { className?: string }) {
   );
 }
 
-/** Large, faint outline leaf for the hero background. */
-export function TeakLeafOutline({ className }: { className?: string }) {
+/* Plantation tree row ------------------------------------------------------------------------- */
+
+/**
+ * A row of real trees along the bottom of the hero. The tile repeats sideways at its natural
+ * proportions, so the trees keep their size at any viewport width; styles/hero.css adds the haze.
+ */
+export function PlantationTreeRow({ className }: { className?: string }) {
   return (
-    <svg
+    <div
       aria-hidden
-      viewBox="-4 -4 208 330"
-      fill="none"
-      stroke="#B4CCBE"
-      strokeWidth="1.5"
-      strokeLinecap="round"
       className={className}
-    >
-      <path d={LEAF} vectorEffect="non-scaling-stroke" />
-      <path d={`M100 290V320${LEAF_VEINS}`} vectorEffect="non-scaling-stroke" />
-    </svg>
-  );
-}
-
-/* Plantation silhouette ----------------------------------------------------------------------- */
-
-const SIL_W = 2560;
-const silhouette = {
-  backTrunks: trunkRow({ width: SIL_W, spacing: 14, y1: 70, y2: 150, seed: 5 }),
-  backCanopy: canopyBand({ width: SIL_W, top: 48, bottom: 80, bump: 30, amp: 26, seed: 11 }),
-  frontTrunks: trunkRow({ width: SIL_W, spacing: 26, y1: 114, y2: 150, seed: 17 }),
-  frontCanopy: canopyBand({ width: SIL_W, top: 96, bottom: 124, bump: 46, amp: 26, seed: 29 }),
-};
-
-/** Two rows of teak drawn at 1:1 and cropped to the viewport width, so trunks never squash. */
-export function PlantationSilhouette({ className }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden
-      viewBox={`0 0 ${SIL_W} 150`}
-      preserveAspectRatio="xMidYMax slice"
-      className={className}
-    >
-      <path d={silhouette.backTrunks} stroke="#AFC6B7" strokeWidth="1.6" />
-      <path d={silhouette.backCanopy} fill="#C0D4C6" />
-      <path d={silhouette.frontTrunks} stroke="#8DAE9B" strokeWidth="3" />
-      <path d={silhouette.frontCanopy} fill="#9DBBA9" />
-    </svg>
+      style={{ "--tree-row": `url(${treeRow})` } as CSSProperties}
+    />
   );
 }
 

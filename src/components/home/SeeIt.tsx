@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { gsap } from "@/components/triangle/gsapSetup";
 import { DRONE_CAPTION, DRONE_VIDEO, FULL_VIDEO_URL, SITE_PHOTOS } from "./content";
 import { BookLink, EASE, Headline, Icon, Media, useReveal } from "./ui";
@@ -39,7 +39,12 @@ export function SeeIt() {
         <div className="rwh-gallery" role="list" aria-label="Site photos">
           {SITE_PHOTOS.map((p, i) =>
             p.src ? (
-              <div key={i} role="listitem" className="rwh-gallery__item">
+              <div
+                key={i}
+                role="listitem"
+                className="rwh-gallery__item"
+                style={p.focus ? ({ "--focus": p.focus } as CSSProperties) : undefined}
+              >
                 <button
                   type="button"
                   className="rwh-gallery__btn"
@@ -51,7 +56,7 @@ export function SeeIt() {
                     alt={p.alt}
                     ratio="4 / 5"
                     placeholder={p.caption}
-                    sizes="(min-width: 1024px) 280px, 70vw"
+                    sizes="(min-width: 1024px) 280px, (min-width: 768px) 25vw, 50vw"
                   />
                   <span className="rwh-chip">
                     <Icon name="pin" size={13} />

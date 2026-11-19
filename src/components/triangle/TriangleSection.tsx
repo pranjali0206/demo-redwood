@@ -1,12 +1,24 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from "react";
 import { gsap, ScrollTrigger, SplitText, prepDraw, token } from "./gsapSetup";
 import { RedwoodMark } from "./RedwoodMark";
 import { RwButton } from "./RwButton";
-import { Scene01, Scene02, Scene03 } from "./scenes";
 import { BOOK_HREF, RINGS, TRIANGLE_FONTS_ITALIC } from "./constants";
 import greeneryImg from "@/assets/sapling-new.webp";
 import growthImg from "@/assets/plantation-field.webp";
 import logsImg from "@/assets/triangle-logs.webp";
+import logBeam from "@/assets/triangle-log-beam.webp";
+import ownLandVideo from "@/assets/triangle-own-land.mp4";
+import ownLandPoster from "@/assets/triangle-own-land.webp";
+import weGrowVideo from "@/assets/triangle-we-grow.mp4";
+import weGrowPoster from "@/assets/triangle-we-grow.webp";
+import earnTwiceVideo from "@/assets/triangle-earn-twice.mp4";
+import earnTwicePoster from "@/assets/triangle-earn-twice.webp";
 
 /* Geometry ------------------------------------------------------------------------------------ */
 
@@ -60,7 +72,8 @@ const CORNERS: {
   title: string;
   line: string;
   tag: ReactNode;
-  Scene: () => ReactNode;
+  /** The corner's live clip (blue screen keyed out onto white) and its final frame. */
+  video: { src: string; poster: string };
 }[] = [
   {
     key: "Ownership",
@@ -72,7 +85,7 @@ const CORNERS: {
         REGISTRY · <span className="s1-tag">YOUR NAME</span>
       </>
     ),
-    Scene: Scene01,
+    video: { src: ownLandVideo, poster: ownLandPoster },
   },
   {
     key: "Growth",
@@ -84,7 +97,7 @@ const CORNERS: {
         IRRIGATED · YEAR <span className="s2-year rw-tab">01</span>
       </>
     ),
-    Scene: Scene02,
+    video: { src: weGrowVideo, poster: weGrowPoster },
   },
   {
     key: "Returns",
@@ -97,7 +110,7 @@ const CORNERS: {
         <span className="rw-tag__land">+ LAND VALUE</span>
       </>
     ),
-    Scene: Scene03,
+    video: { src: earnTwiceVideo, poster: earnTwicePoster },
   },
 ];
 
@@ -110,7 +123,7 @@ const TRIANGLE_LABEL =
  * "One Land. Two Growths." — the Redwood model as a triangle, on a light ground with greenery,
  * growth and timber photographs. Each corner has its own colour from the brand: brown for the
  * land, green for the growth, the logo's red for the returns. It plays by itself when it scrolls
- * into view: the three scenes animate together while a travelling light draws the triangle,
+ * into view: the three corner clips start together while a travelling light draws the triangle,
  * blending from one corner's colour to the next, then keeps circling it.
  */
 export function TriangleSection() {
@@ -135,7 +148,7 @@ export function TriangleSection() {
     let cancelled = false;
     const ctx = gsap.context(() => {}, root);
 
-    // Fonts first, so SplitText measures the real line breaks.
+    // Fonts first, so everything measured at setup uses the real typefaces.
     document.fonts.ready.then(() => {
       if (cancelled) return;
       ctx.add(() => {
@@ -216,11 +229,12 @@ export function TriangleSection() {
               data-i={k + 1}
               style={{ left: pct(MOB.pts[k].x, MOB.w), top: pct(MOB.pts[k].y, MOB.h) }}
             >
-              <div className="rw-tile">
-                <span className="rw-tile__glow" aria-hidden="true" />
-                <span className="rw-tile__ring" aria-hidden="true" />
-                <c.Scene />
-                <p className="rw-mtile__title rw-title" aria-hidden="true">
+              <div className="rw-tile rw-node">
+                <span className="rw-node__num" aria-hidden="true">
+                  <span className="rw-tile__glow" />
+                  <span className="rw-tile__ring" />0{k + 1}
+                </span>
+                <p className="rw-mtile__title" aria-hidden="true">
                   {c.short}
                 </p>
               </div>
@@ -234,9 +248,11 @@ export function TriangleSection() {
               <li key={c.key} className="rw-step rw-anim" data-i={k + 1}>
                 <span className="rw-step__dot" aria-hidden="true">
                   <span className="rw-step__pulse" />
+                  {k + 1}
                 </span>
                 <p className="rw-key">{c.key}</p>
                 <h3 className="rw-step__title rw-title">{c.title}</h3>
+                <CornerVideo {...c.video} />
                 <p className="rw-step__line">{c.line}</p>
                 <p className="rw-tag">{c.tag}</p>
               </li>
@@ -273,11 +289,16 @@ function Photo({ kind, src }: { kind: "greenery" | "growth" | "logs"; src: strin
 function WoodBeams({ geo }: { geo: Geo }) {
   const edges = edgesOf(geo);
   const isDesk = geo.w > 400;
-  const t = isDesk ? 24 : 12;
+  // Thick enough for the log's bark and cut face to read.
+  const t = isDesk ? 30 : 15;
   const ext = isDesk ? 30 : 16;
 
   return (
-    <div className="rw-beams" aria-hidden="true">
+    <div
+      className="rw-beams"
+      aria-hidden="true"
+      style={{ "--log-beam": `url(${logBeam})` } as CSSProperties}
+    >
       {edges.map(([a, b], k) => {
         const dx = b.x - a.x;
         const dy = b.y - a.y;
@@ -419,6 +440,53 @@ function TriangleSvg({ geo, uid, mark }: { geo: Geo; uid: string; mark?: boolean
   );
 }
 
+/**
+ * A corner's live clip: the diorama on white, with a LIVE marker and a progress line in the
+ * corner's colour. Playback is driven by the scene timelines (see buildScene): the clip loops while
+ * the triangle is on screen and rests when it scrolls away.
+ */
+function CornerVideo({ src, poster }: { src: string; poster: string }) {
+  return (
+    <div className="rw-video">
+      <video
+        className="rw-video__el"
+        src={src}
+        poster={poster}
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        disablePictureInPicture
+        aria-hidden="true"
+        tabIndex={-1}
+      />
+      <span className="rw-live" aria-hidden="true">
+        <i />
+        Live
+      </span>
+      <span className="rw-video__progress" aria-hidden="true">
+        <i />
+      </span>
+    </div>
+  );
+}
+
+/** Desktop tiles lean a few degrees towards a mouse pointer (CSS reads --tx / --ty). */
+function tiltTile(e: ReactPointerEvent<HTMLDivElement>) {
+  if (e.pointerType !== "mouse") return;
+  const el = e.currentTarget;
+  const r = el.getBoundingClientRect();
+  const nx = (e.clientX - r.left) / r.width - 0.5;
+  const ny = (e.clientY - r.top) / r.height - 0.5;
+  el.style.setProperty("--ty", `${(nx * 10).toFixed(2)}deg`);
+  el.style.setProperty("--tx", `${(-ny * 10).toFixed(2)}deg`);
+}
+
+function untiltTile(e: ReactPointerEvent<HTMLDivElement>) {
+  e.currentTarget.style.setProperty("--tx", "0deg");
+  e.currentTarget.style.setProperty("--ty", "0deg");
+}
+
 function Corner({
   i,
   c,
@@ -438,10 +506,15 @@ function Corner({
       data-i={i}
       style={{ left: pct(pt.x, DESK.w), top: pct(pt.y, DESK.h) }}
     >
-      <div className="rw-tile" onMouseEnter={() => onHover(i)}>
+      <div
+        className="rw-tile"
+        onMouseEnter={() => onHover(i)}
+        onPointerMove={tiltTile}
+        onPointerLeave={untiltTile}
+      >
         <span className="rw-tile__glow" aria-hidden="true" />
         <span className="rw-tile__ring" aria-hidden="true" />
-        <c.Scene />
+        <CornerVideo {...c.video} />
         <p className="rw-tag">{c.tag}</p>
       </div>
       <div className={`rw-label rw-label--${side}`}>
@@ -461,6 +534,43 @@ function Corner({
 
 type Tok = (name: string) => string;
 type Q = ReturnType<typeof gsap.utils.selector>;
+
+/**
+ * Rises a paragraph in, line by line. The lines are measured when the animation plays, not when
+ * the section is set up: at setup the block can be hidden or mid-resize (switching between the
+ * desktop and phone layouts), and lines measured then would break after every word. Once the rise
+ * is done the split is undone, so the text reflows normally at any later width.
+ */
+function riseLines(el: Element) {
+  gsap.set(el, { autoAlpha: 0 });
+  let split: ReturnType<typeof SplitText.create> | null = null;
+  const undo = () => {
+    split?.revert();
+    split = null;
+  };
+  return {
+    play() {
+      undo();
+      split = SplitText.create(el, { type: "lines", mask: "lines" });
+      gsap.set(el, { autoAlpha: 1 });
+      gsap.from(split.lines, {
+        yPercent: 105,
+        duration: 0.8,
+        stagger: 0.07,
+        ease: "power3.out",
+        onComplete: undo,
+      });
+    },
+    /** Reduced motion: just show it. */
+    show() {
+      gsap.set(el, { autoAlpha: 1 });
+    },
+    revert() {
+      undo();
+      gsap.set(el, { clearProps: "opacity,visibility" });
+    },
+  };
+}
 
 /** Plays `tl` once when `el` scrolls into view (or straight away if it already has). */
 function playOnEnter(el: Element, tl: gsap.core.Animation, start = "top 85%") {
@@ -526,7 +636,7 @@ function setupDesktop(
 
   const erasers = q<SVGPathElement>(".rw-edge--eraser");
   prepDraw(erasers, true);
-  const split = SplitText.create(q(".rw-intro .rw-body-l")[0], { type: "lines", mask: "lines" });
+  const bodyLines = riseLines(q(".rw-intro .rw-body-l")[0]);
 
   const intro = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
   intro
@@ -537,7 +647,7 @@ function setupDesktop(
       0,
     )
     .from(q(".rw-intro .rw-eyebrow .rw-mask__in"), { yPercent: 105, duration: 0.8 }, 0.1)
-    .from(split.lines, { yPercent: 105, duration: 0.8, stagger: 0.07 }, 0.18)
+    .call(() => bodyLines.play(), undefined, 0.18)
     .to(
       erasers,
       {
@@ -557,12 +667,12 @@ function setupDesktop(
 
   if (reduce) {
     intro.progress(1, true);
-    // Not suppressed: the year counter writes its final value in onUpdate.
-    scenes.forEach((s) => s.progress(1));
+    bodyLines.show();
+    scenes.forEach((s) => s.settle());
     finale.progress(1, true);
     light.finish();
     corners.settle();
-    return () => split.revert();
+    return () => bodyLines.revert();
   }
 
   const started = playOnEnter(scope, intro, "top 72%");
@@ -587,7 +697,7 @@ function setupDesktop(
 
   return () => {
     light.stop();
-    split.revert();
+    bodyLines.revert();
     replayRef.current = () => {};
   };
 }
@@ -595,10 +705,10 @@ function setupDesktop(
 function setupMobile(root: HTMLElement, reduce: boolean, tok: Tok) {
   const scope = root.querySelector<HTMLElement>(".rw-mob")!;
   const q = gsap.utils.selector(scope);
+  // The triangle's corners are numbered points; each step below holds its corner's clip and tag.
   const tiles = [1, 2, 3].map((i) => q<HTMLElement>(`.rw-mcorner[data-i="${i}"] .rw-tile`)[0]);
   const steps = q<HTMLElement>(".rw-step");
-  // The scenes play in the corner tiles; their tag text (registry name, year count) is in the steps.
-  const scenes = tiles.map((tile, k) => buildScene(k + 1, tile, tok, steps[k]));
+  const scenes = steps.map((step, k) => buildScene(k + 1, step, tok));
   const corners = cornerPulse(tiles, scenes);
 
   const markRings = q<SVGCircleElement>(".rw-mmark .rw-ring");
@@ -614,12 +724,12 @@ function setupMobile(root: HTMLElement, reduce: boolean, tok: Tok) {
     onClose: () => closeTl.play(),
   });
 
-  const split = SplitText.create(q(".rw-intro .rw-body-l")[0], { type: "lines", mask: "lines" });
+  const bodyLines = riseLines(q(".rw-intro .rw-body-l")[0]);
   const introTl = gsap
     .timeline({ paused: true, defaults: { ease: "power3.out" } })
     .from(root.querySelector(".rw-survey"), { opacity: 0, duration: 0.8 }, 0)
     .from(q(".rw-intro .rw-eyebrow .rw-mask__in"), { yPercent: 105, duration: 0.8 }, 0.1)
-    .from(split.lines, { yPercent: 105, duration: 0.8, stagger: 0.07 }, 0.18);
+    .call(() => bodyLines.play(), undefined, 0.18);
 
   const erasers = q<SVGPathElement>(".rw-edge--eraser");
   prepDraw(erasers, true);
@@ -642,18 +752,17 @@ function setupMobile(root: HTMLElement, reduce: boolean, tok: Tok) {
       0.2,
     )
     .from(q(".rw-mtile__title"), { opacity: 0, y: 6, duration: 0.5, stagger: 0.12 }, 0.45)
-    // As on desktop: the three scenes and the light start together.
-    .call(() => scenes.forEach((s) => s.play(0)), undefined, 0.6)
-    .call(() => light.start(), undefined, 0.65);
+    .call(() => light.start(), undefined, 0.6);
 
-  // The process steps: a rail in the three colours draws down as you scroll; each step slides in
-  // and its dot pops with a ripple in its corner's colour.
+  // The process steps: a rail in the three colours draws down as you scroll; each step slides in,
+  // its dot pops with a ripple in its corner's colour, and its clip starts.
   const rail = q(".rw-steps__rail")[0];
-  const stepTls = steps.map((step) => {
+  const stepTls = steps.map((step, k) => {
     const sq = gsap.utils.selector(step);
     return gsap
       .timeline({ paused: true })
       .from(step, { opacity: 0, x: -18, duration: 0.8, ease: "power3.out" }, 0)
+      .call(() => scenes[k].play(0), undefined, 0.3)
       .from(sq(".rw-step__dot"), { scale: 0, duration: 0.5, ease: "back.out(2.4)" }, 0.15)
       .fromTo(
         sq(".rw-step__pulse"),
@@ -687,11 +796,11 @@ function setupMobile(root: HTMLElement, reduce: boolean, tok: Tok) {
 
   if (reduce) {
     [introTl, triTl, closeTl, finTl, ...stepTls].forEach((t) => t.progress(1, true));
-    // Not suppressed: the year counter writes its final value in onUpdate.
-    scenes.forEach((s) => s.progress(1));
+    bodyLines.show();
+    scenes.forEach((s) => s.settle());
     light.finish();
     corners.settle();
-    return () => split.revert();
+    return () => bodyLines.revert();
   }
 
   playOnEnter(q(".rw-intro")[0], introTl);
@@ -733,7 +842,7 @@ function setupMobile(root: HTMLElement, reduce: boolean, tok: Tok) {
 
   return () => {
     light.stop();
-    split.revert();
+    bodyLines.revert();
   };
 }
 
@@ -780,9 +889,7 @@ function buildLight(
   const mixes = [0, 1, 2].map((k) => gsap.utils.interpolate(colors[k], colors[(k + 1) % 3]));
   const tails = Array.from(svg.querySelectorAll<SVGPathElement>(".rw-tail"));
   const tailLens = tails.map((t) => Number(t.dataset.d));
-  tails.forEach((t, k) =>
-    gsap.set(t, { strokeDasharray: `${tailLens[k]} ${T - tailLens[k]}` }),
-  );
+  tails.forEach((t, k) => gsap.set(t, { strokeDasharray: `${tailLens[k]} ${T - tailLens[k]}` }));
   const segs = Array.from(svg.querySelectorAll<SVGPathElement>(".rw-seg"));
   const segK = segs.map((s) => Number(s.dataset.k));
   segs.forEach((s, j) => {
@@ -864,151 +971,92 @@ function buildLight(
   };
 }
 
-/** A small touch on a corner's scene as the light passes. */
-function accent(i: number, host: Element) {
-  const q = gsap.utils.selector(host);
-  if (i === 1) {
-    gsap.fromTo(
-      q(".s1-ripple"),
-      { scale: 1, opacity: 0.8 },
-      { scale: 2.6, opacity: 0, duration: 0.9, ease: "power2.out", transformOrigin: "50% 50%" },
-    );
-  } else if (i === 2) {
-    gsap.fromTo(
-      q(".s2-drop"),
-      { opacity: 0, y: 0 },
-      {
-        keyframes: [
-          { opacity: 1, y: 10, duration: 0.3 },
-          { opacity: 0, y: 34, duration: 0.6 },
-        ],
-        stagger: 0.12,
-      },
-    );
-  } else {
-    gsap.fromTo(
-      q(".s3-arrow"),
-      { scale: 1 },
-      { scale: 1.35, duration: 0.25, yoyo: true, repeat: 1, transformOrigin: "50% 50%" },
-    );
-  }
+/**
+ * A small touch on a corner's clip as the light passes. It scales the video itself, not its frame:
+ * a transform on the frame would isolate the video's multiply blend and show its white ground.
+ */
+function accent(_i: number, host: Element) {
+  const video = host.querySelector(".rw-video__el");
+  if (!video) return;
+  gsap.fromTo(
+    video,
+    { scale: 1.04 },
+    {
+      scale: 1.09,
+      duration: 0.25,
+      yoyo: true,
+      repeat: 1,
+      ease: "power2.out",
+      clearProps: "transform",
+    },
+  );
 }
 
+/** Corner 2's clip runs from planting to harvest; its year tag follows the clip's own clock. */
+const YEARS = 12;
+
 /**
- * One corner's scene as a paused timeline, so it can play with the others or replay alone.
- * `extra` holds the scene's tag text when that lives outside `host` (the mobile steps).
+ * One corner's clip as a paused timeline, so it can start with the others or replay alone on hover.
+ * Playing the timeline restarts the clip; the timeline spans one pass, after which the clip keeps
+ * looping by itself. A frame loop moves the progress line and, for corner 2, the year count. Clips
+ * rest while their tile is off screen. `extra` holds the tag text when that lives outside `host`
+ * (the mobile steps).
  */
 function buildScene(i: number, host: Element, tok: Tok, extra?: Element) {
   const q = gsap.utils.selector(host);
   const qText = (sel: string): Element[] =>
     extra ? [...q(sel), ...Array.from(extra.querySelectorAll(sel))] : q(sel);
-  const tl = gsap.timeline({ paused: true });
+  const video = q<HTMLVideoElement>(".rw-video__el")[0];
+  const bar = q<HTMLElement>(".rw-video__progress i")[0];
+  const years = qText(".s2-year");
+  // The tile shows the clip's final frame (its poster) until the clip first plays.
+  let started = false;
+  let onScreen = true;
+  let frame = 0;
 
+  const paint = () => {
+    const d = video.duration || 1;
+    const p = Math.min(1, video.currentTime / d);
+    if (bar) bar.style.transform = `scaleX(${p.toFixed(4)})`;
+    if (i === 2) {
+      const y = String(Math.min(YEARS, 1 + Math.floor(p * YEARS))).padStart(2, "0");
+      years.forEach((el) => {
+        if (el.textContent !== y) el.textContent = y;
+      });
+    }
+  };
+  const loop = () => {
+    paint();
+    frame = video.paused ? 0 : requestAnimationFrame(loop);
+  };
+  video.addEventListener("play", () => {
+    if (!frame) frame = requestAnimationFrame(loop);
+  });
+
+  const play = () => {
+    started = true;
+    video.currentTime = 0;
+    if (onScreen) video.play().catch(() => {});
+  };
+  // Off screen the clip rests; back on screen it carries on where it was.
+  new IntersectionObserver(([entry]) => {
+    onScreen = entry.isIntersecting;
+    if (!started) return;
+    if (onScreen) video.play().catch(() => {});
+    else video.pause();
+  }).observe(host);
+
+  const tl = gsap.timeline({ paused: true });
+  tl.call(play, undefined, 0).to({}, { duration: 6 }, 0);
   if (i === 1) {
-    const doc = q(".s1-doc");
-    const flight = q<SVGPathElement>(".s1-path")[0];
-    const seal = q(".s1-seal");
-    const ripple = q(".s1-ripple");
-    const name = q<SVGPathElement>(".s1-name");
-    const plotSolid = q<SVGPathElement>(".s1-plot-solid");
-    const pegs = q(".s1-peg");
-    gsap.set(doc, { opacity: 0, rotation: 14, scale: 0.7, transformOrigin: "50% 50%" });
-    gsap.set(seal, { scale: 1.4, opacity: 0, transformOrigin: "50% 50%" });
-    gsap.set(ripple, { opacity: 0, transformOrigin: "50% 50%" });
-    gsap.set(pegs, { opacity: 0.3, transformOrigin: "50% 50%" });
-    prepDraw(name);
-    prepDraw(plotSolid);
-    tl.to(
-      doc,
-      {
-        motionPath: { path: flight, align: flight, alignOrigin: [0.5, 0.5] },
-        rotation: 8,
-        scale: 1,
-        duration: 1.2,
-        ease: "power2.inOut",
-      },
-      0,
-    )
-      .to(doc, { opacity: 1, duration: 0.3 }, 0)
-      .to(seal, { scale: 1, opacity: 1, duration: 0.35, ease: "power3.out" }, 1.15)
-      .fromTo(
-        ripple,
-        { scale: 1, opacity: 0.8 },
-        { scale: 2.6, opacity: 0, duration: 0.7, ease: "power2.out", immediateRender: false },
-        1.25,
-      )
-      .to(name, { strokeDashoffset: 0, duration: 0.6, ease: "power1.inOut" }, 1.4)
-      .to(q(".s1-plot-dash"), { opacity: 0, duration: 0.4 }, 1.4)
-      .to(plotSolid, { strokeDashoffset: 0, duration: 0.7, ease: "power1.inOut" }, 1.4)
-      .to(pegs, { opacity: 1, scale: 1.2, duration: 0.3, stagger: 0.07 }, 1.6)
-      .to(qText(".s1-tag"), { color: tok("--earth-700"), duration: 0.4 }, 1.8);
-  } else if (i === 2) {
-    const saplings = q(".s2-sapling");
-    const leaves = q<SVGElement>(".s2-leaf");
-    const drops = q(".s2-drop");
-    const years = qText(".s2-year");
-    gsap.set(saplings, { scaleY: 0, transformOrigin: "50% 100%" });
-    leaves.forEach((leaf) =>
-      gsap.set(leaf, { rotation: 0, scale: 0, svgOrigin: leaf.dataset.origin }),
-    );
-    gsap.set(drops, { opacity: 0, y: 0 });
-    gsap.set(q(".s2-canopy"), { scale: 0, svgOrigin: "133 48" });
-    gsap.set(q(".s2-trunk"), { opacity: 0 });
-    tl.to(saplings, { scaleY: 1, duration: 0.9, stagger: 0.15, ease: "power2.out" }, 0);
-    leaves.forEach((leaf, k) =>
-      tl.to(
-        leaf,
-        { rotation: Number(leaf.dataset.rot), scale: 1, duration: 0.5, ease: "power2.out" },
-        0.3 + k * 0.05,
-      ),
-    );
-    drops.forEach((d, k) =>
-      tl.to(
-        d,
-        {
-          keyframes: [
-            { opacity: 1, y: 10, duration: 0.3 },
-            { opacity: 0, y: 34, duration: 0.6 },
-          ],
-        },
-        0.05 + k * 0.22,
-      ),
-    );
-    const year = { v: 1 };
-    tl.to(
-      year,
-      {
-        v: 12,
-        duration: 2.2,
-        ease: "none",
-        onUpdate: () => {
-          const s = String(Math.round(year.v)).padStart(2, "0");
-          years.forEach((el) => (el.textContent = s));
-        },
-      },
-      0,
-    )
-      .to(q(".s2-canopy"), { scale: 1, duration: 1.2, ease: "power2.out" }, 1.0)
-      .to(q(".s2-trunk"), { opacity: 1, duration: 0.6 }, 1.1)
-      .to(q(".s2-leaf--3"), { opacity: 0, duration: 0.4 }, 1.3);
-  } else {
-    const tree = q(".s3-tree");
-    const rings = q<SVGCircleElement>(".s3-ring");
-    const line = q<SVGPathElement>(".s3-line");
-    const arrow = q(".s3-arrow");
-    gsap.set(tree, { rotation: 0, opacity: 1, svgOrigin: "40 70" });
-    gsap.set(q(".s3-log"), { scale: 0, transformOrigin: "50% 50%" });
-    gsap.set(arrow, { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" });
-    gsap.set(q(".s3-fill"), { opacity: 0 });
-    prepDraw(rings);
-    prepDraw(line);
-    tl.to(tree, { rotation: -14, duration: 0.5, ease: "power2.in" }, 0.1)
-      .to(tree, { opacity: 0, duration: 0.3 }, 0.45)
-      .to(q(".s3-log"), { scale: 1, duration: 0.45, stagger: 0.08, ease: "power3.out" }, 0.55)
-      .to(rings, { strokeDashoffset: 0, duration: 0.4, stagger: 0.04, ease: "power1.inOut" }, 0.85)
-      .to(line, { strokeDashoffset: 0, duration: 1, ease: "power1.inOut" }, 1.0)
-      .to(q(".s3-fill"), { opacity: 0.14, duration: 0.8 }, 1.3)
-      .to(arrow, { opacity: 1, scale: 1, duration: 0.35, ease: "power2.out" }, 1.9);
+    tl.to(qText(".s1-tag"), { color: tok("--earth-700"), duration: 0.4 }, 4.8);
   }
-  return tl;
+
+  // Reduced motion: no playback. The poster shows the finished scene; tags show their end state.
+  const settle = () => {
+    if (i === 2) years.forEach((el) => (el.textContent = String(YEARS)));
+    if (i === 1) gsap.set(qText(".s1-tag"), { color: tok("--earth-700") });
+    if (bar) bar.style.transform = "scaleX(1)";
+  };
+  return Object.assign(tl, { settle });
 }

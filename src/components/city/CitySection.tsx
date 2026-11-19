@@ -1,52 +1,84 @@
-import { useEffect, useRef } from "react";
-import { Cross, GraduationCap } from "lucide-react";
+import { useEffect, useRef, type CSSProperties } from "react";
 import { gsap, ScrollTrigger } from "@/components/triangle/gsapSetup";
-import {
-  CLOCK,
-  clockEase,
-  clockInverse,
-  desktopLayout,
-  mobileLayout,
-  polyPoints,
-  type Landmark,
-  type Layout,
-} from "./cityLayout";
-import { createRenderer, cubicBezier, type CityRenderer } from "./cityPaint";
+import satellite from "@/assets/city-satellite.webp";
+import plantation from "@/assets/city-plantation.webp";
 
-/* Constants ---------------------------------------------------------------------------------- */
+/*
+ * "The City Is Coming to You." — from orbit to your plot, in one screen.
+ *
+ * A live satellite view: the city's footprint spreads across the farmland towards Redwood land, a
+ * highway draws in, landmarks appear as the city reaches them, and the camera closes in on the
+ * plot. A callout links the plot to a live view of the plantation, where the saplings grow up the
+ * frame. Beside it the year runs 2026 → 2038 and three figures move with it.
+ *
+ * The section pins at the top of the screen and the visitor's scrolling drives the years: scroll
+ * on and time moves forward, stop and it holds, scroll back and it rewinds. Nothing can rush past
+ * unseen, and the release comes only once 2038 is reached.
+ */
 
-const DESK = desktopLayout();
-const MOB = mobileLayout();
+/* Scene geometry, in the satellite's own units: the photo is 500×887, so the view is 100×177. --- */
 
-/** The master timeline is 5 s on desktop; phones play the same timeline in 4.5 s. */
-const TOTAL = 5;
-const MOBILE_SPEED = TOTAL / 4.5;
-/** Scrolling on before the time-lapse has finished fast-forwards it. */
-const FAST = 4;
-const MARK_YEARS = [2026, 2030, 2034, 2038];
+const VB = { w: 100, h: 177 };
+const CORE = { x: 74, y: 16 }; // where the city starts
+const PLOT = { x: 52, y: 106 }; // Redwood land
+const PLOT_POLY = "45,99 60,98 61,112 46,113";
+const FRONT = { from: 18, to: 80 }; // city edge radius from the core, 2026 → 2038
+const ZOOM_MAX = 1.45; // the camera closes in on the plot
+const HIGHWAY = "M74 16 C78 40 66 66 62 84 S55 97 53 99";
 
-const EASE_OUT = cubicBezier(0.22, 1, 0.36, 1);
+const LANDMARKS = [
+  { key: "hospital", label: "Hospital · 8 min", x: 72, y: 50 },
+  { key: "school", label: "School · 5 min", x: 42, y: 60 },
+  { key: "highway", label: "Highway · 2 km", x: 66, y: 86 },
+].map((l) => {
+  const d = Math.hypot(l.x - CORE.x, l.y - CORE.y);
+  // The progress at which the city edge reaches this landmark.
+  return { ...l, at: (d - FRONT.from) / (FRONT.to - FRONT.from) };
+});
 
+/* The time-lapse ------------------------------------------------------------------------------- */
+
+const TOTAL = 1; // the timeline is scrubbed by scroll, so its length is only a unit
+/** How much scrolling 2026 → 2038 takes, in screen heights: one scroll covers the whole story. */
+const SCROLL_SCREENS = 1;
+const YEARS = [2026, 2030, 2034, 2038];
 const NAV_HIDDEN = "rwc-nav-hidden";
 const navHidden = (on: boolean) => document.documentElement.classList.toggle(NAV_HIDDEN, on);
 
-const MAP_LABEL =
-  "Illustrated site plan: a city grows from 2026 to 2038 up to the green buffer beside Redwood land, while teak trees on the land grow to full size.";
+const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
+const span = (p: number, a: number, b: number) => clamp01((p - a) / (b - a));
+const easeOut = (t: number) => 1 - (1 - t) ** 3;
+const easeInOut = (t: number) => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2);
 
-const METERS = [
-  { key: "land", label: ["Land", "Value"] },
-  { key: "timber", label: ["Timber", "Value"] },
+// Illustrative figures, 2026 → 2038.
+const STATS = [
+  {
+    key: "distance",
+    label: "Distance to city edge",
+    value: (p: number) => `${(14 - 11.5 * easeOut(p)).toFixed(1)} km`,
+    bar: (p: number) => 1 - 0.82 * easeOut(p),
+  },
+  {
+    key: "land",
+    label: "Land value",
+    value: (p: number) => `${(1 + 2.4 * p ** 1.3).toFixed(1)}×`,
+    bar: (p: number) => 0.18 + 0.82 * p ** 1.3,
+  },
+  {
+    key: "trees",
+    label: "Tree height",
+    value: (p: number) => `${Math.round(1 + 17 * p)} m`,
+    bar: (p: number) => 0.06 + 0.94 * p,
+  },
 ] as const;
 
-const pct = (v: number, total: number) => `${(v / total) * 100}%`;
+const PHRASES = ["The city grows.", "Your land grows.", "Your trees grow."];
 
-/* Component ---------------------------------------------------------------------------------- */
+const MAP_LABEL =
+  "Satellite view: from 2026 to 2038 the city spreads across the farmland towards Redwood land, while the teak on the land grows to full height.";
 
-/**
- * "The City Is Coming to You." — a light architectural site plan. The city, in pale line-art,
- * grows from its old core toward Redwood land, the only area in colour. One scroll brings the
- * section into view; the 2026 → 2038 time-lapse then plays by itself in about five seconds.
- */
+/* Component ------------------------------------------------------------------------------------ */
+
 export function CitySection() {
   const rootRef = useRef<HTMLElement>(null);
   const seekRef = useRef<(i: number) => void>(() => {});
@@ -54,559 +86,423 @@ export function CitySection() {
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
-    let cancelled = false;
-    const ctx = gsap.context(() => {}, root);
-
-    document.fonts.ready.then(() => {
-      if (cancelled) return;
-      ctx.add(() => {
-        const mm = gsap.matchMedia();
-        mm.add(
-          {
-            desktop: "(min-width: 1024px)",
-            mobile: "(max-width: 1023px)",
-            reduce: "(prefers-reduced-motion: reduce)",
-          },
-          (c) => {
-            const { desktop, reduce } = c.conditions as { desktop: boolean; reduce: boolean };
-            return setup(root, desktop, reduce, seekRef);
-          },
-        );
+    let cleanup = () => {};
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+      mm.add({ reduce: "(prefers-reduced-motion: reduce)", any: "all" }, (c) => {
+        cleanup = setup(root, Boolean(c.conditions?.reduce), seekRef);
+        return () => cleanup();
       });
-      ScrollTrigger.refresh();
-    });
-
-    return () => {
-      cancelled = true;
-      ctx.revert();
-      navHidden(false);
-    };
+    }, root);
+    return () => ctx.revert();
   }, []);
 
   return (
     <section ref={rootRef} className="rwc" aria-labelledby="rwc-title">
-      <h2 id="rwc-title" className="rwc-sr">
-        The City Is Coming to You.
-      </h2>
-      <Scene kind="desk" L={DESK} onSeek={(i) => seekRef.current(i)} />
-      <Scene kind="mob" L={MOB} />
-      <p className="rwc-sr" aria-live="polite" data-rwc-announce="" />
+      <div className="rwc-frame">
+        {/* Story column */}
+        <div className="rwc-story">
+          <p className="rwc-eyebrow rwc-in" style={{ "--d": 0 } as CSSProperties}>
+            <span aria-hidden /> Why it wins
+          </p>
+          <h2 id="rwc-title" className="rwc-title rwc-in" style={{ "--d": 1 } as CSSProperties}>
+            The City Is <em>Coming to You.</em>
+          </h2>
+
+          <div className="rwc-year rwc-in" style={{ "--d": 2 } as CSSProperties} aria-hidden>
+            <span className="rwc-year__label">Year</span>
+            <span className="rwc-year__value" data-year>
+              2026
+            </span>
+          </div>
+
+          <dl className="rwc-stats">
+            {STATS.map((s, i) => (
+              <div
+                key={s.key}
+                className={`rwc-stat rwc-stat--${s.key} rwc-in`}
+                style={{ "--d": 3 + i } as CSSProperties}
+              >
+                <dt>{s.label}</dt>
+                <dd data-stat={s.key}>{s.value(0)}</dd>
+                <span className="rwc-stat__bar" aria-hidden>
+                  <i data-bar={s.key} />
+                </span>
+              </div>
+            ))}
+          </dl>
+
+          <p className="rwc-phrases rwc-in" style={{ "--d": 6 } as CSSProperties}>
+            {PHRASES.map((t, i) => (
+              <span key={t} data-phrase={i}>
+                {t}{" "}
+              </span>
+            ))}
+          </p>
+
+          <div className="rwc-timeline rwc-in" style={{ "--d": 7 } as CSSProperties}>
+            <span className="rwc-timeline__track" aria-hidden>
+              <i data-track />
+            </span>
+            <div className="rwc-timeline__years">
+              {YEARS.map((y, i) => (
+                <button
+                  key={y}
+                  type="button"
+                  data-chip={i}
+                  onClick={() => seekRef.current(i)}
+                  aria-label={`Show ${y}`}
+                >
+                  {y}
+                </button>
+              ))}
+            </div>
+          </div>
+          <p className="rwc-note rwc-in" style={{ "--d": 8 } as CSSProperties}>
+            Illustrative projection.
+          </p>
+          <p className="rwc-hint" data-hint aria-hidden>
+            <span className="rwc-hint__mouse">
+              <i />
+            </span>
+            Scroll to move through time
+          </p>
+        </div>
+
+        {/* Satellite view */}
+        <div className="rwc-map rwc-in" style={{ "--d": 1 } as CSSProperties}>
+          <svg
+            className="rwc-map__svg"
+            viewBox={`0 0 ${VB.w} ${VB.h}`}
+            preserveAspectRatio="xMidYMid slice"
+            role="img"
+            aria-label={MAP_LABEL}
+          >
+            <defs>
+              <pattern id="rwc-blocks" width="3.2" height="3.2" patternUnits="userSpaceOnUse">
+                <rect width="3.2" height="3.2" fill="#e9e4d8" />
+                <rect x="0.35" y="0.35" width="1.2" height="1.1" fill="#cfc8b8" />
+                <rect x="1.85" y="0.35" width="1" height="1.4" fill="#d9d2c3" />
+                <rect x="0.35" y="1.75" width="1.4" height="1.1" fill="#d6cfbf" />
+                <rect x="2" y="2" width="0.85" height="0.85" fill="#c7bfae" />
+              </pattern>
+              <clipPath id="rwc-city-clip">
+                <circle data-city-clip cx={CORE.x} cy={CORE.y} r={FRONT.from} />
+              </clipPath>
+              <radialGradient
+                id="rwc-city-fade"
+                cx={CORE.x}
+                cy={CORE.y}
+                r="95"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop offset="0" stopColor="#fff" stopOpacity="0.92" />
+                <stop offset="1" stopColor="#fff" stopOpacity="0.55" />
+              </radialGradient>
+              <mask id="rwc-city-mask">
+                <rect width={VB.w} height={VB.h} fill="url(#rwc-city-fade)" />
+              </mask>
+            </defs>
+
+            {/* Everything inside this group moves with the camera. */}
+            <g data-camera>
+              <image href={satellite} width={VB.w} height={VB.h} className="rwc-map__photo" />
+              <rect width={VB.w} height={VB.h} className="rwc-map__grade" />
+
+              {/* The city's footprint, spreading from its core. */}
+              <g clipPath="url(#rwc-city-clip)" mask="url(#rwc-city-mask)">
+                <rect width={VB.w} height={VB.h} fill="url(#rwc-blocks)" />
+              </g>
+              <circle data-city-edge className="rwc-edge" cx={CORE.x} cy={CORE.y} r={FRONT.from} />
+
+              {/* Distance rings around the plot. */}
+              <circle className="rwc-ring" cx={PLOT.x} cy={PLOT.y} r="16" />
+              <circle className="rwc-ring" cx={PLOT.x} cy={PLOT.y} r="32" />
+              <text className="rwc-ring__label" x={PLOT.x + 16.8} y={PLOT.y - 1}>
+                5 km
+              </text>
+              <text className="rwc-ring__label" x={PLOT.x + 32.8} y={PLOT.y - 1}>
+                10 km
+              </text>
+
+              {/* The highway, drawing in towards the land. */}
+              <path className="rwc-highway rwc-highway--casing" d={HIGHWAY} />
+              <path data-highway className="rwc-highway" d={HIGHWAY} pathLength={1} />
+
+              {/* Redwood land. */}
+              <polygon data-plot className="rwc-plot" points={PLOT_POLY} />
+              <circle className="rwc-plot__pulse" cx={PLOT.x} cy={PLOT.y} r="3" />
+              <circle className="rwc-plot__dot" cx={PLOT.x} cy={PLOT.y} r="1.3" />
+
+              {/* Landmarks, which appear as the city reaches them. */}
+              {LANDMARKS.map((l) => (
+                <g
+                  key={l.key}
+                  data-landmark={l.key}
+                  className="rwc-pin"
+                  transform={`translate(${l.x} ${l.y})`}
+                >
+                  <g className="rwc-pin__body">
+                    <circle r="1.6" className="rwc-pin__dot" />
+                    <rect x="-0.2" y="-7.6" width="0.4" height="6" className="rwc-pin__stem" />
+                    <g transform="translate(0 -10.2)">
+                      <rect
+                        x={-l.label.length * 0.78 - 2}
+                        y="-2.6"
+                        width={l.label.length * 1.56 + 4}
+                        height="5.2"
+                        rx="2.6"
+                        className="rwc-pin__tag"
+                      />
+                      <text className="rwc-pin__text" textAnchor="middle" y="1.05">
+                        {l.label}
+                      </text>
+                    </g>
+                  </g>
+                </g>
+              ))}
+            </g>
+          </svg>
+
+          {/* Satellite instrument details (not moved by the camera). */}
+          <span className="rwc-hud rwc-hud--tl" aria-hidden />
+          <span className="rwc-hud rwc-hud--tr" aria-hidden />
+          <span className="rwc-hud rwc-hud--bl" aria-hidden />
+          <span className="rwc-hud rwc-hud--br" aria-hidden />
+          <span className="rwc-scan" aria-hidden />
+          <span className="rwc-live" aria-hidden>
+            <i /> Sat · Live
+          </span>
+          <span className="rwc-coords" aria-hidden>
+            21.14° N &nbsp; 79.08° E
+          </span>
+          <span className="rwc-scale" aria-hidden>
+            <i />2 km
+          </span>
+          <span className="rwc-north" aria-hidden>
+            <svg viewBox="0 0 12 16">
+              <path d="M6 1 10 13 6 10.5 2 13Z" />
+            </svg>
+            N
+          </span>
+          <span className="rwc-plot-tag" aria-hidden>
+            Redwood land
+          </span>
+
+          {/* Desktop: the callout from the plot to the plantation view. */}
+          <span className="rwc-callout" aria-hidden>
+            <i data-callout />
+          </span>
+
+          {/* Phones: the plantation view as a lens over the map. */}
+          <span className="rwc-lens" data-lens aria-hidden>
+            <img src={plantation} alt="" />
+          </span>
+        </div>
+
+        {/* Plantation view */}
+        <figure className="rwc-plant rwc-in" style={{ "--d": 2 } as CSSProperties}>
+          <div className="rwc-plant__frame">
+            <img
+              data-plant
+              src={plantation}
+              alt="Young teak trees growing in rows on Redwood land"
+              className="rwc-plant__photo"
+            />
+            <span className="rwc-plant__sky" aria-hidden />
+          </div>
+          <span className="rwc-ruler" aria-hidden>
+            <i data-ruler />
+            <b data-ruler-label>1 m</b>
+          </span>
+          <figcaption>
+            <span className="rwc-live rwc-live--inline" aria-hidden>
+              <i /> Live
+            </span>
+            Redwood land · <span data-plant-year>2026</span>
+          </figcaption>
+        </figure>
+      </div>
     </section>
   );
 }
 
-/* Pieces ------------------------------------------------------------------------------------- */
+/* Animation ------------------------------------------------------------------------------------ */
 
-function Scene({
-  kind,
-  L,
-  onSeek,
-}: {
-  kind: "desk" | "mob";
-  L: Layout;
-  onSeek?: (i: number) => void;
-}) {
-  const lines =
-    kind === "desk" ? ["The City Is Coming to You."] : ["The City Is", "Coming to You."];
-  return (
-    <div className={`rwc-scene rwc-scene--${kind}`}>
-      <div className="rwc-frame">
-        <header className="rwc-top">
-          <div className="rwc-head">
-            <p className="rwc-eyebrow">WHY IT WINS</p>
-            <p className="rwc-headline" aria-hidden="true">
-              {lines.map((l) => (
-                <span key={l} className="rwc-mask">
-                  <span className="rwc-mask__in">{l}</span>
-                </span>
-              ))}
-            </p>
-          </div>
-          <div className="rwc-year">
-            <p className="rwc-year__label">YEAR</p>
-            <p className="rwc-year__num" aria-live="off" data-year="">
-              2026
-            </p>
-            {onSeek ? (
-              <div className="rwc-ylinks" role="group" aria-label="Show the map in a given year">
-                {MARK_YEARS.map((y, i) => (
-                  <button
-                    key={y}
-                    type="button"
-                    className="rwc-ylink"
-                    aria-label={`Show the map in ${y}`}
-                    onClick={() => onSeek(i)}
-                  >
-                    {y}
-                  </button>
-                ))}
-              </div>
-            ) : null}
-          </div>
-        </header>
+function setup(root: HTMLElement, reduce: boolean, seekRef: { current: (i: number) => void }) {
+  const $ = <T extends Element = HTMLElement>(sel: string) => root.querySelector<T>(sel);
+  const $$ = <T extends Element = HTMLElement>(sel: string) =>
+    Array.from(root.querySelectorAll<T>(sel));
 
-        <div className="rwc-body">
-          <MapPanel L={L} />
-          <div className="rwc-meters">
-            {METERS.map((m) => (
-              <div key={m.key} className="rwc-gauge" data-m={m.key}>
-                <div className="rwc-gauge__bar" aria-hidden="true">
-                  <div className="rwc-gauge__track">
-                    <span className="rwc-gauge__fill" />
-                  </div>
-                  <svg className="rwc-gauge__chev" viewBox="0 0 10 6" focusable="false">
-                    <path d="M1 5.2 5 1.2l4 4" />
-                  </svg>
-                </div>
-                <p className="rwc-gauge__label">
-                  {m.label[0]}
-                  <br />
-                  {m.label[1]}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="rwc-closing">
-          <p className="rwc-hint" aria-hidden="true">
-            Keep scrolling
-            <svg viewBox="0 0 10 6" focusable="false">
-              <path d="M1 1 5 5l4-4" />
-            </svg>
-          </p>
-          <p className="rwc-close">
-            <span className="rwc-ph">
-              <span className="rwc-ph__in">The City Grows.</span>
-            </span>{" "}
-            <span className="rwc-ph">
-              <span className="rwc-ph__in">Your Land Grows.</span>
-            </span>{" "}
-            <span className="rwc-ph">
-              <span className="rwc-ph__in rwc-accent">Your Trees Grow.</span>
-            </span>
-          </p>
-          <p className="rwc-sub">Every Redwood land is chosen in the path of growth.</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function MapPanel({ L }: { L: Layout }) {
-  const hw = L.highway;
-  // The gate: two crimson posts either side of the highway where it meets the boundary.
-  const dx = hw.gate.x - hw.a.x;
-  const dy = hw.gate.y - hw.a.y;
-  const dl = Math.hypot(dx, dy) || 1;
-  const nx = -dy / dl;
-  const ny = dx / dl;
-  const off = hw.w / 2 + 3;
-  return (
-    <div className="rwc-map" role="img" aria-label={MAP_LABEL}>
-      <div className="rwc-world" aria-hidden="true">
-        <canvas className="rwc-cv" data-cv="ground" />
-        <canvas className="rwc-cv rwc-cv--city" data-cv="city" />
-        <canvas className="rwc-cv" data-cv="trees" />
-        <div className="rwc-stage">
-          <svg className="rwc-overlay" viewBox={`0 0 ${L.fw} ${L.fh}`} preserveAspectRatio="none">
-            <polygon className="rwc-boundary" points={polyPoints(L.land)} />
-            {L.land.map((p, i) => (
-              <circle key={i} className="rwc-peg" cx={p.x} cy={p.y} r={L.mobile ? 2.2 : 2.8} />
-            ))}
-            <g className="rwc-gate">
-              <line
-                x1={hw.gate.x + nx * off}
-                y1={hw.gate.y + ny * off}
-                x2={hw.gate.x - nx * off}
-                y2={hw.gate.y - ny * off}
-              />
-              {[1, -1].map((s) => (
-                <rect
-                  key={s}
-                  x={hw.gate.x + nx * off * s - 2}
-                  y={hw.gate.y + ny * off * s - 2}
-                  width="4"
-                  height="4"
-                />
-              ))}
-            </g>
-          </svg>
-          <span
-            className="rwc-chip"
-            style={{ left: pct(L.chip.x, L.fw), top: pct(L.chip.y, L.fh) }}
-          >
-            REDWOOD LAND
-          </span>
-          {L.landmarks.map((l, i) => (
-            <Pin key={i} l={l} L={L} />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/** A landmark pin: 28 px white disc with a line glyph, and a pill label under it. */
-function Pin({ l, L }: { l: Landmark; L: Layout }) {
-  const anchorY = L.pinMode === "above" ? l.y - l.h / 2 - 2 : l.y;
-  return (
-    <div
-      className={`rwc-pin rwc-pin--${L.pinMode}`}
-      style={{ left: pct(l.x, L.fw), top: pct(anchorY, L.fh) }}
-    >
-      <span className="rwc-pin__disc">
-        <Glyph kind={l.kind} />
-      </span>
-      <span className="rwc-pin__label">{l.label}</span>
-    </div>
-  );
-}
-
-function Glyph({ kind }: { kind: Landmark["kind"] }) {
-  if (kind === "school") return <GraduationCap size={15} strokeWidth={1.5} />;
-  if (kind === "hospital") return <Cross size={14} strokeWidth={1.5} />;
-  // Two houses, side by side.
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinejoin="round"
-      strokeLinecap="round"
-    >
-      <path d="M2.5 20.5v-8l5-4.5 5 4.5v8z" />
-      <path d="M12.5 12.5 16.5 9l5 4.5v7h-9" />
-      <path d="M6 20.5v-4h3v4M16 20.5v-3h2.5v3" />
-    </svg>
-  );
-}
-
-/* DOM state from the clock ------------------------------------------------------------------- */
-
-/** Year, year links and the two gauges follow the clock. */
-function bindUi(scope: HTMLElement, root: HTMLElement) {
-  const year = scope.querySelector<HTMLElement>("[data-year]")!;
-  const links = Array.from(scope.querySelectorAll<HTMLElement>(".rwc-ylink"));
-  const gauges = Array.from(scope.querySelectorAll<HTMLElement>(".rwc-gauge")).map((g) => ({
-    track: g.querySelector<HTMLElement>(".rwc-gauge__track")!,
-    fill: g.querySelector<HTMLElement>(".rwc-gauge__fill")!,
-    chev: g.querySelector<SVGElement>(".rwc-gauge__chev")!,
-    h: 0,
+  const camera = $<SVGGElement>("[data-camera]")!;
+  const cityClip = $<SVGCircleElement>("[data-city-clip]")!;
+  const cityEdge = $<SVGCircleElement>("[data-city-edge]")!;
+  const highway = $<SVGPathElement>("[data-highway]")!;
+  const plot = $<SVGPolygonElement>("[data-plot]")!;
+  const landmarks = LANDMARKS.map((l) => ({ ...l, el: $(`[data-landmark="${l.key}"]`)! }));
+  const yearEls = [$("[data-year]")!, $("[data-plant-year]")!];
+  const stats = STATS.map((s) => ({
+    value: s.value,
+    fill: s.bar,
+    el: $(`[data-stat="${s.key}"]`)!,
+    bar: $(`[data-bar="${s.key}"]`)!,
   }));
-  const announce = root.querySelector<HTMLElement>("[data-rwc-announce]");
-  let lastYear = -1;
-  let announced = false;
-  let last = 0;
+  const phrases = $$("[data-phrase]");
+  const track = $("[data-track]")!;
+  const chips = $$("[data-chip]");
+  const callout = $("[data-callout]")!;
+  const lens = $("[data-lens]")!;
+  const plant = $("[data-plant]")!;
+  const ruler = $("[data-ruler]")!;
+  const rulerLabel = $("[data-ruler-label]")!;
+  const hint = $("[data-hint]")!;
 
-  const apply = (p: number) => {
-    last = p;
-    const y = 2026 + Math.round(p * 12);
-    if (y !== lastYear) {
-      lastYear = y;
-      year.textContent = String(y);
-      links.forEach((l, i) => {
-        const on = y >= MARK_YEARS[i] && (i === 3 || y < MARK_YEARS[i + 1]);
-        l.classList.toggle("is-active", on);
-        l.setAttribute("aria-pressed", String(on));
-      });
-    }
-    // Gauges: 25% of the track in 2026, 88% in 2038. Timber starts slower (progress^1.4).
-    const shares = [p, p ** 1.4];
-    gauges.forEach((g, i) => {
-      if (!g.h) g.h = g.track.clientHeight;
-      const h = g.h * (0.25 + 0.63 * shares[i]);
-      g.fill.style.transform = `translate3d(0, ${(g.h - h).toFixed(2)}px, 0)`;
-      g.chev.style.transform = `translate3d(0, ${(g.h - h - 6 - 6).toFixed(2)}px, 0)`;
-    });
-    if (p >= 1 && !announced && announce) {
-      announced = true;
-      announce.textContent = "Year 2038";
-    }
+  const state = { p: 0 };
+
+  // The plot's tag and the callout are HTML over the map: pin them to the plot's on-screen point.
+  // The camera zooms about the plot, so that point only moves when the map is resized (phones crop
+  // the view to fill, so it is not simply 52% / 60%).
+  const map = $(".rwc-map")!;
+  const svg = $<SVGSVGElement>(".rwc-map__svg")!;
+  const place = () => {
+    const m = svg.getScreenCTM();
+    if (!m) return;
+    const box = map.getBoundingClientRect();
+    const pt = new DOMPoint(PLOT.x, PLOT.y).matrixTransform(m);
+    map.style.setProperty("--plot-x", `${(pt.x - box.left).toFixed(1)}px`);
+    map.style.setProperty("--plot-y", `${(pt.y - box.top).toFixed(1)}px`);
   };
-  return {
-    apply,
-    /** Track heights change with the layout: re-measure. */
-    remeasure() {
-      gauges.forEach((g) => (g.h = 0));
-      apply(last);
-    },
-  };
-}
+  const ro = new ResizeObserver(place);
+  ro.observe(map);
+  place();
 
-/* Setup -------------------------------------------------------------------------------------- */
-
-/** Paints the static layers when the section is about one viewport away, in idle time. */
-function lazyPrepare(root: Element, renderer: CityRenderer) {
-  const io = new IntersectionObserver(
-    (entries) => {
-      if (!entries.some((e) => e.isIntersecting)) return;
-      io.disconnect();
-      const idle = (window as { requestIdleCallback?: (cb: () => void) => number })
-        .requestIdleCallback;
-      if (idle) idle(() => renderer.prepare());
-      else window.setTimeout(() => renderer.prepare(), 0);
-    },
-    { rootMargin: "100% 0px" },
-  );
-  io.observe(root);
-  return io;
-}
-
-/**
- * The master timeline (5 s): headline, map fade-up and camera ease-out; the highway draws to
- * the gate; the clock runs 2026 → 2038 with the city, trees and gauges; the four pins pop; the
- * boundary pulses once; the camera settles toward the land, the city fades lighter, and the
- * closing line arrives. Everything rests at the end.
- */
-function buildMaster(
-  scope: HTMLElement,
-  L: Layout,
-  state: { p: number; hwy: number },
-  render: () => void,
-  camera: boolean,
-) {
-  const q = gsap.utils.selector(scope);
-  const map = q(".rwc-map")[0];
-  const world = q(".rwc-world")[0];
-  const tl = gsap.timeline({ paused: true });
-
-  tl.fromTo(q(".rwc-eyebrow"), { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "none" }, 0)
-    .fromTo(
-      q(".rwc-headline .rwc-mask__in"),
-      { yPercent: 108 },
-      { yPercent: 0, duration: 0.6, stagger: 0.07, ease: EASE_OUT },
-      0,
-    )
-    .fromTo(map, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease: EASE_OUT }, 0);
-  if (camera) {
-    tl.fromTo(
-      world,
-      { scale: 1.06, transformOrigin: "0% 50%" },
-      { scale: 1, duration: 1, ease: "power2.inOut" },
-      0.4,
-    );
-  }
-  tl.fromTo(
-    state,
-    { hwy: 0 },
-    { hwy: 1, duration: 2.4, ease: "power1.inOut", onUpdate: render },
-    0.4,
-  ).fromTo(
-    state,
-    { p: 0 },
-    { p: 1, duration: CLOCK.dur, ease: clockEase, onUpdate: render },
-    CLOCK.start,
-  );
-
-  q(".rwc-pin").forEach((pin, i) => {
-    const at = L.landmarks[i].at;
-    tl.fromTo(
-      pin.querySelector(".rwc-pin__disc"),
-      { scale: 0.6, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.6)" },
-      at,
-    ).fromTo(
-      pin.querySelector(".rwc-pin__label"),
-      { opacity: 0, y: -3 },
-      { opacity: 1, y: 0, duration: 0.25, ease: EASE_OUT },
-      at + 0.1,
-    );
-  });
-
-  // The highway arrives: a brief crimson tick on the gate.
-  tl.fromTo(
-    q(".rwc-gate"),
-    { opacity: 0.35, scale: 1 },
-    {
-      keyframes: [
-        { opacity: 1, scale: 1.5, duration: 0.14, ease: "power2.out" },
-        { scale: 1, duration: 0.3, ease: "power2.inOut" },
-      ],
-      transformOrigin: "50% 50%",
-    },
-    2.8,
-  )
-    // The last suburbs settle; the boundary breathes once.
-    .fromTo(
-      q(".rwc-boundary"),
-      { opacity: 0.8, strokeWidth: 1.5 },
-      {
-        keyframes: [
-          { opacity: 1, strokeWidth: 2.2, duration: 0.15, ease: "power1.out" },
-          { opacity: 0.9, strokeWidth: 1.5, duration: 0.3, ease: "power1.inOut" },
-        ],
-      },
-      4.2,
-    );
-
-  if (camera) {
-    tl.set(world, { transformOrigin: "100% 50%" }, 4.4).to(
-      world,
-      { scale: 1.03, duration: 0.6, ease: "power2.out" },
-      4.4,
-    );
-  }
-  tl.to(q(".rwc-cv--city"), { opacity: 0.7, duration: 0.6, ease: "power1.out" }, 4.4)
-    .to(q(".rwc-hint"), { opacity: 0, duration: 0.3, ease: "none" }, 4.3)
-    .fromTo(
-      q(".rwc-close .rwc-ph__in"),
-      { yPercent: 110 },
-      { yPercent: 0, duration: 0.6, stagger: 0.07, ease: EASE_OUT },
-      4.4,
-    )
-    .fromTo(
-      q(".rwc-sub"),
-      { opacity: 0, y: 8 },
-      { opacity: 1, y: 0, duration: 0.5, ease: EASE_OUT },
-      4.74,
-    )
-    .set({}, {}, TOTAL);
-  return tl;
-}
-
-function setup(
-  root: HTMLElement,
-  desktop: boolean,
-  reduce: boolean,
-  seekRef: { current: (i: number) => void },
-) {
-  const scope = root.querySelector<HTMLElement>(desktop ? ".rwc-scene--desk" : ".rwc-scene--mob")!;
-  const L = desktop ? DESK : MOB;
-  const q = gsap.utils.selector(scope);
-  const mapEl = q<HTMLElement>(".rwc-map")[0];
-  const stageEl = q<HTMLElement>(".rwc-stage")[0];
-  const cv = (k: string) => q<HTMLCanvasElement>(`[data-cv="${k}"]`)[0];
-  const renderer = createRenderer(
-    { ground: cv("ground"), city: cv("city"), trees: cv("trees") },
-    L,
-    { halos: desktop, grain: desktop },
-  );
-  const ui = bindUi(scope, root);
-  const state = { p: 0, hwy: 0 };
+  /** Paints the whole scene for progress p (0 = 2026, 1 = 2038). */
   const render = () => {
-    renderer.set(state);
-    ui.apply(state.p);
-  };
+    const p = state.p;
+    const year = String(2026 + Math.round(12 * p));
+    yearEls.forEach((el) => el.textContent !== year && (el.textContent = year));
 
-  // The frame fits the panel whole; on desktop it hugs the right (more old city shows on wide
-  // panels), on phones the top (more old city shows below).
-  const fit = () => {
-    const W = mapEl.clientWidth;
-    const H = mapEl.clientHeight;
-    if (!W || !H) return;
-    const s = Math.min(W / L.fw, H / L.fh);
-    const w = L.fw * s;
-    const h = L.fh * s;
-    const x = L.mobile ? (W - w) / 2 : W - w;
-    const y = L.mobile ? 0 : (H - h) / 2;
-    Object.assign(stageEl.style, {
-      left: `${x}px`,
-      top: `${y}px`,
-      width: `${w}px`,
-      height: `${h}px`,
+    // Camera: closes in on the plot (the plot stays put on screen).
+    const z = 1 + (ZOOM_MAX - 1) * easeInOut(p);
+    camera.setAttribute(
+      "transform",
+      `translate(${PLOT.x} ${PLOT.y}) scale(${z.toFixed(4)}) translate(${-PLOT.x} ${-PLOT.y})`,
+    );
+
+    // City: its edge moves out from the core.
+    const r = FRONT.from + (FRONT.to - FRONT.from) * easeOut(p);
+    cityClip.setAttribute("r", r.toFixed(2));
+    cityEdge.setAttribute("r", r.toFixed(2));
+    // Landmarks keep their size on screen while the camera closes in.
+    landmarks.forEach((l) => {
+      l.el.classList.toggle("is-on", easeOut(p) >= l.at);
+      l.el.setAttribute("transform", `translate(${l.x} ${l.y}) scale(${(1 / z).toFixed(4)})`);
     });
-    renderer.resize(W, H, { x, y, s });
-    ui.remeasure();
-  };
-  const ro = new ResizeObserver(fit);
-  ro.observe(mapEl);
-  fit();
-  const io = lazyPrepare(root, renderer);
 
-  const tl = buildMaster(scope, L, state, render, desktop && !reduce);
-  const base = desktop ? 1 : MOBILE_SPEED;
+    highway.style.strokeDashoffset = String(1 - easeInOut(span(p, 0.08, 0.7)));
+    plot.style.fillOpacity = String(0.12 + 0.5 * p);
+
+    // Figures.
+    stats.forEach((s) => {
+      const v = s.value(p);
+      if (s.el.textContent !== v) s.el.textContent = v;
+      s.bar.style.transform = `scaleX(${s.fill(p).toFixed(4)})`;
+    });
+    phrases.forEach((el, i) => el.classList.toggle("is-on", p >= i * 0.33));
+    track.style.transform = `scaleX(${p.toFixed(4)})`;
+    chips.forEach((el, i) => el.classList.toggle("is-on", p >= (YEARS[i] - 2026) / 12 - 0.001));
+
+    // Plantation: the trees grow up the frame and the colour comes in.
+    const g = easeOut(span(p, 0.12, 0.92));
+    plant.style.clipPath = `inset(${((1 - g) * 100).toFixed(2)}% 0 0 0)`;
+    plant.style.filter = `saturate(${(0.35 + 0.75 * g).toFixed(3)})`;
+    plant.style.transform = `scale(${(1.18 - 0.18 * g).toFixed(4)})`;
+    ruler.style.transform = `scaleY(${(0.04 + 0.96 * g).toFixed(4)})`;
+    rulerLabel.textContent = `${Math.round(1 + 17 * p)} m`;
+    rulerLabel.style.bottom = `${(4 + 92 * g).toFixed(2)}%`;
+    callout.style.transform = `scaleX(${easeOut(span(p, 0.04, 0.24)).toFixed(4)})`;
+    lens.style.setProperty("--lens", easeOut(span(p, 0.3, 0.55)).toFixed(4));
+    hint.style.opacity = String(1 - span(p, 0.01, 0.08));
+  };
+
+  const tl = gsap.timeline({ paused: true });
+  tl.to(state, { p: 1, duration: TOTAL, ease: "none", onUpdate: render });
+
+  const live = (on: boolean) => root.classList.toggle("is-live", on);
   const finish = () => {
-    if (tl.progress() < 1) {
-      tl.progress(1);
-      renderer.snap();
-    }
-  };
-
-  const cleanup = () => {
-    ro.disconnect();
-    io.disconnect();
-    renderer.destroy();
-    navHidden(false);
-    seekRef.current = () => {};
-  };
-
-  if (reduce) {
-    // No pin, no autoplay, no camera: the finished 2038 state.
-    renderer.prepare();
-    finish();
+    tl.pause();
+    state.p = 1;
     render();
-    renderer.snap();
-    return cleanup;
-  }
+  };
 
   render();
 
-  // The pin: when the section reaches the top, it holds for 100vh and the time-lapse plays by
-  // itself. Scrolling on early fast-forwards to 2038, so the payoff is always seen.
+  if (reduce) {
+    live(true);
+    finish();
+    seekRef.current = (i) => {
+      state.p = (YEARS[i] - 2026) / 12;
+      render();
+    };
+    return () => {
+      ro.disconnect();
+      seekRef.current = () => {};
+    };
+  }
+
+  // The pin: the section holds at the top while scrolling drives the timeline (smoothed slightly).
   const pin = ScrollTrigger.create({
     trigger: root,
     start: "top top",
-    end: "+=100%",
+    end: () => `+=${Math.round(window.innerHeight * SCROLL_SCREENS)}`,
     pin: true,
     anticipatePin: 1,
-    onEnter: () => {
-      renderer.prepare();
-      if (tl.progress() === 0) tl.timeScale(base).play(0);
-    },
-    onEnterBack: finish,
-    onLeave: finish,
-    onUpdate: (self) => {
-      if (
-        self.direction > 0 &&
-        self.progress > 0.02 &&
-        tl.isActive() &&
-        tl.timeScale() < base * FAST
-      ) {
-        tl.timeScale(base * FAST);
-      }
-    },
+    scrub: 0.6,
+    animation: tl,
+    invalidateOnRefresh: true,
+    onToggle: (self) => self.isActive && live(true),
+  });
+
+  // The copy and frames arrive a little before the pin, as the section rises into view (and are
+  // simply shown if the page loads with the section already above or inside the screen).
+  ScrollTrigger.create({
+    trigger: root,
+    start: "top 70%",
+    end: "max",
+    onToggle: (self) => self.isActive && live(true),
   });
 
   // The site navigation steps away while the section fills the screen.
-  ScrollTrigger.create({
+  const navST = ScrollTrigger.create({
     trigger: root,
     start: "top 3px",
     end: () => pin.end,
     onToggle: (self) => navHidden(self.isActive),
   });
 
-  // Once the section is wholly below the screen again, reset it, so coming back down replays.
+  // Once the section is wholly below the screen again, it rests until the visitor comes back.
   ScrollTrigger.create({
     trigger: root,
     start: "top bottom",
-    onLeaveBack: () => {
-      tl.pause(0);
-      state.p = 0;
-      state.hwy = 0;
-      render();
-      renderer.snap();
-    },
+    onLeaveBack: () => live(false),
   });
 
-  // Year links seek the time-lapse; 2026 replays it from the start.
+  // Year buttons scroll to that year's point in the pin.
   seekRef.current = (i) => {
-    if (i === 0) {
-      tl.timeScale(base).restart();
-      return;
-    }
-    const p = (MARK_YEARS[i] - 2026) / 12;
-    const t = i === 3 ? TOTAL : CLOCK.start + CLOCK.dur * clockInverse(p);
-    tl.pause();
-    gsap.to(tl, { time: t, duration: 0.6, ease: "power2.inOut", overwrite: true });
+    live(true);
+    const f = (YEARS[i] - 2026) / 12;
+    const top = pin.start + (pin.end - pin.start) * f + (i === 0 ? 1 : 0);
+    window.scrollTo({ top, behavior: "smooth" });
   };
 
   if (import.meta.env.DEV) {
-    (window as unknown as { __rwc?: unknown }).__rwc = { tl, state, pin, renderer, L };
+    (window as unknown as { __rwc?: unknown }).__rwc = { tl, state, pin };
   }
 
-  return cleanup;
+  return () => {
+    ro.disconnect();
+    navST.kill();
+    navHidden(false);
+    seekRef.current = () => {};
+  };
 }

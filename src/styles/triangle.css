@@ -41,7 +41,7 @@
   --dur-fast: 200ms;
 
   /* type */
-  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
   --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
 
   font-family: var(--font-body);
@@ -87,23 +87,16 @@
 
 /* Type ---------------------------------------------------------------------------------------- */
 
+/* Instrument Serif has a single weight; its contrast does the work bold would. */
 .rw-display,
 .rw-title {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-variation-settings:
-    "SOFT" 50,
-    "WONK" 0,
-    "opsz" 144;
+  font-weight: 400;
 }
 .rw-title {
-  font-size: clamp(22px, 19.8px + 0.57vw, 28px);
-  line-height: 1.15;
+  font-size: clamp(26px, 22px + 0.75vw, 34px);
+  line-height: 1.08;
   letter-spacing: -0.01em;
-  font-variation-settings:
-    "SOFT" 50,
-    "WONK" 0,
-    "opsz" 72;
 }
 .rw-body-l {
   font-size: clamp(17px, 15.9px + 0.29vw, 20px);
@@ -127,8 +120,8 @@
   font-variant-numeric: tabular-nums lining-nums;
 }
 .rw-italic {
-  font-style: normal;
-  font-weight: 600;
+  font-style: italic;
+  font-weight: 400;
 }
 .rw-mask {
   display: block;
@@ -408,7 +401,7 @@
   filter: blur(5px);
 }
 
-/* Wood beams forming the triangle edges */
+/* Wood beams forming the triangle edges: a cut log, stretched along each edge, cut face at the end */
 .rw-beams {
   position: absolute;
   inset: 0;
@@ -416,33 +409,8 @@
 }
 .rw-beam {
   position: absolute;
-  border-radius: 999px;
-  background:
-    repeating-linear-gradient(
-      to right,
-      transparent 0px,
-      transparent 30px,
-      rgba(80, 45, 12, 0.06) 30px,
-      rgba(80, 45, 12, 0.06) 31px,
-      transparent 31px,
-      transparent 52px,
-      rgba(80, 45, 12, 0.04) 52px,
-      rgba(80, 45, 12, 0.04) 53px
-    ),
-    linear-gradient(
-      to bottom,
-      #6b4520 0%,
-      #8b6035 12%,
-      #a07840 30%,
-      #b8944e 50%,
-      #a07840 70%,
-      #8b6035 88%,
-      #6b4520 100%
-    );
-  box-shadow:
-    0 3px 10px rgba(58, 42, 28, 0.35),
-    inset 0 2px 0 rgba(255, 255, 255, 0.1),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+  background: var(--log-beam) center / 100% 100% no-repeat;
+  filter: drop-shadow(0 4px 6px rgba(58, 32, 12, 0.35));
 }
 .rw-stop--1 {
   stop-color: var(--earth-500);
@@ -513,47 +481,120 @@
   }
 }
 
-/* Corner tiles (both layouts): white card, a colour bar on top, a soft wash of the colour. */
+/*
+ * Corner clips (both layouts), open — no card. A halo in the corner's colour pulses as the light
+ * passes, and a soft coloured shadow stays under the clip once the light has been.
+ */
 .rw-tile {
   position: relative;
-  border-radius: 16px;
-  background:
-    linear-gradient(180deg, var(--c-wash), transparent 58%),
-    var(--paper);
-  border: 1px solid var(--line-light);
-  box-shadow:
-    0 1px 2px rgba(14, 26, 20, 0.06),
-    0 20px 40px -24px rgba(14, 26, 20, 0.45);
-}
-.rw-tile::before {
-  content: "";
-  position: absolute;
-  top: -1px;
-  left: 18px;
-  right: 18px;
-  height: 3px;
-  border-radius: 0 0 3px 3px;
-  background: var(--c);
 }
 .rw-tile__glow,
 .rw-tile__ring {
   position: absolute;
-  inset: -1px;
-  border-radius: inherit;
   pointer-events: none;
   opacity: 0;
+  border-radius: 50%;
 }
 .rw-tile__glow {
-  box-shadow: 0 0 34px var(--c-glow);
+  inset: 4% 8% 10%;
+  background: radial-gradient(closest-side, var(--c-glow), transparent);
+  filter: blur(14px);
 }
 .rw-tile__ring {
-  border: 1.5px solid var(--c);
+  left: 12%;
+  right: 12%;
+  top: 62%;
+  height: 26%;
+  background: radial-gradient(closest-side, var(--c-glow), transparent);
+  filter: blur(10px);
 }
-.rw-scene {
+
+/*
+ * The live clip. The footage is keyed onto white; its box is the section's own parchment, and
+ * multiply turns the white into that parchment, so only the diorama shows. The box's edges are
+ * feathered away (the mask also makes it its own blend group, which keeps the multiply reliable)
+ * and its opaque middle hides the triangle's beams where they run beneath.
+ */
+.rw-video {
+  position: relative;
   display: block;
-  width: 172px;
-  height: 84px;
+  width: 100%;
+  aspect-ratio: 720 / 322;
+  background: var(--parchment-50);
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 9%, #000 91%, transparent),
+    linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 9%, #000 91%, transparent),
+    linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
+  mask-composite: intersect;
+}
+.rw-video__el {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+  transform: scale(1.04);
+  transition: transform 0.9s var(--ease-out);
+}
+.rw-tile:hover .rw-video__el {
+  transform: scale(1.1);
+}
+
+/* LIVE: a small red marker with a breathing dot, so the corners read as happening now. */
+.rw-live {
+  position: absolute;
+  top: 9%;
+  left: 9%;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px 4px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 0 0 1px rgba(14, 26, 20, 0.07),
+    0 6px 14px -8px rgba(14, 26, 20, 0.35);
+  color: var(--red-700);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.rw-live i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--red-600);
+  box-shadow: 0 0 0 0 rgba(193, 19, 43, 0.5);
+  animation: rw-live 1.6s ease-out infinite;
+}
+@keyframes rw-live {
+  to {
+    box-shadow: 0 0 0 6px rgba(193, 19, 43, 0);
+  }
+}
+
+/* How far through its clip the corner is, in the corner's colour, along the clip's foot. */
+.rw-video__progress {
+  position: absolute;
+  left: 24%;
+  right: 24%;
+  bottom: 9%;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(14, 26, 20, 0.08);
   overflow: hidden;
+}
+.rw-video__progress i {
+  display: block;
+  height: 100%;
+  background: var(--c);
+  transform: scaleX(0);
+  transform-origin: left;
 }
 .rw-tile .rw-tag,
 .rw-step .rw-tag {
@@ -605,16 +646,24 @@
   height: 0;
   z-index: 2;
 }
+/* 26cqi = 374px on the full 1440 stage; the clip is 720:322, so half its height is 5.81cqi. */
 .rw-corner .rw-tile {
   position: absolute;
-  left: -100px;
-  top: -70px;
-  width: 200px;
-  height: 140px;
-  padding: 13px 13px 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  left: -13cqi;
+  top: -5.81cqi;
+  width: 26cqi;
+  transform: perspective(900px) rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg));
+  transition: transform 0.7s var(--ease-out);
+}
+.rw-corner .rw-tile .rw-tag {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 10px);
+  transform: translateX(-50%);
+}
+.rw-corner[data-i="1"] .rw-tile .rw-tag {
+  top: auto;
+  bottom: calc(100% + 6px);
 }
 
 .rw-label {
@@ -624,11 +673,11 @@
   width: 300px;
 }
 .rw-label--right {
-  left: 124px;
+  left: calc(13cqi + 22px);
   text-align: left;
 }
 .rw-label--left {
-  right: 124px;
+  right: calc(13cqi + 22px);
   text-align: right;
 }
 /* The rule always points back at the tile. */
@@ -638,7 +687,7 @@
 /* Labels beside the base corners only have the stage margin to live in: 27.78cqi = 400/1440. */
 .rw-corner[data-i="2"] .rw-label,
 .rw-corner[data-i="3"] .rw-label {
-  width: min(300px, 27.78cqi - 144px);
+  width: min(300px, 27.78cqi - 13cqi - 30px);
 }
 .rw-label__title {
   margin: 10px 0 0;
@@ -655,7 +704,7 @@
 .rw-centre {
   position: absolute;
   left: 50%;
-  top: 64.44%;
+  top: 59%;
   transform: translate(-50%, -50%);
   width: 380px;
   z-index: 2;
@@ -671,9 +720,9 @@
 .rw-headline {
   margin: 16px 0 0;
   color: var(--ink-900);
-  font-size: clamp(36px, 3.6cqi, 56px);
-  line-height: 1.02;
-  letter-spacing: -0.02em;
+  font-size: clamp(44px, 4.4cqi, 68px);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
 }
 .rw-headline .rw-hl-accent {
   color: var(--ink-900);
@@ -717,12 +766,12 @@
   margin-top: 10px;
 }
 
-/* The triangle with a live tile at each corner, like the desktop stage at phone size. */
+/* Phones: a compact overview triangle with a numbered point at each corner. */
 .rw-mtri {
   position: relative;
-  width: min(440px, 100%);
+  width: min(330px, 86%);
   aspect-ratio: 340 / 380;
-  margin: 28px auto 0;
+  margin: 36px auto 0;
   container-type: inline-size;
 }
 .rw-mmark {
@@ -733,7 +782,7 @@
   fill: var(--earth-700);
   stroke: none;
 }
-/* A zero-size anchor on the corner point; flex centring puts the tile's middle on the point. */
+/* A zero-size anchor on the corner point; flex centring puts the point's circle on the corner. */
 .rw-mcorner {
   position: absolute;
   z-index: 2;
@@ -743,52 +792,83 @@
   align-items: center;
   justify-content: center;
 }
-.rw-mcorner .rw-tile {
+.rw-node {
   flex: none;
-  width: 42cqi;
-  padding: 2.6cqi 2.4cqi 2.4cqi;
-  border-radius: 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 8px;
+  /* The circle (44px) stays centred on the corner; the label hangs below it. */
+  transform: translateY(calc(50% - 22px));
 }
-.rw-mcorner .rw-tile::before {
-  left: 14px;
-  right: 14px;
+/* The top corner's label sits above its circle, clear of the two beams leaving it. */
+.rw-mcorner[data-i="1"] .rw-node {
+  flex-direction: column-reverse;
+  transform: translateY(calc(-50% + 22px));
 }
-.rw-mcorner .rw-scene {
-  width: 100%;
+.rw-node__num {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1.5px solid var(--c);
+  box-shadow: 0 10px 22px -12px rgba(14, 26, 20, 0.45);
+  color: var(--c-ink);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+.rw-node .rw-tile__glow {
+  inset: -8px;
+  border-radius: 50%;
+  background: none;
+  filter: none;
+  box-shadow: 0 0 22px var(--c-glow);
+}
+.rw-node .rw-tile__ring {
+  inset: -6px;
+  width: auto;
   height: auto;
+  border-radius: 50%;
+  background: none;
+  filter: none;
+  border: 1.5px solid var(--c);
 }
 .rw-mtile__title {
-  margin: 1.2cqi 0 0;
+  margin: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(247, 243, 234, 0.92);
   color: var(--c-ink);
-  font-size: clamp(12px, 4.1cqi, 16px);
-  line-height: 1.15;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
   text-align: center;
   white-space: nowrap;
 }
 
-/* The process, step by step, on a rail that runs brown → green → red. */
+/*
+ * The process, step by step, on a rail that runs brown → green → red. Steps are open (no cards):
+ * a numbered marker on the rail, the step's name and title, its clip, one plain line and its tag.
+ */
 .rw-steps {
   position: relative;
   max-width: 560px;
-  margin: 40px auto 0;
-  padding-left: 30px;
+  margin: 48px auto 0;
+  padding-left: 42px;
 }
 .rw-steps__rail {
   position: absolute;
-  left: 8px;
-  top: 26px;
-  bottom: 26px;
+  left: 13px;
+  top: 14px;
+  bottom: 40px;
   width: 2px;
   border-radius: 2px;
-  background: linear-gradient(
-    180deg,
-    var(--earth-500),
-    var(--leaf-600) 50%,
-    var(--red-600)
-  );
+  background: linear-gradient(180deg, var(--earth-500), var(--leaf-600) 50%, var(--red-600));
   transform-origin: 50% 0;
 }
 .rw-steps__list {
@@ -796,31 +876,28 @@
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 14px;
+  gap: 44px;
 }
 .rw-step {
   position: relative;
-  padding: 18px 20px 18px;
-  border-radius: 18px;
-  background:
-    linear-gradient(180deg, var(--c-wash), transparent 60%),
-    var(--paper);
-  border: 1px solid var(--line-light);
-  box-shadow:
-    0 1px 2px rgba(14, 26, 20, 0.05),
-    0 16px 34px -26px rgba(14, 26, 20, 0.4);
 }
-/* The dot sits on the rail: rail centre is 9px into .rw-steps, the card starts 30px in. */
+/* The marker sits on the rail: rail centre is 14px into .rw-steps, the step starts 42px in. */
 .rw-step__dot {
   position: absolute;
-  left: -28px;
-  top: 19px;
-  width: 14px;
-  height: 14px;
+  left: -41px;
+  top: -6px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
   border-radius: 999px;
   background: var(--c);
   border: 3px solid var(--parchment-50);
   box-shadow: 0 0 0 1px var(--c);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
 }
 .rw-step__pulse {
   position: absolute;
@@ -830,15 +907,20 @@
   opacity: 0;
 }
 .rw-step__title {
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   color: var(--ink-900);
-  font-size: 22px;
+  font-size: 30px;
+  line-height: 1.05;
+}
+.rw-step .rw-video {
+  margin: 10px -4% 0;
+  width: 108%;
 }
 .rw-step__line {
   margin: 6px 0 0;
-  color: var(--ink-600);
-  font-size: 15px;
-  line-height: 1.5;
+  color: var(--ink-700);
+  font-size: 16px;
+  line-height: 1.55;
 }
 .rw-step .rw-tag {
   margin-top: 12px;
@@ -867,6 +949,14 @@
 /* Reduced motion ------------------------------------------------------------------------------ */
 
 @media (prefers-reduced-motion: reduce) {
+  .rw-live i {
+    animation: none;
+  }
+  .rw-corner .rw-tile,
+  .rw-video__el {
+    transition: none;
+  }
+
   .rw *,
   .rw *::before,
   .rw *::after {
