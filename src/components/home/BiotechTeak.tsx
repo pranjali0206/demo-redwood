@@ -112,9 +112,9 @@ export function BiotechTeak() {
           </article>
         </div>
 
-        {/* Proof: biotech has already paid off for Indian farmers, crop by crop; Sagwan is next. */}
+        {/* Proof: biotech has already paid off for farmers, crop by crop; Sagwan is next. */}
         <div className="rwh-proof" data-rv="up">
-          <p className="rwh-proof__eyebrow">Proven in Indian farming</p>
+          <p className="rwh-proof__eyebrow">Proven on farms worldwide</p>
           <h3 className="rwh-proof__title">
             Biotech already pays farmers. <em>Sagwan is next.</em>
           </h3>

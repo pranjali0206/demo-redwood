@@ -20,7 +20,7 @@ import ufFarmImg from "@/assets/uf-farm.webp";
 import labImg from "@/assets/biotech-lab.webp";
 import bookImg from "@/assets/city-plantation.webp";
 import proofCotton from "@/assets/proof-cotton.webp";
-import proofTectona from "@/assets/proof-tectona.webp";
+import proofCorn from "@/assets/proof-corn.webp";
 import proofRose from "@/assets/proof-rose.webp";
 import proofSagwan from "@/assets/proof-sagwan.webp";
 
@@ -94,7 +94,7 @@ export const COMPARISON = [
 ];
 
 /**
- * Biotech already pays in Indian farming; Sagwan is next. General, well-established outcomes only:
+ * Biotech already pays farmers; Sagwan is next. General, well-established outcomes only:
  * put Redwood's own figure in the bracket on the Sagwan line once it is confirmed.
  */
 export const BIOTECH_PROOF: {
@@ -111,10 +111,10 @@ export const BIOTECH_PROOF: {
     img: proofCotton,
   },
   {
-    crop: "Tectona grandis",
-    how: "Clonal, nursery-raised saplings",
-    result: "Planted in even rows, with straighter stems and steadier growth than seed-raised stock.",
-    img: proofTectona,
+    crop: "American Corn",
+    how: "Biotech hybrid seed",
+    result: "Grown on almost all US corn acres, with higher yields and better pest and weed control.",
+    img: proofCorn,
   },
   {
     crop: "Rose",
@@ -123,7 +123,7 @@ export const BIOTECH_PROOF: {
     img: proofRose,
   },
   {
-    crop: "Sagwan",
+    crop: "Sagwan (Tectona grandis)",
     how: "Redwood tissue-culture clones",
     result: "Even, straight, healthy teak, growing on your own land.",
     img: proofSagwan,
