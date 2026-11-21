@@ -54,7 +54,7 @@ export function Process() {
   return (
     <section
   ref={sectionRef}
-  className="relative overflow-hidden py-24 lg:py-32 text-foreground"
+  className="relative overflow-hidden py-14 lg:py-24 text-foreground"
   style={{ backgroundColor: "var(--forest-950)", ...vars }}  // ← add ...vars
 >
 
@@ -130,7 +130,7 @@ export function Process() {
         </div>
 
         {/* Formula */}
-        <div className="mt-28 relative">
+        <div className="mt-14 relative md:mt-16">
           <Reveal>
             <p className="text-center text-xs uppercase tracking-[0.4em] text-[color:var(--brand-amber)]">
               The Redwood Formula

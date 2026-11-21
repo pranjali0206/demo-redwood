@@ -1,0 +1,479 @@
+/*
+ * "Rooted in living soil" — the bio-fertilizer section on the About page (components/about/BioFertilizers.tsx).
+ * The three scenes are SVG animated here. They play only while on screen ([data-play="true"]), and
+ * with reduced motion they hold a finished frame.
+ */
+
+.bf-scene {
+  background: #efe8d8;
+  isolation: isolate;
+}
+.bf-scene[data-play="false"] *,
+.bf-scene[data-play="false"] *::before {
+  animation-play-state: paused !important;
+}
+
+/* The scene's headline fact, as a chip in the corner. */
+.bf-scene__fact {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 253, 246, 0.92);
+  box-shadow: 0 8px 20px -12px rgba(59, 42, 26, 0.5);
+  color: #3b2a1a;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.bf-scene__fact i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--bf-accent, #175f45);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--bf-accent, #175f45) 55%, transparent);
+  animation: bf-ping 1.8s ease-out infinite;
+}
+
+/* A real photo pinned to the compost scene. */
+.bf-polaroid {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  width: 30%;
+  margin: 0;
+  padding: 6px 6px 0;
+  background: #fffdf6;
+  border-radius: 6px;
+  box-shadow: 0 18px 30px -14px rgba(20, 12, 6, 0.6);
+  transform: rotate(4deg);
+  animation: bf-float 6s ease-in-out infinite alternate;
+}
+.bf-polaroid img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 3px;
+}
+.bf-polaroid figcaption {
+  padding: 5px 0 7px;
+  color: #3b2a1a;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Photos ease in slowly, like a breath. */
+.bf-photo__img {
+  animation: bf-kenburns 18s ease-in-out infinite alternate;
+}
+
+.bf-benefit__icon {
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.bf-benefit:hover .bf-benefit__icon {
+  transform: translateY(-3px) rotate(-8deg);
+}
+
+/* SVG text. */
+.bf-svg-num {
+  fill: #3b2a1a;
+  font: 800 14px var(--font-manrope);
+}
+.bf-svg-label {
+  fill: rgba(59, 42, 26, 0.7);
+  font: 700 9.5px var(--font-manrope);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.bf-svg-tag {
+  fill: #6b4a2b;
+  font: 800 8.5px var(--font-manrope);
+  letter-spacing: 0.14em;
+}
+.bf-svg-layer {
+  fill: rgba(255, 255, 255, 0.6);
+  font: 800 8.5px var(--font-manrope);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Jeevamrut: ingredients drop in, the brew is stirred, bubbles rise, microbes multiply. ------- */
+
+.bf-drop {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: bf-drop 6.5s cubic-bezier(0.55, 0, 0.9, 0.45) infinite;
+  animation-delay: calc(var(--i) * 1.3s);
+}
+.bf-stir {
+  transform-origin: 205px 112px;
+  animation: bf-stir 1.8s ease-in-out infinite alternate;
+}
+.bf-swirl {
+  animation: bf-swirl 2.4s linear infinite;
+}
+.bf-bubble {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: bf-bubble 2.6s ease-out infinite;
+  animation-delay: calc(var(--i) * 0.42s);
+}
+.bf-timer {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: bf-timer 6.5s linear infinite;
+}
+.bf-microbe {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bf-microbe 6.5s ease-out infinite backwards;
+  animation-delay: calc(var(--i) * 0.5s);
+}
+.bf-dapple {
+  animation: bf-dapple 7s ease-in-out infinite alternate;
+}
+.bf-dapple--2 {
+  animation-delay: -3.5s;
+}
+
+/* Ghanjeevamrut: cakes dry from dark to tan and crack, then crumble into the bag. ------------ */
+
+.bf-ray {
+  animation: bf-dapple 5s ease-in-out infinite alternate;
+}
+.bf-ray--2 {
+  animation-delay: -2.5s;
+}
+.bf-cake__top {
+  fill: #a07b4c;
+  animation: bf-dry-top 9s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.35s);
+}
+.bf-cake__side {
+  fill: #7d5c37;
+  animation: bf-dry-side 9s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.35s);
+}
+.bf-crack {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: bf-crack 9s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.35s);
+}
+.bf-spark {
+  opacity: 0;
+  animation: bf-spark 9s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.35s);
+}
+.bf-shimmer {
+  opacity: 0;
+  animation: bf-shimmer 3s ease-out infinite;
+  animation-delay: calc(var(--i) * 0.9s);
+}
+.bf-crumb {
+  opacity: 0;
+  animation: bf-crumb 3.6s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 1.2s);
+}
+
+/* Vermicompost: worms crawl their tunnels, water drips in, castings build up. ---------------- */
+
+.bf-worm {
+  stroke-dasharray: 9 100;
+  stroke-dashoffset: -40;
+  animation: bf-crawl var(--dur, 10s) linear infinite;
+  animation-delay: var(--delay, 0s);
+}
+.bf-worm--shine {
+  stroke-dasharray: 7 102;
+  stroke-dashoffset: -41;
+  animation-name: bf-crawl-shine;
+}
+.bf-rain {
+  animation: bf-rain 1.4s ease-in infinite;
+  animation-delay: calc(var(--i) * 0.28s);
+}
+.bf-casting {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bf-casting 8s ease-out infinite backwards;
+  animation-delay: calc(var(--i) * 0.6s);
+}
+
+/* Keyframes ------------------------------------------------------------------------------------ */
+
+@keyframes bf-ping {
+  to {
+    box-shadow: 0 0 0 7px transparent;
+  }
+}
+@keyframes bf-float {
+  to {
+    transform: rotate(1.5deg) translateY(-6px);
+  }
+}
+@keyframes bf-kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08) translate(-1%, -1%);
+  }
+}
+@keyframes bf-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-12px) rotate(0deg);
+  }
+  8% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(78px) rotate(120deg);
+  }
+  34%,
+  100% {
+    opacity: 0;
+    transform: translateY(86px) rotate(140deg);
+  }
+}
+@keyframes bf-stir {
+  from {
+    transform: rotate(-10deg);
+  }
+  to {
+    transform: rotate(12deg);
+  }
+}
+@keyframes bf-swirl {
+  to {
+    stroke-dashoffset: -56;
+  }
+}
+@keyframes bf-bubble {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.3);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-24px) scale(1.15);
+  }
+}
+@keyframes bf-timer {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  85%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes bf-microbe {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  7% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+  11%,
+  68% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  78%,
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+@keyframes bf-dapple {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 0.6;
+  }
+}
+@keyframes bf-dry-top {
+  0%,
+  6% {
+    fill: #4b3420;
+  }
+  55%,
+  92% {
+    fill: #a07b4c;
+  }
+  100% {
+    fill: #4b3420;
+  }
+}
+@keyframes bf-dry-side {
+  0%,
+  6% {
+    fill: #35241a;
+  }
+  55%,
+  92% {
+    fill: #7d5c37;
+  }
+  100% {
+    fill: #35241a;
+  }
+}
+@keyframes bf-crack {
+  0%,
+  45% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  65%,
+  92% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+@keyframes bf-spark {
+  0%,
+  58% {
+    opacity: 0;
+  }
+  66% {
+    opacity: 1;
+  }
+  74% {
+    opacity: 0.2;
+  }
+  82% {
+    opacity: 1;
+  }
+  92%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes bf-shimmer {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  35% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-18px);
+  }
+}
+@keyframes bf-crumb {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(26px, -42px);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(51px, -34px);
+  }
+  90%,
+  100% {
+    opacity: 0;
+    transform: translate(51px, -28px);
+  }
+}
+@keyframes bf-crawl {
+  from {
+    stroke-dashoffset: 9;
+  }
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+@keyframes bf-crawl-shine {
+  from {
+    stroke-dashoffset: 8;
+  }
+  to {
+    stroke-dashoffset: -101;
+  }
+}
+@keyframes bf-rain {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(58px);
+  }
+}
+@keyframes bf-casting {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  12%,
+  85% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+/* Reduced motion: every scene rests on a finished frame. */
+@media (prefers-reduced-motion: reduce) {
+  .bf-scene *,
+  .bf-scene__fact i,
+  .bf-polaroid,
+  .bf-photo__img {
+    animation: none !important;
+  }
+  .bf-bubble,
+  .bf-drop,
+  .bf-crumb,
+  .bf-shimmer,
+  .bf-spark {
+    opacity: 0;
+  }
+  .bf-timer {
+    stroke-dashoffset: 0;
+  }
+  .bf-benefit__icon {
+    transition: none;
+  }
+}

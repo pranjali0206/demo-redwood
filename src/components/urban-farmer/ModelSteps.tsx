@@ -77,7 +77,7 @@ export function ModelSteps() {
   return (
     <section
       id="model"
-      className="relative scroll-mt-16 overflow-hidden bg-uf-paper py-24 text-stone-900 sm:py-32"
+      className="relative scroll-mt-16 overflow-hidden bg-uf-paper py-14 text-stone-900 sm:py-20"
     >
       <div
         aria-hidden

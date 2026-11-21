@@ -107,14 +107,18 @@ body:has(.rwb-hero) :is(.font-serif, h1, h2, h3, h4, h5, h6):not(.rw *, .rwb-her
   perspective: 1100px;
 }
 
+/* Frosted glass: the forest shows through, blurred, behind a bright rim and a soft top sheen. */
 .rwb-card {
-  background: rgba(250, 249, 244, 0.9);
-  -webkit-backdrop-filter: blur(16px) saturate(1.3);
-  backdrop-filter: blur(16px) saturate(1.3);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0) 42%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.46) 0%, rgba(236, 244, 236, 0.22) 55%, rgba(214, 232, 220, 0.16) 100%);
+  -webkit-backdrop-filter: blur(22px) saturate(1.7) brightness(1.04);
+  backdrop-filter: blur(22px) saturate(1.7) brightness(1.04);
   box-shadow:
     0 30px 60px -30px rgba(6, 30, 22, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.7),
-    0 0 0 1px rgba(16, 62, 48, 0.06);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 0 0 1px rgba(16, 62, 48, 0.08);
   transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
   transition:
     transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
@@ -132,7 +136,15 @@ body:has(.rwb-hero) :is(.font-serif, h1, h2, h3, h4, h5, h6):not(.rw *, .rwb-her
   box-shadow:
     0 40px 80px -32px rgba(6, 30, 22, 0.6),
     inset 0 0 0 1px rgba(255, 255, 255, 0.7),
-    0 0 0 1px rgba(16, 62, 48, 0.08);
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 0 0 1px rgba(16, 62, 48, 0.1);
+}
+
+/* Browsers without backdrop blur get a solid ivory card, so the text never sits on bare forest. */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .rwb-card {
+    background: rgba(250, 249, 244, 0.94);
+  }
 }
 
 .rwb-card__glare {
@@ -226,44 +238,54 @@ body:has(.rwb-hero) :is(.font-serif, h1, h2, h3, h4, h5, h6):not(.rw *, .rwb-her
     rwb-brand-sweep 1.8s cubic-bezier(0.45, 0, 0.25, 1) calc(1.15s + var(--i, 0) * 0.14s) both;
 }
 
-/* Timber signs ------------------------------------------------------------------------------- */
-
 /*
- * The headline's plus and equals, closing their lines, each built from two short logs, in a
- * box about one em square, nudged down to centre on the lettering. The logs drop in on load, then
- * the sign sways very gently.
+ * The brand's underline: a champagne stroke under "Redwood Biotech", tapering in from the left and
+ * tilted a touch like a pen stroke. It is deliberately static: animated, Chrome left it unpainted
+ * beside the text-clipped brand words. Phones let the brand wrap, so they go without it.
  */
-.rwb-sign {
-  position: relative;
-  display: inline-block;
-  width: 0.78em;
-  height: 0.78em;
-  margin-left: 0.04em;
-  vertical-align: -0.06em;
-  animation: rwb-sign-sway 5s ease-in-out 3s infinite alternate;
-}
-
-.rwb-sign__log {
+.rwb-brand-underline {
   position: absolute;
-  inset: 50% 0 auto;
-  height: 0.22em;
-  margin-top: -0.11em;
-  background: var(--log) center / 100% 100% no-repeat;
-  filter: drop-shadow(0 0.03em 0.03em rgba(60, 35, 10, 0.35));
-  animation: rwb-log-drop 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--log-delay, 0s) backwards;
+  left: 0.04em;
+  right: 0.14em;
+  bottom: 0.02em;
+  height: 0.07em;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(167, 131, 72, 0.15) 0%,
+    var(--color-rwb-champagne) 14%,
+    var(--color-rwb-gold-soft) 70%,
+    rgba(217, 184, 103, 0.35) 100%
+  );
+  transform-origin: left center;
+  transform: rotate(-1deg);
+  pointer-events: none;
+  /* Above the brand words, whose text-clipped boxes run down past the baseline. */
+  z-index: 1;
+}
+@media (max-width: 639px) {
+  .rwb-brand-underline {
+    display: none;
+  }
 }
 
-.rwb-sign--plus .rwb-sign__log:last-child {
-  rotate: 90deg;
+/* The timber calculator's button: a frosted pill with a gold rim, set beside the species line. */
+.rwb-calc-cta {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(245, 239, 224, 0.75));
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    inset 0 0 0 1px rgba(167, 131, 72, 0.55),
+    0 10px 24px -14px rgba(16, 62, 48, 0.55);
+  transition:
+    box-shadow 0.4s ease,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
-
-.rwb-sign--equals .rwb-sign__log:first-child {
-  translate: 0 -0.15em;
-}
-
-.rwb-sign--equals .rwb-sign__log:last-child {
-  translate: 0 0.15em;
-  scale: -1 1;
+.rwb-calc-cta:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 0 0 1px rgba(167, 131, 72, 0.9),
+    0 16px 30px -14px rgba(16, 62, 48, 0.6);
 }
 
 /* Load-in ------------------------------------------------------------------------------------- */
@@ -370,25 +392,6 @@ body:has(.rwb-hero) :is(.font-serif, h1, h2, h3, h4, h5, h6):not(.rw *, .rwb-her
   }
 }
 
-@keyframes rwb-log-drop {
-  from {
-    opacity: 0;
-    transform: translateY(-0.9em) rotate(-40deg);
-  }
-  65% {
-    opacity: 1;
-    transform: translateY(0.05em) rotate(5deg);
-  }
-}
-
-@keyframes rwb-sign-sway {
-  from {
-    rotate: -3deg;
-  }
-  to {
-    rotate: 3deg;
-  }
-}
 
 @keyframes rwb-breathe {
   from {

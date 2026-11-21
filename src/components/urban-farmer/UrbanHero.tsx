@@ -14,7 +14,7 @@ import textLogoImg from "@/assets/urban-farmer-text.webp";
 import { EASE, seeded } from "./constants";
 import { useScrollMap } from "./useScrollMap";
 
-const HEADLINE = ["Now,", "Farming", "Is", "No", "Longer", "Restricted", "to"];
+const HEADLINE = ["Own", "Farmland.", "Grow", "Premium"];
 
 const NOISE =
   "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")";
@@ -194,7 +194,7 @@ export function UrbanHero() {
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ duration: 0.9, ease: EASE, delay: wordsDone }}
               >
-                Rurals.
+                Sagwan.
                 <svg
                   aria-hidden
                   viewBox="0 0 300 24"
@@ -219,8 +219,10 @@ export function UrbanHero() {
               {...reveal(wordsDone + 0.3)}
               className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-stone-600 sm:text-xl lg:mx-0"
             >
-              Join the revolutionary journey by{" "}
-              <span className="font-semibold text-uf-forest">Redwood Biotech</span> and become an{" "}
+              Invest in managed Sagwan agroforestry with{" "}
+              <span className="font-semibold text-uf-forest">Redwood Biotech</span>. Own registered
+              farmland, get premium Sagwan planted on it, and let our team manage it for 12 years until
+              harvest. That's what it means to be an{" "}
               <span className="font-semibold text-uf-soil">Urban Farmer</span>.
             </motion.p>
 

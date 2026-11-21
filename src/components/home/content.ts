@@ -165,7 +165,6 @@ export const SERVICES = [
   },
 ] as const;
 
-export const YOUR_PART = "Visit any time · get regular updates";
 
 /* See It for Yourself ------------------------------------------------------------------------ */
 

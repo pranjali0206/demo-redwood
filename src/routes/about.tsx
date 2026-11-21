@@ -4,9 +4,11 @@ import { useRef, useEffect, useState } from "react";
 import { Eye, Target, Heart, ArrowRight, Sparkles, TrendingUp } from "lucide-react";
 import heroImg from "../assets/about-hero.webp";
 import forestImg from "../assets/forest-light.webp";
-import saplingImg from "../assets/sapling-new.webp";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
+import { AboutOffer } from "@/components/about/AboutOffer";
+import { BioFertilizers } from "@/components/about/BioFertilizers";
+import { GrowthFilm } from "@/components/about/GrowthFilm";
 import agroforestryField from "../assets/agroforestry-field.webp";
 import commerceBg from "../assets/About-commercebg.webp";
 export const Route = createFileRoute("/about")({
@@ -23,15 +25,6 @@ export const Route = createFileRoute("/about")({
 });
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
-
-const story = [
-  "At Redwood Biotech, we believe that the future of wealth creation lies at the intersection of Science, Nature, and Smart Investments.",
-  "Our journey began with a simple vision—to create an investment model that not only generates long-term value for investors but also contributes positively to the environment. After extensive research into land development, biotechnology, and forestry economics, we identified a unique opportunity: combining strategically located real estate with scientifically managed Genitically Engineered Hi-Tech Sagwan (Teak) plantations.",
-  "This dual-asset approach allows investors to benefit from two powerful growth drivers—potential land appreciation and the long-term value of premium timber. We chose Sagwan because of its global demand, durability, and reputation as one of the world's most valuable timber species.",
-  "What sets Redwood apart is our commitment to science-backed plantation management, careful land selection, and complete transparency. Every project is designed with a long-term perspective, ensuring that growth is driven by both natural and economic fundamentals.",
-  "But beyond land and plantations, our greatest asset is the trust of our investors. We believe relationships are built through honesty, communication, and consistent delivery. That's why we focus on creating lifelong partnerships rather than one-time transactions.",
-  "As India continues to grow and the demand for sustainable assets increases, Redwood Biotech remains committed to building opportunities that generate value for investors while creating a greener future for generations to come.",
-];
 
 const vision = [
   "To be India's trusted agroforestry investment brand.",
@@ -301,7 +294,7 @@ function DualLineChart() {
 
 function GrowthEngineSection() {
   return (
-    <section className="relative overflow-hidden px-6 py-32">
+    <section className="relative overflow-hidden px-6 py-16 md:py-24">
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-1/3 top-1/2 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[oklch(0.42_0.11_152/0.06)] blur-[120px]" />
       </div>
@@ -443,51 +436,23 @@ function AboutPage() {
         </div>
       </section>
 
-      {/* ── STORY ────────────────────────────────────────────────────────── */}
-      <section className="relative px-6 py-32">
-        <div className="mx-auto grid max-w-6xl gap-16 lg:grid-cols-[1fr_1.2fr]">
-          <div className="lg:sticky lg:top-32 lg:h-[calc(100vh-10rem)]">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="h-[420px] lg:h-[70%] overflow-hidden rounded-3xl shadow-[var(--shadow-elegant)]"
-            >
-              <img src={saplingImg} alt="Hands planting a sapling" loading="lazy" className="h-full w-full object-cover" />
-            </motion.div>
-            <motion.p
-              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-              className="mt-6 font-display text-2xl italic text-muted-foreground"
-            >
-              "Redwood Biotech — where nature grows, wealth follows."
-            </motion.p>
-          </div>
+      {/* ── ABOUT: the offer, in business terms ─────────────────────────── */}
+      <AboutOffer />
 
-          <div className="space-y-8">
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">The Beginning</p>
-            {story.map((p, i) => (
-              <motion.p
-                key={i}
-                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.7, delay: 0.05 * i }}
-                className={i === 0 ? "font-display text-3xl leading-tight text-foreground md:text-4xl" : "text-lg leading-relaxed text-muted-foreground"}
-              >
-                {p}
-              </motion.p>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
+      {/* ── BIO-FERTILIZERS ──────────────────────────────────────────────── */}
+      <BioFertilizers />
 
       <GrowthEngineSection />
+
+      {/* ── GROWTH FILM: from seed to plantation ─────────────────────────── */}
+      <GrowthFilm />
 
 
 
       
 
       {/* ── VISION · MISSION · VALUES — horizontal strip ─────────────────── */}
-      <section className="relative bg-black px-6 py-28">
+      <section className="relative bg-black px-6 py-14 md:py-20">
         {/* subtle section divider glow */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 
@@ -598,7 +563,7 @@ function AboutPage() {
       </section>
 
       {/* ── COMMERCE SECTION ─────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden px-6 py-32">
+      <section className="relative overflow-hidden px-6 py-16 md:py-24">
             {/* Background Image */}
             <div
               className="absolute inset-0 -z-0 bg-cover bg-center bg-no-repeat opacity-[0.2]"
@@ -727,7 +692,7 @@ function AboutPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden px-6 py-36">
+      <section className="relative overflow-hidden px-6 py-16 md:py-24">
 
   {/* Background */}
   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,200,80,0.18),transparent_35%),linear-gradient(180deg,#06110B_0%,#0D1E15_45%,#1A1208_100%)]" />

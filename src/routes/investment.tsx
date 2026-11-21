@@ -285,7 +285,7 @@ function Hero() {
 
 function LogicIntro() {
   return (
-    <section id="logic" className="relative py-32 md:py-48 grain">
+    <section id="logic" className="relative py-16 md:py-20 grain">
       <div className="mx-auto max-w-5xl px-6">
         <Reveal>
           <p className="text-xs uppercase tracking-[0.3em] text-primary mb-6">— The Thesis</p>
@@ -481,7 +481,7 @@ function Pillars() {
 
 function DualAssetSection() {
   return (
-    <section id="dual-asset" className="relative py-28 md:py-40 bg-surface overflow-hidden">
+    <section id="dual-asset" className="relative py-14 md:py-24 bg-surface overflow-hidden">
       {/* ambient accent */}
       <div className="pointer-events-none absolute -top-40 right-0 h-[500px] w-[500px] rounded-full bg-primary/5 blur-[120px]" />
 
@@ -606,7 +606,7 @@ function DualAssetSection() {
 
 function DemandSection() {
   return (
-    <section className="relative py-28 md:py-40 bg-[#000000] text-white grain">
+    <section className="relative py-14 md:py-24 bg-[#000000] text-white grain">
       <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-12 gap-12 items-start">
         <div className="md:col-span-5">
           <Reveal><p className="text-xs uppercase tracking-[0.3em] text-ember mb-6">— Market Dynamics</p></Reveal>
@@ -713,7 +713,7 @@ function DemandSection() {
 
 function FarmPlanSection() {
   return (
-    <section className="py-28 md:py-40 bg-[#060606] text-white">
+    <section className="py-14 md:py-24 bg-[#060606] text-white">
       <div className="mx-auto max-w-6xl px-6">
         <Reveal>
           <p className="text-xs uppercase tracking-[0.3em] text-red-400 mb-6">— Farm Plan</p>
@@ -794,7 +794,7 @@ function FarmPlanSection() {
 
 function EconomicsSection() {
   return (
-    <section id="economics" className="py-28 md:py-40">
+    <section id="economics" className="py-14 md:py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid md:grid-cols-12 gap-12 items-center">
           <div className="md:col-span-6">
@@ -878,7 +878,7 @@ function EconomicsSection() {
         </div>
 
         {/* Growth drivers radial */}
-        <div className="mt-24 rounded-3xl bg-gradient-to-br from-primary/[0.04] via-transparent to-ember/[0.06] border border-border p-8 md:p-12">
+        <div className="mt-12 rounded-3xl bg-gradient-to-br from-primary/[0.04] via-transparent to-ember/[0.06] border border-border p-8 md:p-12 md:mt-16">
           <div className="grid md:grid-cols-12 gap-10 items-center">
             <div className="md:col-span-5">
               <Reveal><p className="text-xs uppercase tracking-[0.3em] text-primary mb-4">— One Asset, Many Drivers</p></Reveal>
@@ -916,7 +916,7 @@ function EconomicsSection() {
 
 function OutcomeSection() {
   return (
-    <section className="py-32 md:py-48 bg-black text-white">
+    <section className="py-16 md:py-20 bg-black text-white">
       <div className="mx-auto max-w-4xl px-6 text-center">
         <Reveal>
           <p className="text-xs uppercase tracking-[0.3em] text-red-500 mb-6">
@@ -955,7 +955,7 @@ function ScrollProgress() {
 
 function PillarOutcome() {
   return (
-    <div className="relative border-t border-white/10 py-28 md:py-40 overflow-hidden">
+    <div className="relative border-t border-white/10 py-14 md:py-24 overflow-hidden">
       {/* decorative blurred orb */}
       <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 h-[500px] w-[500px] rounded-full bg-red-600/10 blur-[120px]" />
 

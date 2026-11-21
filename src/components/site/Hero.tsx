@@ -1,8 +1,16 @@
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, ArrowUpRight, HandCoins, LandPlot, Trees } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Calculator,
+  FileCheck2,
+  HandCoins,
+  LandPlot,
+  ShieldCheck,
+  Trees,
+} from "lucide-react";
 import forestPhoto from "@/assets/hero-forest.webp";
-import timberLog from "@/assets/hero-timber-log.webp";
 import urbanFarmerStamp from "@/assets/urban-farmer-stamp.webp";
 import { PlantationTreeRow } from "./HeroScenery";
 
@@ -38,10 +46,17 @@ const points = [
     text: (
       <>
         Land grown, managed and sold by Redwood Biotech, with{" "}
-        <strong className="rwb-keyphrase">proceeds earned by the landowner</strong>.
+        <strong className="rwb-keyphrase">proceeds shared with and earned by the landowner</strong>.
       </>
     ),
   },
+];
+
+// The Urban Farmer card's perks.
+const CARD_PERKS = [
+  { icon: Trees, label: "Premium Sagwan" },
+  { icon: FileCheck2, label: "Land in your name" },
+  { icon: ShieldCheck, label: "Managed by Redwood" },
 ];
 
 /** Load-in delay for an element with the `rwb-rise` class (see styles/hero.css). */
@@ -148,19 +163,6 @@ function Words({ text, start, className }: { text: string; start: number; classN
   );
 }
 
-/** A plus or equals sign built from two short timber logs; each log drops into place on load. */
-function TimberSign({ kind, delay }: { kind: "plus" | "equals"; delay: number }) {
-  return (
-    <span className={`rwb-sign rwb-sign--${kind}`}>
-      <span className="rwb-sign__log" style={{ "--log-delay": `${delay}s` } as CSSProperties} />
-      <span
-        className="rwb-sign__log"
-        style={{ "--log-delay": `${delay + 0.18}s` } as CSSProperties}
-      />
-    </span>
-  );
-}
-
 export function Hero() {
   const sceneRef = usePointerParallax<HTMLDivElement>();
 
@@ -182,41 +184,63 @@ export function Hero() {
           </p>
 
           {/*
-              The Redwood formula as the headline, one term per line, in one face and weight: the
-              plus and equals are timber logs closing their lines, and only the result is in red.
-              Solid colour throughout; "Redwood Biotech" catches one champagne sweep on load.
+              The headline, three lines in one face and weight. Only the brand is in red: "Redwood
+              Biotech" catches one champagne sweep on load and is underlined by a gold swash.
             */}
           <h1
-            aria-label="Farmland plus Genetically Engineered Sagwan equals Redwood Biotech"
-            className="rwb-headline mt-6 font-lobster text-[clamp(42px,6.4cqi,84px)] font-normal leading-[1.08] tracking-[0.005em] text-rwb-ink max-sm:font-abril max-sm:text-[clamp(39px,12.2cqi,52px)] max-sm:leading-[1.08] max-sm:tracking-normal"
-            style={{ "--log": `url(${timberLog})` } as CSSProperties}
+            aria-label="Purchase a farmland of genetically engineered Sagwan from Redwood Biotech"
+            className="rwb-headline mt-6 font-lobster text-[clamp(40px,6cqi,80px)] font-normal leading-[1.1] tracking-[0.005em] text-rwb-ink max-sm:font-abril max-sm:text-[clamp(32px,10cqi,46px)] max-sm:leading-[1.1] max-sm:tracking-normal"
           >
-            <span aria-hidden className="block">
-              <Words text="Farmland" start={0} />
-              <TimberSign kind="plus" delay={0.45} />
+            {/* Three set lines from small tablets up; on phones the words flow as one sentence. */}
+            <span aria-hidden className="sm:block">
+              <Words text="Purchase a Farmland of" start={0} />
             </span>
-            <span aria-hidden className="block">
-              <Words text="Genetically Engineered" start={1} />
-              {/* The last word and its sign wrap together, so the sign never starts a line. */}
-              <span className="whitespace-nowrap">
-                <Words text="Sagwan" start={3} />
-                <TimberSign kind="equals" delay={0.75} />
+            <span aria-hidden className="sm:block">
+              <Words text="Genetically Engineered Sagwan" start={4} />
+            </span>
+            <span aria-hidden className="sm:block">
+              {/* "from" set small, so the brand carries the line. */}
+              <span className="text-[0.6em]">
+                <Words text="from" start={7} />
               </span>
-            </span>
-            <span aria-hidden className="rwb-brand-line block text-rwb-red">
-              <Words text="Redwood Biotech" start={4} />
+              <span className="rwb-brand-line relative text-rwb-red sm:text-[1.08em] sm:inline-block sm:whitespace-nowrap">
+                <Words text="Redwood Biotech" start={8} />
+                <span aria-hidden className="rwb-brand-underline" />
+              </span>
             </span>
           </h1>
 
-          <div className="mt-10 grid flex-1 items-end gap-x-16 gap-y-12 sm:mt-12 min-[1100px]:grid-cols-[minmax(0,1fr)_minmax(0,360px)]">
-            <div className="min-w-0 max-w-[620px]">
+          {/* The species and spacing, with the way into the timber calculator. */}
+          <div className="rwb-rise mt-5 flex flex-wrap items-center gap-x-5 gap-y-3" style={rise(0.5)}>
+            <p className="font-instrument text-[19px] italic leading-snug text-rwb-emerald sm:text-[22px]">
+              (Tectona grandis · planted 10 × 10 feet)
+            </p>
+            <Link
+              to="/timber-calculator"
+              className="rwb-calc-cta group inline-flex h-11 items-center gap-2.5 rounded-full pl-2 pr-5 text-[14.5px] font-semibold text-rwb-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rwb-ink"
+            >
+              <span className="flex size-8 items-center justify-center rounded-full bg-rwb-ink text-rwb-gold-soft transition-transform duration-500 group-hover:-rotate-12">
+                <Calculator size={16} strokeWidth={2} />
+              </span>
+              Timber Calculator
+              <ArrowRight
+                size={15}
+                strokeWidth={2}
+                className="transition-transform duration-300 ease-out group-hover:translate-x-1"
+              />
+            </Link>
+          </div>
+
+          <div className="mt-7 grid flex-1 items-end gap-x-16 gap-y-12 sm:mt-8 min-[1100px]:grid-cols-[minmax(0,1fr)_minmax(0,360px)]">
+            {/* Starts right under the species line (not pushed down to the card's baseline). */}
+            <div className="min-w-0 max-w-[660px] self-start">
               <p
-                className="rwb-rise text-[21px] font-semibold leading-[1.3] tracking-[-0.02em] text-rwb-ink sm:text-[24px]"
+                className="rwb-rise text-[28px] font-semibold leading-[1.14] tracking-[-0.025em] text-rwb-ink sm:text-[36px] min-[1100px]:text-[40px]"
                 style={rise(0.6)}
               >
                 Growth of land, growth of timber,
                 <br className="hidden sm:inline" /> is actually{" "}
-                <span className="whitespace-nowrap font-instrument text-[1.14em] font-normal italic tracking-normal text-rwb-emerald">
+                <span className="whitespace-nowrap font-instrument text-[1.16em] font-normal italic tracking-normal text-rwb-emerald">
                   growth of yours.
                 </span>
               </p>
@@ -333,7 +357,7 @@ function ForestSide() {
 }
 
 /**
- * The Urban Farmer campaign: an ivory card over the forest. The whole card is one link; it leans
+ * The Urban Farmer campaign: a frosted-glass card over the forest. The whole card is one link; it leans
  * slightly towards the pointer with a soft glare.
  */
 function UrbanFarmerCard() {
@@ -363,12 +387,29 @@ function UrbanFarmerCard() {
           </span>
         </span>
 
-        <span className="relative mt-6 block font-instrument text-[30px] leading-[1.1] tracking-[-0.01em] text-rwb-ink">
-          Biotech grows the forest.{" "}
-          <em className="text-rwb-emerald">The forest grows your business.</em>
+        <span className="relative mt-5 block font-instrument text-[30px] leading-[1.1] tracking-[-0.01em] text-rwb-ink">
+          Invest in Sagwan agroforestry.{" "}
+          <em className="text-rwb-emerald">Watch your wealth grow, ring by ring.</em>
+        </span>
+        <span className="relative mt-3 block text-[14.5px] leading-relaxed text-rwb-ink/75">
+          Join the revolutionary journey by{" "}
+          <b className="whitespace-nowrap font-semibold text-rwb-red">Redwood Biotech</b> and become an Urban Farmer.
         </span>
 
-        <span className="relative mt-7 flex h-[50px] items-center justify-between gap-3 rounded-[10px] bg-rwb-ink pl-5 pr-4 text-[15px] font-semibold text-white transition-colors duration-300 group-hover:bg-rwb-emerald">
+        {/* What an Urban Farmer gets, at a glance. */}
+        <span className="relative mt-4 flex flex-wrap gap-1.5">
+          {CARD_PERKS.map((p) => (
+            <span
+              key={p.label}
+              className="inline-flex items-center gap-1.5 rounded-full bg-white/55 px-2.5 py-1 text-[12px] font-semibold text-rwb-ink shadow-[inset_0_0_0_1px_rgba(16,62,48,0.1)]"
+            >
+              <p.icon size={13} strokeWidth={2} className="text-rwb-emerald" />
+              {p.label}
+            </span>
+          ))}
+        </span>
+
+        <span className="relative mt-5 flex h-[50px] items-center justify-between gap-3 rounded-[10px] bg-rwb-ink pl-5 pr-4 text-[15px] font-semibold text-white transition-colors duration-300 group-hover:bg-rwb-emerald">
           Become The Urban Farmer
           <ArrowRight
             size={17}

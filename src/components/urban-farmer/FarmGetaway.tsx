@@ -55,7 +55,7 @@ export function FarmGetaway() {
   const [active, setActive] = useState(0);
 
   return (
-    <section className="relative overflow-hidden bg-uf-sage py-24 text-uf-forest sm:py-32">
+    <section className="relative overflow-hidden bg-uf-sage py-14 text-uf-forest sm:py-20">
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-0 h-[30rem] w-[60rem] -translate-x-1/2 rounded-full bg-uf-sun/20 blur-3xl"

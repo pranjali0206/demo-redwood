@@ -91,7 +91,7 @@ function AgroforestryPage() {
   return (
     <SiteLayout>
       {/* SECTION 1 — HERO */}
-      <section className="bg-green-900 px-6 py-32 md:py-40">
+      <section className="bg-green-900 px-6 py-16 md:py-24">
         <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
           <Reveal>
             <p className="text-xs font-medium uppercase tracking-widest text-amber-300">
@@ -113,7 +113,7 @@ function AgroforestryPage() {
       </section>
 
       {/* SECTION 2 — WHAT IS BIOTECHNOLOGY */}
-      <section className="bg-white px-6 py-24 md:py-32">
+      <section className="bg-white px-6 py-14 md:py-24">
         <div className="mx-auto grid max-w-7xl gap-16 md:grid-cols-2 md:gap-20">
           <Reveal>
             <div>
@@ -165,7 +165,7 @@ function AgroforestryPage() {
       </section>
 
       {/* SECTION 3 — REAL-WORLD EXAMPLES */}
-      <section className="bg-stone-100 px-6 py-24 md:py-32">
+      <section className="bg-stone-100 px-6 py-14 md:py-24">
         <div className="mx-auto max-w-6xl">
           <Reveal>
             <h2 className="text-center font-serif text-5xl text-green-900">
@@ -208,7 +208,7 @@ function AgroforestryPage() {
       </section>
 
       {/* SECTION 4 — THE BRIDGE */}
-      <section className="px-6 py-32 md:py-40" style={{ backgroundColor: "#0a2818" }}>
+      <section className="px-6 py-16 md:py-24" style={{ backgroundColor: "#0a2818" }}>
         <div className="mx-auto max-w-4xl text-center">
           <Reveal>
             <p className="text-xs font-medium uppercase tracking-widest text-amber-400">
@@ -245,7 +245,7 @@ function AgroforestryPage() {
       </section>
 
       {/* SECTION 5 — HI-TECH SAGWAN TEASER */}
-      <section className="bg-white px-6 py-24 md:py-32">
+      <section className="bg-white px-6 py-14 md:py-24">
         <div className="mx-auto max-w-4xl text-center">
           <Reveal>
             <p className="text-xs font-medium uppercase tracking-widest text-green-700">
@@ -313,7 +313,7 @@ function AgroforestryPage() {
       </section>
 
       {/* SECTION 6 — FINAL CTA */}
-      <section className="bg-stone-100 px-6 py-24">
+      <section className="bg-stone-100 px-6 py-14 md:py-20">
         <div className="mx-auto max-w-3xl text-center">
           <Reveal>
             <h2 className="font-serif text-4xl text-green-900">

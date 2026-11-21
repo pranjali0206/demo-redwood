@@ -46,7 +46,6 @@ export function Navbar({
         backdropFilter: solid ? "blur(8px)" : "blur(0px)",
       }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      // rwb-site-header: the city section hides the bar while it is pinned (styles/city.css).
       className="rwb-site-header fixed top-0 inset-x-0 z-50"
     >
       <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between gap-3 px-4 font-manrope sm:px-6 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:px-10">

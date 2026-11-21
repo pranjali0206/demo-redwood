@@ -8,7 +8,7 @@ import { FarmGetaway } from "@/components/urban-farmer/FarmGetaway";
 import { JoinRevolution } from "@/components/urban-farmer/JoinRevolution";
 
 const DESCRIPTION =
-  "Farming is no longer restricted to rurals. Own registered land, grow Genetically Engineered Hi-Tech Sagwan managed by Redwood Biotech, enjoy your own farm getaway — and get your Urban Farmer digital certificate.";
+  "Own farmland. Grow premium Sagwan. Invest in managed Sagwan agroforestry with Redwood Biotech: registered land in your name, Genetically Engineered Hi-Tech Sagwan planted on it, 12 years of expert care, and your own farm getaway.";
 
 export const Route = createFileRoute("/urban-farmer")({
   head: () => ({

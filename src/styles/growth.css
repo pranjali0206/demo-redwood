@@ -1,0 +1,662 @@
+/*
+ * "From one seed to premium timber" — the growth film on the About page
+ * (components/about/GrowthFilm.tsx). The film's cream ground is the page's own; feathered edges
+ * let it sit in the page rather than in a box. Below it three boxes (Lab work, Field work, Sold)
+ * light up with the film.
+ */
+
+.rwg {
+  --rwg-green: #175f45;
+  --rwg-ink: #103e30;
+  --rwg-gold: #b08a3e;
+  --rwg-muted: var(--color-muted-foreground, #6b6b6b);
+}
+
+/* The film -------------------------------------------------------------------------------------- */
+
+.rwg-film {
+  position: relative;
+  max-width: 1040px;
+  aspect-ratio: 16 / 9;
+  margin: clamp(28px, 5vh, 52px) auto 0;
+}
+.rwg-film__media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 8%, #000 91%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 8%, #000 91%, transparent 100%);
+  mask-composite: intersect;
+}
+.rwg-film__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #fbf6ee;
+  filter: saturate(0.96) sepia(0.05);
+}
+/* Each new take fades softly back in. */
+.rwg-film.is-rewind .rwg-film__media {
+  animation: rwg-rewind 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Overlays sit in the film's solid area, clear of the feathered edges. */
+.rwg-badge {
+  position: absolute;
+  z-index: 2;
+  top: 10%;
+  left: 8%;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(10px) saturate(1.4);
+  backdrop-filter: blur(10px) saturate(1.4);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8),
+    0 8px 20px -12px rgba(16, 62, 48, 0.5);
+  color: var(--rwg-ink);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.rwg-badge i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--rwg-green);
+  animation: rwg-ping 1.8s ease-out infinite;
+}
+.rwg.is-sold .rwg-badge i {
+  background: var(--rwg-gold);
+}
+.rwg[data-paused="true"] .rwg-badge i {
+  animation: none;
+  opacity: 0.5;
+}
+.rwg-toggle {
+  position: absolute;
+  z-index: 2;
+  top: 9.5%;
+  right: 8%;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.75);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--rwg-ink);
+  box-shadow: 0 8px 20px -12px rgba(16, 62, 48, 0.6);
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.rwg-toggle:hover {
+  transform: scale(1.08);
+}
+.rwg-toggle:focus-visible {
+  outline: 2px solid var(--rwg-green);
+  outline-offset: 3px;
+}
+.rwg-toggle svg {
+  width: 15px;
+  height: 15px;
+}
+.rwg-toggle__play,
+.rwg[data-paused="true"] .rwg-toggle__pause {
+  display: none;
+}
+.rwg[data-paused="true"] .rwg-toggle__play {
+  display: block;
+}
+.rwg-progress {
+  position: absolute;
+  z-index: 2;
+  left: 8%;
+  right: 8%;
+  bottom: 8%;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(16, 62, 48, 0.12);
+  overflow: hidden;
+}
+.rwg-progress i {
+  display: block;
+  height: 100%;
+  background: var(--rwg-green);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+.rwg.is-sold .rwg-progress i {
+  background: var(--rwg-gold);
+}
+
+/* The sold stamp over the grown plantation, as the film holds on it. */
+.rwg-film__sold {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 44%;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 12px 28px 11px;
+  border-radius: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  background: linear-gradient(135deg, rgba(196, 154, 70, 0.9), rgba(150, 112, 40, 0.88));
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  box-shadow: 0 24px 50px -20px rgba(60, 40, 8, 0.7);
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(-6deg) scale(1.5);
+  transition:
+    opacity 0.35s ease,
+    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+.rwg-film__sold b {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: clamp(26px, 4vw, 44px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.rwg-film__sold small {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.92;
+}
+.rwg.is-sold .rwg-film__sold {
+  opacity: 1;
+  transform: translate(-50%, -50%) rotate(-6deg) scale(1);
+}
+
+/* The journey boxes ----------------------------------------------------------------------------- */
+
+.rwg-boxes {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) minmax(0, 2.1fr);
+  gap: 16px;
+  max-width: 1100px;
+  margin: clamp(22px, 4vh, 36px) auto 0;
+}
+.rwg-box {
+  position: relative;
+  overflow: hidden;
+  padding: 20px 20px 22px;
+  border-radius: 22px;
+  border: 1px solid var(--color-border, rgba(16, 62, 48, 0.12));
+  background: var(--color-card, #fff);
+  transition:
+    border-color 0.5s ease,
+    box-shadow 0.5s ease,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* A thin accent along the top that brightens while the box is live. */
+.rwg-box::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--rwg-green), transparent);
+  opacity: 0.25;
+  transition: opacity 0.5s ease;
+}
+.rwg-box--sold::before {
+  background: linear-gradient(90deg, transparent, var(--rwg-gold), transparent);
+}
+.rwg-box.is-on {
+  border-color: rgba(23, 95, 69, 0.4);
+  box-shadow:
+    0 24px 50px -30px rgba(16, 62, 48, 0.45),
+    0 0 0 4px rgba(23, 95, 69, 0.07);
+  transform: translateY(-3px);
+}
+.rwg-box--sold.is-on {
+  border-color: rgba(176, 138, 62, 0.55);
+  box-shadow:
+    0 24px 50px -30px rgba(90, 64, 16, 0.5),
+    0 0 0 4px rgba(176, 138, 62, 0.12);
+}
+.rwg-box.is-on::before {
+  opacity: 1;
+}
+
+.rwg-box__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.rwg-box__icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(23, 95, 69, 0.1);
+  color: var(--rwg-green);
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.rwg-box__icon svg {
+  width: 20px;
+  height: 20px;
+}
+.rwg-box--sold .rwg-box__icon {
+  background: rgba(176, 138, 62, 0.14);
+  color: var(--rwg-gold);
+}
+.rwg-box.is-on .rwg-box__icon {
+  transform: rotate(-8deg) scale(1.06);
+}
+.rwg-box__kicker {
+  display: block;
+  color: var(--rwg-muted);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.rwg-box__label {
+  display: block;
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 21px;
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--rwg-ink);
+}
+.rwg-box__where {
+  display: block;
+  color: var(--rwg-muted);
+  font-size: 12.5px;
+}
+.rwg-box__note {
+  display: none;
+}
+
+/* Stages inside a box, joined by a track that fills as the film passes through them. */
+.rwg-box__steps {
+  position: relative;
+  margin-top: 20px;
+}
+.rwg-box__track {
+  position: absolute;
+  top: 17px;
+  left: calc(50% / var(--n));
+  right: calc(50% / var(--n));
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(23, 95, 69, 0.14);
+  overflow: hidden;
+}
+.rwg-box__track i {
+  display: block;
+  height: 100%;
+  background: var(--rwg-green);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+.rwg-stages {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rwg-stages button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+.rwg-stages button:focus-visible {
+  outline: 2px solid var(--rwg-green);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+.rwg-stages__dot {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-card, #fff);
+  border: 2px solid rgba(23, 95, 69, 0.22);
+  color: rgba(23, 95, 69, 0.55);
+  font-size: 13px;
+  font-weight: 700;
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    color 0.4s ease,
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.4s ease;
+}
+.rwg-stages b {
+  font-family: var(--font-serif, Georgia, serif);
+  font-size: 16.5px;
+  font-weight: 500;
+  color: rgba(16, 62, 48, 0.55);
+  transition: color 0.4s ease;
+}
+.rwg-stages__text {
+  max-width: 22ch;
+  color: var(--rwg-muted);
+  font-size: 12.5px;
+  line-height: 1.45;
+  opacity: 0.55;
+  transition: opacity 0.4s ease;
+}
+.rwg-stages li.is-done .rwg-stages__dot {
+  border-color: var(--rwg-green);
+  color: var(--rwg-green);
+}
+.rwg-stages li.is-on .rwg-stages__dot {
+  background: var(--rwg-green);
+  border-color: var(--rwg-green);
+  color: #fff;
+  transform: scale(1.1);
+  box-shadow: 0 0 0 6px rgba(23, 95, 69, 0.14);
+}
+.rwg-stages li.is-on b,
+.rwg-stages li.is-done b {
+  color: var(--rwg-ink);
+}
+.rwg-stages li.is-on .rwg-stages__text {
+  opacity: 1;
+}
+.rwg-stages button:hover b {
+  color: var(--rwg-green);
+}
+
+/* Sold: harvest, sale and the share of proceeds, with a stamp and rising coins when live. */
+.rwg-sale {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.rwg-sale li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--rwg-muted);
+  font-size: 14px;
+  line-height: 1.3;
+  opacity: 0.7;
+  transition:
+    opacity 0.5s ease,
+    color 0.5s ease,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.rwg-box--sold.is-on .rwg-sale li {
+  color: var(--rwg-ink);
+  opacity: 1;
+  transform: translateX(4px);
+}
+.rwg-box--sold.is-on .rwg-sale li:nth-child(2) {
+  transition-delay: 0.12s;
+}
+.rwg-box--sold.is-on .rwg-sale li:nth-child(3) {
+  transition-delay: 0.24s;
+  font-weight: 700;
+}
+.rwg-sale__icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(176, 138, 62, 0.13);
+  color: var(--rwg-gold);
+}
+.rwg-sale__icon svg {
+  width: 14px;
+  height: 14px;
+}
+.rwg-box__stamp {
+  position: absolute;
+  top: 18px;
+  right: 16px;
+  padding: 3px 9px;
+  border: 2px solid var(--rwg-gold);
+  border-radius: 6px;
+  color: var(--rwg-gold);
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: rotate(-10deg) scale(1.7);
+  transition:
+    opacity 0.3s ease 0.3s,
+    transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s;
+}
+.rwg-box--sold.is-on .rwg-box__stamp {
+  opacity: 1;
+  transform: rotate(-10deg) scale(1);
+}
+.rwg-coins i {
+  position: absolute;
+  bottom: 10px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f3d98c, #c49a46 70%);
+  box-shadow: 0 2px 6px rgba(90, 64, 16, 0.35);
+  color: #6b4d12;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 800;
+  opacity: 0;
+}
+.rwg-coins i:nth-child(1) {
+  right: 22px;
+}
+.rwg-coins i:nth-child(2) {
+  right: 48px;
+}
+.rwg-coins i:nth-child(3) {
+  right: 74px;
+}
+.rwg-box--sold.is-on .rwg-coins i {
+  animation: rwg-coin 2.2s ease-out infinite;
+}
+.rwg-box--sold.is-on .rwg-coins i:nth-child(2) {
+  animation-delay: 0.45s;
+}
+.rwg-box--sold.is-on .rwg-coins i:nth-child(3) {
+  animation-delay: 0.9s;
+}
+
+/* Tablets: Lab and Field side by side, Sold across the full width below. */
+@media (max-width: 1023px) {
+  .rwg-boxes {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  }
+  .rwg-box--sold {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 12px 28px;
+  }
+  .rwg-sale {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    padding-right: 84px;
+  }
+  .rwg-coins {
+    display: none;
+  }
+}
+
+/* Phones ---------------------------------------------------------------------------------------- */
+
+@media (max-width: 639px) {
+  .rwg-film {
+    margin-inline: -20px;
+  }
+  .rwg-film__media {
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0, #000 4%, #000 96%, transparent 100%),
+      linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+    mask-image:
+      linear-gradient(to right, transparent 0, #000 4%, #000 96%, transparent 100%),
+      linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+  }
+  .rwg-badge {
+    top: 9%;
+    left: 6%;
+    padding: 5px 9px 5px 8px;
+    font-size: 9.5px;
+  }
+  .rwg-toggle {
+    top: 7.5%;
+    right: 6%;
+    width: 30px;
+    height: 30px;
+  }
+  .rwg-toggle svg {
+    width: 13px;
+    height: 13px;
+  }
+  .rwg-progress {
+    left: 6%;
+    right: 6%;
+    bottom: 7%;
+  }
+  .rwg-film__sold {
+    padding: 8px 18px 7px;
+  }
+  .rwg-film__sold small {
+    font-size: 8.5px;
+  }
+
+  .rwg-boxes {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .rwg-box {
+    padding: 16px 16px 18px;
+    border-radius: 18px;
+  }
+  .rwg-box--sold {
+    display: block;
+  }
+  .rwg-box__note {
+    display: block;
+    margin: 10px 0 0;
+    color: var(--rwg-muted);
+    font-size: 13.5px;
+    line-height: 1.45;
+  }
+  .rwg-box__steps {
+    margin-top: 14px;
+  }
+  .rwg-box__track {
+    top: 14px;
+  }
+  .rwg-stages__dot {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+  }
+  .rwg-stages b {
+    font-size: 13.5px;
+    line-height: 1.2;
+  }
+  .rwg-stages__text {
+    display: none;
+  }
+  .rwg-sale {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 14px;
+    padding-right: 0;
+  }
+  .rwg-coins {
+    display: block;
+  }
+}
+
+@keyframes rwg-rewind {
+  from {
+    opacity: 0.15;
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+  }
+}
+@keyframes rwg-ping {
+  0% {
+    box-shadow: 0 0 0 0 rgba(23, 95, 69, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 7px rgba(23, 95, 69, 0);
+  }
+}
+@keyframes rwg-coin {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.6);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-18px) scale(0.9) rotate(20deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rwg-badge i {
+    animation: none;
+  }
+  .rwg-toggle,
+  .rwg-coins {
+    display: none;
+  }
+  .rwg-box,
+  .rwg-box__icon,
+  .rwg-box__stamp,
+  .rwg-sale li,
+  .rwg-film__sold,
+  .rwg-stages__dot,
+  .rwg-stages b,
+  .rwg-stages__text {
+    transition: none;
+  }
+}

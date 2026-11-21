@@ -139,7 +139,7 @@ export function About() {
         </div>
 
         {/* Why choose */}
-        <div className="mt-28">
+        <div className="mt-14 md:mt-16">
         <Reveal className="max-w-2xl">
         <span className="text-xs uppercase tracking-[0.4em] text-[color:var(--brand-red)] font-semibold">
           Why Choose Redwood
@@ -220,7 +220,7 @@ export function About() {
           </motion.div>
         </div>
         {/* Closing manifesto */}
-        <Reveal delay={0.2} className="mt-24 text-center">
+        <Reveal delay={0.2} className="mt-12 text-center md:mt-16">
           <p
             className="font-serif text-2xl sm:text-4xl leading-snug max-w-4xl mx-auto"
             style={{ color: "var(--forest-950)" }}

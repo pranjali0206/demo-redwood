@@ -328,7 +328,7 @@ function ModelPage() {
       </section>
 
       {/* ── INTRO ──────────────────────────────────────────────────────────── */}
-      <section className="relative px-6 py-28 sm:py-32">
+      <section className="relative px-6 py-14 sm:py-20">
         <div className="mx-auto max-w-4xl">
           <motion.p
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
@@ -357,7 +357,7 @@ function ModelPage() {
       </section>
 
       {/* ── DUAL ASSET SHOWCASE ────────────────────────────────────────────── */}
-      <section className="relative bg-[oklch(0.18_0.03_150/0.55)] backdrop-blur-sm px-6 py-32">
+      <section className="relative bg-[oklch(0.18_0.03_150/0.55)] backdrop-blur-sm px-6 py-16 md:py-24">
         <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-2">
           {[
             { img: forestImg,  tag: "Asset One", title: "Land",        text: "Strategically located parcels with strong appreciation fundamentals." },
@@ -384,7 +384,7 @@ function ModelPage() {
       </section>
 
       {/* ── HIGHLIGHTS GRID ────────────────────────────────────────────────── */}
-      <section className="relative px-6 py-32">
+      <section className="relative px-6 py-16 md:py-24">
         <div className="mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -418,7 +418,7 @@ function ModelPage() {
       </section>
 
 {/* ── PREMIUM CTA ───────────────────────────────────────────────────── */}
-<section className="relative overflow-hidden px-6 py-36">
+<section className="relative overflow-hidden px-6 py-16 md:py-24">
 
   {/* ── Premium Cinematic Background ─────────────────────────────── */}
   <div className="absolute inset-0 z-0 overflow-hidden">

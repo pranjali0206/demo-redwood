@@ -8,7 +8,7 @@ import mixed2 from "@/assets/teak-mixed-2.webp";
 import mixed3 from "@/assets/teak-mixed-3.webp";
 import mixed4 from "@/assets/teak-mixed-4.webp";
 
-/** 3.2 — Why Biotech Teak: normal teak and Redwood tissue-culture teak, point by point. */
+/** 3.2 — "Sagwan Is the King of Timber": normal teak and Redwood tissue-culture teak, point by point. */
 export function BiotechTeak() {
   const ref = useRef<HTMLElement>(null);
   const [view, setView] = useState<"normal" | "redwood">("redwood");
@@ -35,14 +35,16 @@ export function BiotechTeak() {
   });
 
   return (
-    <section ref={ref} className="rwh rwh-sec rwh-bg-0" aria-labelledby="teak-title">
+    <section ref={ref} className="rwh rwh-sec rwh-sec--end-tight rwh-bg-0" aria-labelledby="teak-title">
       <div className="rwh-wrap">
         <header className="rwh-head">
           <p className="rwh-eyebrow" data-rv="up">
             THE TREE
           </p>
           <Headline id="teak-title">
-            Why <em>Biotech Teak</em>
+            Sagwan Is the King of Timber.
+            <br />
+            <em>Timber Is the Future of Agriculture.</em>
           </Headline>
           <p className="rwh-lead" data-rv="up">
             Not all teak is the same. Redwood plants tissue-culture teak, raised in a lab from

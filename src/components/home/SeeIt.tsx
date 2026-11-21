@@ -21,7 +21,7 @@ export function SeeIt() {
   const photos = SITE_PHOTOS.filter((p) => p.src);
 
   return (
-    <section ref={ref} className="rwh rwh-sec rwh-bg-0" aria-labelledby="see-title">
+    <section ref={ref} className="rwh rwh-sec rwh-sec--end-tight rwh-bg-0" aria-labelledby="see-title">
       <div className="rwh-wrap">
         <header className="rwh-head">
           <p className="rwh-eyebrow" data-rv="up">

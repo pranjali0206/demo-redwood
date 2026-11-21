@@ -8,7 +8,7 @@ export function LabSection() {
   useReveal(ref);
 
   return (
-    <section ref={ref} className="rwh rwh-sec rwh-bg-50" aria-labelledby="lab-title">
+    <section ref={ref} className="rwh rwh-sec rwh-sec--start-tight rwh-bg-50" aria-labelledby="lab-title">
       <div className="rwh-wrap">
         <div className="rwh-lab" data-rv="up">
           <Media

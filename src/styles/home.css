@@ -55,7 +55,7 @@
 }
 /* Section rhythm: enough air to separate the sections, not so much that they read as gaps. */
 .rwh-sec {
-  padding: 84px 0;
+  padding: 64px 0;
 }
 .rwh-bg-0 {
   background: linear-gradient(
@@ -115,7 +115,7 @@
   text-wrap: pretty;
 }
 .rwh-head {
-  margin-bottom: 56px;
+  margin-bottom: 40px;
 }
 .rwh-head--center {
   text-align: center;
@@ -626,7 +626,7 @@
   text-underline-offset: 3px;
 }
 
-/* 3.2 Why Biotech Teak ------------------------------------------------------------------------ */
+/* 3.2 Sagwan Is the King of Timber ----------------------------------------------------------- */
 
 .rwh-strip {
   max-width: 960px;
@@ -796,7 +796,7 @@
 }
 .rwh-closing {
   max-width: 640px;
-  margin: 48px auto 0;
+  margin: 40px auto 0;
   color: var(--ink-900);
   font-family: var(--font-display);
   font-style: normal;
@@ -1035,96 +1035,15 @@
   font-size: 15.5px;
   line-height: 1.6;
 }
-.rwh-tl {
-  margin-top: 64px;
+
+/* The section that ends on its closing line ("Better plants at the start…") keeps almost no
+   space after it. */
+.rwh-sec.rwh-sec--end-tight {
+  padding-bottom: 20px;
 }
-.rwh-tl__track {
-  position: relative;
-  height: 86px;
-  margin: 0 10px;
-}
-.rwh-tl__axis {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 22px;
-  height: 1px;
-  background: rgba(23, 32, 27, 0.25);
-}
-.rwh-tl__tick {
-  position: absolute;
-  top: 16px;
-  width: 1px;
-  height: 13px;
-  background: rgba(23, 32, 27, 0.35);
-}
-.rwh-tl__tick .rwh-tl__label {
-  position: absolute;
-  bottom: 18px;
-  left: 0;
-  transform: translateX(-50%);
-  white-space: nowrap;
-}
-.rwh-tl__tick.is-start .rwh-tl__label {
-  transform: none;
-}
-.rwh-tl__tick.is-end .rwh-tl__label {
-  transform: translateX(-100%);
-}
-.rwh-tl__label {
-  color: var(--ink-500);
-  font-size: 11px;
-  line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.rwh-tl__span {
-  position: absolute;
-  left: 0;
-  width: 82%;
-  height: 2px;
-  margin-top: 14px;
-  border-radius: 2px;
-  background: rgba(14, 59, 46, 0.35);
-}
-.rwh-tl__dot {
-  position: absolute;
-  left: -4px;
-  top: -3px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--rwb-green);
-}
-.rwh-tl__label--span {
-  position: absolute;
-  left: 14px;
-  top: -6px;
-  padding-right: 8px;
-  background: var(--paper-50);
-}
-.rwh-tl__sale {
-  position: absolute;
-  left: 100%;
-  margin-top: 14px;
-}
-.rwh-tl__label--sale {
-  position: absolute;
-  right: 12px;
-  top: -6px;
-  padding-left: 8px;
-  background: var(--paper-50);
-}
-.rwh-part {
-  margin: 32px 0 0;
-  color: var(--ink-700);
-  font-size: 16px;
-  text-align: center;
-}
-.rwh-part__k {
-  color: var(--ink-900);
-  font-weight: 700;
+/* A section that follows straight on from the one above (the Redwood Lab after See It). */
+.rwh-sec.rwh-sec--start-tight {
+  padding-top: 24px;
 }
 
 /* 3.4 See It for Yourself --------------------------------------------------------------------- */
@@ -1368,7 +1287,6 @@
 }
 .rwh-lab {
   position: relative;
-  margin-top: 80px;
 }
 .rwh-lab .rwh-empty {
   align-items: flex-end;
@@ -1605,7 +1523,7 @@
 /* 3.9 Footer ---------------------------------------------------------------------------------- */
 
 .rwh-footer {
-  padding-top: 88px;
+  padding-top: 64px;
   background: var(--paper-100);
 }
 .rwh-footer__grid {
@@ -1745,7 +1663,7 @@ html.rwc-nav-hidden .rwh-sticky {
     padding: 0 40px;
   }
   .rwh-sec {
-    padding: 72px 0;
+    padding: 56px 0;
   }
   .rwh-book__grid {
     grid-template-columns: 1fr;
@@ -1782,10 +1700,10 @@ html.rwc-nav-hidden .rwh-sticky {
     padding: 0 20px;
   }
   .rwh-sec {
-    padding: 52px 0;
+    padding: 44px 0;
   }
   .rwh-head {
-    margin-bottom: 32px;
+    margin-bottom: 24px;
   }
   .rwh-book__card {
     padding: 24px 20px;
@@ -1862,9 +1780,6 @@ html.rwc-nav-hidden .rwh-sticky {
   }
   .rwh-svc__body {
     font-size: 14.5px;
-  }
-  .rwh-tl {
-    display: none;
   }
 
   /* Phones: a tidy 2×2 grid of portrait tiles, no sideways scrolling. The captions sit under
@@ -1984,9 +1899,6 @@ html.rwc-nav-hidden .rwh-sticky {
   }
   .rwh-steps__note {
     text-align: left;
-  }
-  .rwh-lab {
-    margin-top: 56px;
   }
   .rwh-lab .rwh-empty {
     align-items: center;

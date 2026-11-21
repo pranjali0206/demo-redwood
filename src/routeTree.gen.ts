@@ -21,6 +21,7 @@ import { Route as ModelRouteImport } from './routes/model'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as TimberCalculatorRouteImport } from './routes/timber-calculator'
 import { Route as UrbanFarmerRouteImport } from './routes/urban-farmer'
 
 const IndexRoute = IndexRouteImport.update({
@@ -83,6 +84,11 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TimberCalculatorRoute = TimberCalculatorRouteImport.update({
+  id: '/timber-calculator',
+  path: '/timber-calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UrbanFarmerRoute = UrbanFarmerRouteImport.update({
   id: '/urban-farmer',
   path: '/urban-farmer',
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/timber-calculator': typeof TimberCalculatorRoute
   '/urban-farmer': typeof UrbanFarmerRoute
 }
 export interface FileRoutesByTo {
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/timber-calculator': typeof TimberCalculatorRoute
   '/urban-farmer': typeof UrbanFarmerRoute
 }
 export interface FileRoutesById {
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/timber-calculator': typeof TimberCalculatorRoute
   '/urban-farmer': typeof UrbanFarmerRoute
 }
 export interface FileRouteTypes {
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/sitemap.xml'
     | '/terms'
+    | '/timber-calculator'
     | '/urban-farmer'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/sitemap.xml'
     | '/terms'
+    | '/timber-calculator'
     | '/urban-farmer'
   id:
     | '__root__'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/sitemap.xml'
     | '/terms'
+    | '/timber-calculator'
     | '/urban-farmer'
   fileRoutesById: FileRoutesById
 }
@@ -196,6 +208,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
+  TimberCalculatorRoute: typeof TimberCalculatorRoute
   UrbanFarmerRoute: typeof UrbanFarmerRoute
 }
 
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/timber-calculator': {
+      id: '/timber-calculator'
+      path: '/timber-calculator'
+      fullPath: '/timber-calculator'
+      preLoaderRoute: typeof TimberCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/urban-farmer': {
       id: '/urban-farmer'
       path: '/urban-farmer'
@@ -308,6 +328,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
+  TimberCalculatorRoute: TimberCalculatorRoute,
   UrbanFarmerRoute: UrbanFarmerRoute,
 }
 export const routeTree = rootRouteImport

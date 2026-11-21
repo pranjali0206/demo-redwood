@@ -8,11 +8,12 @@ import {
 import { gsap, ScrollTrigger, SplitText, prepDraw, token } from "./gsapSetup";
 import { RedwoodMark } from "./RedwoodMark";
 import { RwButton } from "./RwButton";
-import { BOOK_HREF, RINGS, TRIANGLE_FONTS_ITALIC } from "./constants";
+import { BOOK_HREF, TRIANGLE_FONTS_ITALIC } from "./constants";
 import greeneryImg from "@/assets/sapling-new.webp";
 import growthImg from "@/assets/plantation-field.webp";
 import logsImg from "@/assets/triangle-logs.webp";
 import logBeam from "@/assets/triangle-log-beam.webp";
+import woodImg from "@/assets/wood-texture.webp";
 import ownLandVideo from "@/assets/triangle-own-land.mp4";
 import ownLandPoster from "@/assets/triangle-own-land.webp";
 import weGrowVideo from "@/assets/triangle-we-grow.mp4";
@@ -34,18 +35,6 @@ const DESK: Geo = {
   ],
   tail: 1,
 };
-/** Phones: the corner tiles are 42% of the stage wide (see .rw-mcorner .rw-tile). */
-const MOB: Geo = {
-  w: 340,
-  h: 380,
-  pts: [
-    { x: 170, y: 66 },
-    { x: 268, y: 300 },
-    { x: 72, y: 300 },
-  ],
-  tail: 0.6,
-};
-
 /** Seconds for the light's first lap (it draws the triangle), then for each calm lap after. */
 const FIRST_LAP = 3;
 const LAP = 6;
@@ -68,7 +57,6 @@ const edgesOf = ({ pts: [a, b, c] }: Geo): [Pt, Pt][] => [
 
 const CORNERS: {
   key: string;
-  short: string;
   title: string;
   line: string;
   tag: ReactNode;
@@ -77,8 +65,7 @@ const CORNERS: {
 }[] = [
   {
     key: "Ownership",
-    short: "Own the Land",
-    title: "You Own the Land",
+    title: "Invest in Redwood Estates",
     line: "A registered plot in your name, from day one.",
     tag: (
       <>
@@ -89,8 +76,7 @@ const CORNERS: {
   },
   {
     key: "Growth",
-    short: "We Grow 12 Years",
-    title: "We Grow for 12 Years",
+    title: "12 Years of Cultivating Premium Sagwan",
     line: "We plant teak, irrigate and tend it, season after season.",
     tag: (
       <>
@@ -101,8 +87,7 @@ const CORNERS: {
   },
   {
     key: "Returns",
-    short: "You Earn Twice",
-    title: "You Earn Twice",
+    title: "Invest, Grow & Earn with Redwood Biotech",
     line: "Your share of the timber at harvest — plus the land, still in your name.",
     tag: (
       <>
@@ -115,7 +100,7 @@ const CORNERS: {
 ];
 
 const TRIANGLE_LABEL =
-  "Diagram of the Redwood model as a triangle. Ownership: you own the land. Growth: we grow teak for twelve years. Returns: you earn twice, from the timber and from the land.";
+  "Diagram of the Redwood model as a triangle. Ownership: invest in Redwood Estates. Growth: twelve years of cultivating premium Sagwan. Returns: invest, grow and earn with Redwood Biotech.";
 
 /* Component ----------------------------------------------------------------------------------- */
 
@@ -215,32 +200,9 @@ export function TriangleSection() {
         </div>
       </div>
 
-      {/* Mobile ------------------------------------------------------------------------------- */}
+      {/* Mobile: no triangle, just the three steps on a rail. ---------------------------------- */}
       <div className="rw-mob">
         <Intro mobile />
-        <div className="rw-mtri rw-anim">
-          <Photo kind="greenery" src={greeneryImg} />
-          <WoodBeams geo={MOB} />
-          <TriangleSvg geo={MOB} uid="rwm" mark />
-          {CORNERS.map((c, k) => (
-            <div
-              key={c.key}
-              className="rw-mcorner"
-              data-i={k + 1}
-              style={{ left: pct(MOB.pts[k].x, MOB.w), top: pct(MOB.pts[k].y, MOB.h) }}
-            >
-              <div className="rw-tile rw-node">
-                <span className="rw-node__num" aria-hidden="true">
-                  <span className="rw-tile__glow" />
-                  <span className="rw-tile__ring" />0{k + 1}
-                </span>
-                <p className="rw-mtile__title" aria-hidden="true">
-                  {c.short}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
         <div className="rw-steps">
           <span className="rw-steps__rail" aria-hidden="true" />
           <ol className="rw-steps__list">
@@ -259,14 +221,31 @@ export function TriangleSection() {
             ))}
           </ol>
         </div>
+        {/* The close, as a timber card: real wood grain graded into the brand green, a crisp
+            log cross-section whose growth rings draw in, the promise, and the visit. */}
         <div className="rw-mfinale rw-anim">
-          <Photo kind="logs" src={logsImg} />
-          <RedwoodMark className="rw-mark" />
-          <Headline />
-          <div className="rw-cta">
-            <RwButton href={BOOK_HREF} block ring>
-              Book a Site Visit
-            </RwButton>
+          <div className="rw-mfinale__card">
+            <div
+              className="rw-photo rw-mfinale__wood"
+              style={{ backgroundImage: `url(${woodImg})` }}
+              aria-hidden="true"
+            />
+            <TimberRound />
+            <Headline />
+            <p className="rw-mfinale__line">
+              Your land appreciates while your Sagwan grows into premium timber, and you earn from
+              both.
+            </p>
+            <div className="rw-cta">
+              <RwButton href={BOOK_HREF} block ring>
+                Book a Site Visit
+              </RwButton>
+            </div>
+            <ul className="rw-mfinale__facts">
+              <li>Registered in your name</li>
+              <li>Managed for 12 years</li>
+              <li>75% of the timber sale</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -283,6 +262,41 @@ function Photo({ kind, src }: { kind: "greenery" | "growth" | "logs"; src: strin
       style={{ backgroundImage: `url(${src})` }}
       aria-hidden="true"
     />
+  );
+}
+
+/**
+ * A Sagwan log's cut face, drawn (so it stays sharp on any screen): bark, heartwood and growth
+ * rings around the pith, stamped "Premium Sagwan". The rings carry .rw-ring, so the finale's
+ * timeline draws them in, ring by ring.
+ */
+function TimberRound() {
+  const rings = [12, 18, 24, 30, 36];
+  return (
+    <svg className="rw-round" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+      <defs>
+        <radialGradient id="rw-round-face" cx="0.46" cy="0.42" r="0.62">
+          <stop offset="0" stopColor="#efc98a" />
+          <stop offset="0.6" stopColor="#d39a52" />
+          <stop offset="1" stopColor="#a8692e" />
+        </radialGradient>
+      </defs>
+      <circle cx="50" cy="50" r="47" fill="#4a2c16" />
+      <circle cx="50" cy="50" r="42.5" fill="url(#rw-round-face)" />
+      <g fill="none" stroke="#7d4a1e" strokeWidth="1" strokeOpacity="0.7">
+        {rings.map((r, i) => (
+          <circle key={r} className="rw-ring" cx={50 + (i % 2 ? 0.6 : -0.4)} cy={50 + (i % 3) * 0.4} r={r} />
+        ))}
+      </g>
+      <path d="M50 50 L 79 31" stroke="#7a4a1f" strokeWidth="0.8" strokeOpacity="0.5" />
+      <circle cx="50" cy="50" r="2.2" fill="#7a4a1f" />
+      <text x="50" y="44" textAnchor="middle" className="rw-round__text">
+        PREMIUM
+      </text>
+      <text x="50" y="62" textAnchor="middle" className="rw-round__text">
+        SAGWAN
+      </text>
+    </svg>
   );
 }
 
@@ -359,12 +373,10 @@ function Headline() {
  * next, so the drawn triangle blends brown → green → red → brown. `uid` keeps the gradient ids
  * apart, since the desktop and mobile triangles are both in the page.
  */
-function TriangleSvg({ geo, uid, mark }: { geo: Geo; uid: string; mark?: boolean }) {
+function TriangleSvg({ geo, uid }: { geo: Geo; uid: string }) {
   const [a, b, c] = geo.pts;
   const loop = loopD(geo);
   const edges = edgesOf(geo);
-  const cx = (a.x + b.x + c.x) / 3;
-  const cy = (a.y + b.y + c.y) / 3;
   return (
     <svg
       className="rw-stage__svg"
@@ -415,14 +427,6 @@ function TriangleSvg({ geo, uid, mark }: { geo: Geo; uid: string; mark?: boolean
         />
       ))}
       <path className="rw-loop" d={loop} />
-      {mark ? (
-        <g className="rw-mmark" transform={`translate(${cx} ${cy - 18})`}>
-          {RINGS.map((r, k) => (
-            <circle key={r} className={`rw-ring rw-ring--${k + 1}`} r={r} />
-          ))}
-          <circle className="rw-mmark__seed" r="1.6" />
-        </g>
-      ) : null}
       <g className="rw-light" aria-hidden="true">
         <path className="rw-tail rw-tail--3" d={loop} data-d={140 * geo.tail} />
         <path className="rw-tail rw-tail--2" d={loop} data-d={70 * geo.tail} />
@@ -705,24 +709,9 @@ function setupDesktop(
 function setupMobile(root: HTMLElement, reduce: boolean, tok: Tok) {
   const scope = root.querySelector<HTMLElement>(".rw-mob")!;
   const q = gsap.utils.selector(scope);
-  // The triangle's corners are numbered points; each step below holds its corner's clip and tag.
-  const tiles = [1, 2, 3].map((i) => q<HTMLElement>(`.rw-mcorner[data-i="${i}"] .rw-tile`)[0]);
+  // No triangle on phones: each step holds its corner's clip and tag.
   const steps = q<HTMLElement>(".rw-step");
   const scenes = steps.map((step, k) => buildScene(k + 1, step, tok));
-  const corners = cornerPulse(tiles, scenes);
-
-  const markRings = q<SVGCircleElement>(".rw-mmark .rw-ring");
-  prepDraw(markRings);
-  const closeTl = gsap
-    .timeline({ paused: true })
-    .to(q(".rw-tri-fill"), { opacity: 0.07, duration: 1 }, 0)
-    .to(markRings, { strokeDashoffset: 0, duration: 0.6, stagger: 0.1, ease: "power1.inOut" }, 0)
-    .from(q(".rw-mmark__seed"), { scale: 0, svgOrigin: "0 0", duration: 0.4 }, 0.2);
-
-  const light = buildLight(q<SVGSVGElement>(".rw-stage__svg")[0], MOB, CORNER_TOKENS.map(tok), {
-    onVertex: corners.pulse,
-    onClose: () => closeTl.play(),
-  });
 
   const bodyLines = riseLines(q(".rw-intro .rw-body-l")[0]);
   const introTl = gsap
@@ -730,29 +719,6 @@ function setupMobile(root: HTMLElement, reduce: boolean, tok: Tok) {
     .from(root.querySelector(".rw-survey"), { opacity: 0, duration: 0.8 }, 0)
     .from(q(".rw-intro .rw-eyebrow .rw-mask__in"), { yPercent: 105, duration: 0.8 }, 0.1)
     .call(() => bodyLines.play(), undefined, 0.18);
-
-  const erasers = q<SVGPathElement>(".rw-edge--eraser");
-  prepDraw(erasers, true);
-  const triTl = gsap
-    .timeline({ paused: true, defaults: { ease: "power3.out" } })
-    .from(q(".rw-mtri .rw-photo"), { opacity: 0, scale: 1.05, duration: 1.4 }, 0)
-    .from(q(".rw-beam"), { opacity: 0, duration: 0.9, stagger: 0.12, ease: "power2.out" }, 0.1)
-    .to(
-      erasers,
-      {
-        strokeDashoffset: (_i, el) => Number((el as SVGElement).dataset.len),
-        duration: 0.9,
-        ease: "power1.inOut",
-      },
-      0.1,
-    )
-    .from(
-      tiles,
-      { opacity: 0, y: 16, scale: 0.88, duration: 0.8, stagger: 0.12, ease: "back.out(1.5)" },
-      0.2,
-    )
-    .from(q(".rw-mtile__title"), { opacity: 0, y: 6, duration: 0.5, stagger: 0.12 }, 0.45)
-    .call(() => light.start(), undefined, 0.6);
 
   // The process steps: a rail in the three colours draws down as you scroll; each step slides in,
   // its dot pops with a ripple in its corner's colour, and its clip starts.
@@ -795,16 +761,13 @@ function setupMobile(root: HTMLElement, reduce: boolean, tok: Tok) {
     );
 
   if (reduce) {
-    [introTl, triTl, closeTl, finTl, ...stepTls].forEach((t) => t.progress(1, true));
+    [introTl, finTl, ...stepTls].forEach((t) => t.progress(1, true));
     bodyLines.show();
     scenes.forEach((s) => s.settle());
-    light.finish();
-    corners.settle();
     return () => bodyLines.revert();
   }
 
   playOnEnter(q(".rw-intro")[0], introTl);
-  playOnEnter(q(".rw-mtri")[0], triTl, "top 80%");
   steps.forEach((step, k) => playOnEnter(step, stepTls[k]));
   playOnEnter(fin, finTl);
   gsap.fromTo(
@@ -821,29 +784,11 @@ function setupMobile(root: HTMLElement, reduce: boolean, tok: Tok) {
       },
     },
   );
-  const vis = ScrollTrigger.create({
-    trigger: q(".rw-mtri")[0],
-    start: "top bottom",
-    end: "bottom top",
-    onToggle: (s) => light.setVisible(s.isActive),
-  });
-  light.setVisible(vis.isActive);
-
   if (import.meta.env.DEV) {
-    (window as unknown as { __rw?: unknown }).__rw = {
-      introTl,
-      triTl,
-      stepTls,
-      finTl,
-      scenes,
-      light,
-    };
+    (window as unknown as { __rw?: unknown }).__rw = { introTl, stepTls, finTl, scenes };
   }
 
-  return () => {
-    light.stop();
-    bodyLines.revert();
-  };
+  return () => bodyLines.revert();
 }
 
 function buildDesktopFinale(q: Q, tok: Tok) {

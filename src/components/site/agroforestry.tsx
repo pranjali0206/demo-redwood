@@ -33,7 +33,7 @@ export default function Agroforestry() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[oklch(0.985_0.01_95)] py-24 lg:py-32"
+      className="relative overflow-hidden bg-[oklch(0.985_0.01_95)] py-14 lg:py-24"
     >
       {/* Background image layer */}
       <div

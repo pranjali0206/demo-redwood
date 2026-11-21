@@ -178,7 +178,7 @@ function GalleryPage() {
 
         {/* Featured short film — the feature specimen */}
         <section
-          className="relative overflow-hidden px-6 py-20 md:py-28"
+          className="relative overflow-hidden px-6 py-20 md:py-20"
           style={{ background: `linear-gradient(180deg, ${PAPER} 0%, ${PAPER_DEEP} 55%, ${PAPER} 100%)` }}
         >
           <div
@@ -266,7 +266,7 @@ function GalleryPage() {
 
         {/* Field photographs — specimen-tag grid */}
         <section
-          className="relative overflow-hidden px-6 py-20 md:py-28"
+          className="relative overflow-hidden px-6 py-20 md:py-20"
           style={{ background: `linear-gradient(180deg, ${MOSS} 0%, #2E3B26 55%, ${INK} 100%)` }}
         >
           <div
@@ -343,7 +343,7 @@ function GalleryPage() {
 
         {/* Reels — specimen-tag grid */}
         <section
-          className="relative overflow-hidden px-6 py-20 md:py-28"
+          className="relative overflow-hidden px-6 py-20 md:py-20"
           style={{ background: `linear-gradient(180deg, ${INK} 0%, #2E3B26 55%, ${MOSS} 100%)` }}
         >
           <div

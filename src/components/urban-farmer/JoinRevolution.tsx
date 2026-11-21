@@ -132,7 +132,7 @@ export function JoinRevolution() {
   return (
     <section
       id="join"
-      className="relative scroll-mt-16 overflow-hidden bg-uf-cream py-24 text-uf-forest sm:py-32"
+      className="relative scroll-mt-16 overflow-hidden bg-uf-cream py-14 text-uf-forest sm:py-20"
     >
       <img
         src={joinBg}
