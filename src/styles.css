@@ -1,6 +1,11 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@import "./styles/hero.css";
+@import "./styles/triangle.css";
+@import "./styles/city.css";
+@import "./styles/home.css";
+@import "./styles/urban-farmer-faq.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -44,6 +49,30 @@
   --color-uf-sun: #f6b93b;
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Home hero and nav: emerald and gold. */
+  --color-rwb-ink: #103e30;
+  --color-rwb-emerald: #175f45;
+  --color-rwb-sub: #2c4a3d;
+  --color-rwb-body: #294b3e;
+  --color-rwb-nav: #3f5a4e;
+  --color-rwb-label: #7a5610;
+  --color-rwb-gold: #d9a441;
+  --color-rwb-gold-deep: #b08a3e;
+  --color-rwb-gold-soft: #d9b867;
+  --color-rwb-cream: #f5efe0;
+  --color-rwb-mist: #9fbfaf;
+  --color-rwb-red: #c91f35;
+  --color-rwb-champagne: #a78348;
+  --color-rwb-ivory: #f5f4ed;
+  --font-playfair: "Playfair Display", ui-serif, Georgia, "Times New Roman", serif;
+  --font-jakarta: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-bitter: "Bitter", ui-serif, Georgia, serif;
+  --font-manrope: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-instrument: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-lobster: "Lobster", "Brush Script MT", cursive;
+  --font-abril: "Abril Fatface", ui-serif, Georgia, serif;
+  --font-dmserif: "DM Serif Display", ui-serif, Georgia, serif;
+  --font-dmsans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {

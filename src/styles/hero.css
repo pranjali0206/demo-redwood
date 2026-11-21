@@ -1,0 +1,436 @@
+/*
+ * Home hero effects that Tailwind utilities can't express.
+ *
+ * Every element's resting style is its final look, and keyframes only describe where it starts.
+ * That keeps the hero complete when animations are off or before any JavaScript has loaded.
+ * Pointer effects read --px / --py (set by usePointerParallax) and default to 0 without them.
+ */
+
+/*
+ * Home page: Playfair Display for the sections below the hero. The hero (.rwb-hero) has its own
+ * Manrope / Instrument Serif system, as do the triangle (.rw) and city (.rwc) sections.
+ */
+body:has(.rwb-hero) :is(.font-serif, h1, h2, h3, h4, h5, h6):not(.rw *, .rwb-hero *, .rwc *) {
+  font-family: var(--font-playfair);
+}
+
+/* Forest ---------------------------------------------------------------------------------------- */
+
+/*
+ * The forest covers about three quarters of the hero from the right, faded back to a soft wash:
+ * it eases in from the left edge over a long, many-stop ramp (a straight ramp reads as a muddy
+ * band) and dissolves into the tree row at the foot. Faded this far, the copy stays readable over it.
+ */
+.rwb-forest {
+  width: 76%;
+  opacity: 0.5;
+  -webkit-mask-image:
+    linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(0, 0, 0, 0.06) 8%,
+      rgba(0, 0, 0, 0.18) 16%,
+      rgba(0, 0, 0, 0.36) 24%,
+      rgba(0, 0, 0, 0.56) 32%,
+      rgba(0, 0, 0, 0.75) 40%,
+      rgba(0, 0, 0, 0.9) 48%,
+      #000 58%
+    ),
+    linear-gradient(to bottom, #000 74%, transparent 97%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(0, 0, 0, 0.06) 8%,
+      rgba(0, 0, 0, 0.18) 16%,
+      rgba(0, 0, 0, 0.36) 24%,
+      rgba(0, 0, 0, 0.56) 32%,
+      rgba(0, 0, 0, 0.75) 40%,
+      rgba(0, 0, 0, 0.9) 48%,
+      #000 58%
+    ),
+    linear-gradient(to bottom, #000 74%, transparent 97%);
+  mask-composite: intersect;
+}
+
+/* Phones and tablets: the whole width, fainter still, fading out down the page. */
+@media (max-width: 1099px) {
+  .rwb-forest {
+    width: 100%;
+    opacity: 0.32;
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0%, #000 60%),
+      linear-gradient(to bottom, #000 40%, transparent 95%);
+    mask-image:
+      linear-gradient(to right, transparent 0%, #000 60%),
+      linear-gradient(to bottom, #000 40%, transparent 95%);
+  }
+}
+
+/* A gentle drift against the pointer. */
+.rwb-forest__layer {
+  transform: translate3d(calc(var(--px, 0) * -12px), calc(var(--py, 0) * -8px), 0);
+}
+
+/* The photograph breathes: a very slow zoom towards the sun. */
+.rwb-forest__photo {
+  object-position: 60% 22%;
+  transform-origin: 69% 20%;
+  animation: rwb-breathe 30s ease-in-out infinite alternate;
+}
+
+/* A faint shimmer along the photo's own sunbeams. */
+.rwb-forest__rays {
+  background: repeating-conic-gradient(
+    from 150deg at 69% 20%,
+    rgba(255, 246, 214, 0.16) 0deg 1.6deg,
+    transparent 1.6deg 7deg
+  );
+  -webkit-mask-image: radial-gradient(circle at 69% 20%, #000 0%, transparent 65%);
+  mask-image: radial-gradient(circle at 69% 20%, #000 0%, transparent 65%);
+  mix-blend-mode: screen;
+  filter: blur(8px);
+  transform-origin: 69% 20%;
+  animation: rwb-rays 12s ease-in-out infinite alternate;
+}
+
+/* Campaign block -------------------------------------------------------------------------------- */
+
+/* The growth label sits on the faded forest: deep green with a soft light halo. */
+.rwb-growth {
+  color: var(--color-rwb-ink);
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.9);
+}
+
+.rwb-tilt-stage {
+  perspective: 1100px;
+}
+
+.rwb-card {
+  background: rgba(250, 249, 244, 0.9);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  backdrop-filter: blur(16px) saturate(1.3);
+  box-shadow:
+    0 30px 60px -30px rgba(6, 30, 22, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.7),
+    0 0 0 1px rgba(16, 62, 48, 0.06);
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition:
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.6s ease;
+}
+
+/* Follow the pointer closely while it is over the card; ease back when it leaves. */
+.rwb-card[data-tilting] {
+  transition:
+    transform 0.15s linear,
+    box-shadow 0.6s ease;
+}
+
+.rwb-card:hover {
+  box-shadow:
+    0 40px 80px -32px rgba(6, 30, 22, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.7),
+    0 0 0 1px rgba(16, 62, 48, 0.08);
+}
+
+.rwb-card__glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at var(--gx, 50%) var(--gy, 0%),
+    rgba(255, 255, 255, 0.55),
+    transparent 55%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.rwb-card:hover .rwb-card__glare {
+  opacity: 1;
+}
+
+/* Headline type ---------------------------------------------------------------------------------- */
+
+/*
+ * The whole formula is set in Lobster, one face for every word, scaled with the content width (cqi)
+ * so its longest line nearly fills it. Lobster has a single weight and its own joined letterforms,
+ * so no bolding and no negative tracking (which would collide the joins).
+ */
+
+/*
+ * Phones: the script runs too fine at small sizes, so the formula switches to Abril Fatface there
+ * (see the max-sm classes on the headline in Hero.tsx). Abril is very heavy, so on phones both
+ * colours step a little lighter: a fresher green and a brighter red.
+ */
+@media (max-width: 639px) {
+  .rwb-headline {
+    color: #1f6049;
+  }
+  .rwb-brand-line {
+    --brand-fill: #d93a50;
+  }
+}
+
+/* Points: an editorial pairing. DM Sans for the line in a lighter green, and the key phrase in DM
+   Serif Display, dark green, a touch larger to sit level with the sans. */
+.rwb-keyphrase {
+  font-family: var(--font-dmserif);
+  font-size: 1.12em;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--color-rwb-ink);
+}
+
+/* Headline: the brand's moment ------------------------------------------------------------------ */
+
+/*
+ * The headline is solid colour: confident type, no effects. The one exception is the brand name:
+ * as the page loads a single band of champagne light passes across "Redwood Biotech", word by word,
+ * like light on a brass nameplate, and then it stays still.
+ * The sweep is a background clipped to the text, so the words are filled with the red underneath
+ * it; the fill box is extended so the band also covers ascenders and descenders.
+ */
+.rwb-brand-line .rwb-word {
+  background-image:
+    linear-gradient(
+      110deg,
+      transparent 36%,
+      rgba(231, 201, 140, 0.95) 46%,
+      rgba(255, 244, 214, 1) 50%,
+      rgba(231, 201, 140, 0.95) 54%,
+      transparent 64%
+    ),
+    linear-gradient(
+      var(--brand-fill, var(--color-rwb-red)),
+      var(--brand-fill, var(--color-rwb-red))
+    );
+  background-size:
+    260% 100%,
+    100% 100%;
+  background-repeat: no-repeat;
+  background-position:
+    150% 0,
+    0 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  padding-block: 0.08em 0.2em;
+  margin-block: -0.08em -0.2em;
+  animation:
+    rwb-word 1s cubic-bezier(0.22, 1, 0.36, 1) calc(0.15s + var(--i, 0) * 70ms) backwards,
+    rwb-brand-sweep 1.8s cubic-bezier(0.45, 0, 0.25, 1) calc(1.15s + var(--i, 0) * 0.14s) both;
+}
+
+/* Timber signs ------------------------------------------------------------------------------- */
+
+/*
+ * The headline's plus and equals, closing their lines, each built from two short logs, in a
+ * box about one em square, nudged down to centre on the lettering. The logs drop in on load, then
+ * the sign sways very gently.
+ */
+.rwb-sign {
+  position: relative;
+  display: inline-block;
+  width: 0.78em;
+  height: 0.78em;
+  margin-left: 0.04em;
+  vertical-align: -0.06em;
+  animation: rwb-sign-sway 5s ease-in-out 3s infinite alternate;
+}
+
+.rwb-sign__log {
+  position: absolute;
+  inset: 50% 0 auto;
+  height: 0.22em;
+  margin-top: -0.11em;
+  background: var(--log) center / 100% 100% no-repeat;
+  filter: drop-shadow(0 0.03em 0.03em rgba(60, 35, 10, 0.35));
+  animation: rwb-log-drop 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--log-delay, 0s) backwards;
+}
+
+.rwb-sign--plus .rwb-sign__log:last-child {
+  rotate: 90deg;
+}
+
+.rwb-sign--equals .rwb-sign__log:first-child {
+  translate: 0 -0.15em;
+}
+
+.rwb-sign--equals .rwb-sign__log:last-child {
+  translate: 0 0.15em;
+  scale: -1 1;
+}
+
+/* Load-in ------------------------------------------------------------------------------------- */
+
+.rwb-rise {
+  animation: rwb-rise 1s cubic-bezier(0.22, 1, 0.36, 1) var(--rise-delay, 0s) backwards;
+}
+
+/* Headline words rise out of a soft blur, one after another. */
+.rwb-word {
+  display: inline-block;
+  animation: rwb-word 1s cubic-bezier(0.22, 1, 0.36, 1) calc(0.15s + var(--i, 0) * 70ms) backwards;
+}
+
+/* Tree row ------------------------------------------------------------------------------------ */
+
+/* The tile is sized by height only, so it repeats sideways without ever stretching the trees. */
+.rwb-treerow {
+  background: var(--tree-row) repeat-x center bottom / auto 100%;
+  transform-origin: bottom;
+  animation: rwb-rows-grow 1.8s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/*
+ * Morning haze: the hero's white laid over the crowns and faded out towards the trunks. Masking it
+ * with the same tile keeps the tint on the trees and off the sky between them.
+ */
+.rwb-treerow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.78) 0%,
+    rgba(255, 255, 255, 0.45) 38%,
+    rgba(255, 255, 255, 0) 80%
+  );
+  -webkit-mask: var(--tree-row) repeat-x center bottom / auto 100%;
+  mask: var(--tree-row) repeat-x center bottom / auto 100%;
+}
+
+/*
+ * Hidden only until StatCount takes over, so visitors never see the real figure drop back to 0.
+ * If JavaScript never arrives, the real figure appears after 5s.
+ */
+.rwb-count {
+  animation: rwb-count-fallback 0s linear 5s backwards;
+}
+
+/* Stats strip --------------------------------------------------------------------------------- */
+
+.rwb-stat {
+  flex: 1 1 220px;
+  border-color: rgba(217, 184, 103, 0.18);
+}
+
+.rwb-stat + .rwb-stat {
+  border-left-width: 1px;
+}
+
+@media (max-width: 959px) {
+  .rwb-stat {
+    flex-basis: 50%;
+  }
+
+  .rwb-stat:nth-child(odd) {
+    border-left-width: 0;
+    padding-left: 0;
+  }
+
+  .rwb-stat:nth-child(n + 3) {
+    border-top-width: 1px;
+  }
+}
+
+/* Keyframes ----------------------------------------------------------------------------------- */
+
+@keyframes rwb-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+@keyframes rwb-word {
+  from {
+    opacity: 0;
+    transform: translateY(0.3em);
+    filter: blur(6px);
+  }
+}
+
+/* The brand name's single sweep: the band crosses once and rests off to the left. */
+@keyframes rwb-brand-sweep {
+  from {
+    background-position:
+      150% 0,
+      0 0;
+  }
+  to {
+    background-position:
+      -50% 0,
+      0 0;
+  }
+}
+
+@keyframes rwb-log-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-0.9em) rotate(-40deg);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(0.05em) rotate(5deg);
+  }
+}
+
+@keyframes rwb-sign-sway {
+  from {
+    rotate: -3deg;
+  }
+  to {
+    rotate: 3deg;
+  }
+}
+
+@keyframes rwb-breathe {
+  from {
+    transform: scale(1.02);
+  }
+  to {
+    transform: scale(1.08) translate(-1%, 0.6%);
+  }
+}
+
+@keyframes rwb-rays {
+  from {
+    opacity: 0.5;
+    rotate: -1.5deg;
+  }
+  to {
+    opacity: 1;
+    rotate: 2deg;
+  }
+}
+
+@keyframes rwb-rows-grow {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes rwb-count-fallback {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Reduced motion ------------------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .rwb-hero *,
+  .rwb-hero *::before,
+  .rwb-hero *::after,
+  .rwb-nav-link,
+  .rwb-nav-link::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
